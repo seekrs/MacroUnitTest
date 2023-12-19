@@ -1,34 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   window.h                                           :+:      :+:    :+:   */
+/*   main_menu_bar.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/19 15:37:01 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 17:15:09 by maldavid         ###   ########.fr       */
+/*   Created: 2023/12/19 17:47:01 by maldavid          #+#    #+#             */
+/*   Updated: 2023/12/19 18:08:39 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MLX_UT_WINDOW__
-#define __MLX_UT_WINDOW__
-
-#include <pch.h>
+#include <components/main_menu_bar.h>
 
 namespace mlxut
 {
-	class Window
+	void MainMenuBar::render() noexcept
 	{
-		public:
-			Window(const std::string& title, std::size_t w, std::size_t h);
-			inline SDL_Window* const getNativeWindow() const noexcept { return _win; }
-			void destroy() noexcept;
-			~Window();
-
-		private:
-			SDL_Window* _win = nullptr;
-			SDL_Surface* _icon = nullptr;
-	};
+		if(!ImGui::BeginMainMenuBar())
+			return;
+		if(ImGui::BeginMenu("Help"))
+		{
+			if(ImGui::MenuItem("About"))
+			{
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
 }
-
-#endif

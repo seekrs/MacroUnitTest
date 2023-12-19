@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   window.h                                           :+:      :+:    :+:   */
+/*   errors.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/19 15:37:01 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 17:15:09 by maldavid         ###   ########.fr       */
+/*   Created: 2023/12/19 16:38:06 by maldavid          #+#    #+#             */
+/*   Updated: 2023/12/19 16:38:12 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MLX_UT_WINDOW__
-#define __MLX_UT_WINDOW__
+#ifndef __MLX_UT_ERRORS__
+#define __MLX_UT_ERRORS__
 
 #include <pch.h>
 
-namespace mlxut
+enum class e_kind
 {
-	class Window
-	{
-		public:
-			Window(const std::string& title, std::size_t w, std::size_t h);
-			inline SDL_Window* const getNativeWindow() const noexcept { return _win; }
-			void destroy() noexcept;
-			~Window();
+	message,
+	warning,
+	error,
+	fatal_error
+};
 
-		private:
-			SDL_Window* _win = nullptr;
-			SDL_Surface* _icon = nullptr;
-	};
+namespace mlxut::core::error
+{
+	void report(e_kind kind, std::string msg, ...);
 }
 
-#endif
+#endif // __MLX_ERRORS__

@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   window.h                                           :+:      :+:    :+:   */
+/*   sdl_context.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/19 15:37:01 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 17:15:09 by maldavid         ###   ########.fr       */
+/*   Created: 2023/12/19 17:17:52 by maldavid          #+#    #+#             */
+/*   Updated: 2023/12/19 17:19:37 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MLX_UT_WINDOW__
-#define __MLX_UT_WINDOW__
-
-#include <pch.h>
+#ifndef __MLX_UT_SDL_CONTEXT__
+#define __MLX_UT_SDL_CONTEXT__
 
 namespace mlxut
 {
-	class Window
+	class SDLContext
 	{
 		public:
-			Window(const std::string& title, std::size_t w, std::size_t h);
-			inline SDL_Window* const getNativeWindow() const noexcept { return _win; }
-			void destroy() noexcept;
-			~Window();
-
-		private:
-			SDL_Window* _win = nullptr;
-			SDL_Surface* _icon = nullptr;
+			SDLContext();
+			~SDLContext();
 	};
 }
 
