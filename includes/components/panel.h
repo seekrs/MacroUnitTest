@@ -1,34 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   window.h                                           :+:      :+:    :+:   */
+/*   panel.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/19 15:37:01 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 17:15:09 by maldavid         ###   ########.fr       */
+/*   Created: 2023/12/19 17:42:33 by maldavid          #+#    #+#             */
+/*   Updated: 2023/12/19 17:48:10 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#ifndef __MLX_UT_WINDOW__
-#define __MLX_UT_WINDOW__
 
 #include <pch.h>
 
 namespace mlxut
 {
-	class Window
+	class Panel
 	{
 		public:
-			Window(const std::string& title, std::size_t w, std::size_t h);
-			inline SDL_Window* const getNativeWindow() const noexcept { return _win; }
-			void destroy() noexcept;
-			~Window();
+			Panel(const std::string& name);
 
-		private:
-			SDL_Window* _win = nullptr;
-			SDL_Surface* _icon = nullptr;
+			virtual void onAttach() {}
+			virtual void onOpen() {}
+			virtual bool isOpen() {}
+			virtual void onUpdate([[maybe_unused]] ImVec2 size) {}
+			virtual void onQuit() {}
+
+			inline const std::string& getName() const noexcept { return _name }
+			inline void setName(const std::string& name) noexcept { _name = name; }
+			virtual ~Panel();
+
+		protected:
+			std::string _name;
+			ImVec2 _size;
+			
 	};
 }
-
-#endif

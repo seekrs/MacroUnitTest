@@ -1,33 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   window.h                                           :+:      :+:    :+:   */
+/*   main_menu_bar.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/19 15:37:01 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 17:15:09 by maldavid         ###   ########.fr       */
+/*   Created: 2023/12/19 17:41:43 by maldavid          #+#    #+#             */
+/*   Updated: 2023/12/19 17:46:47 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MLX_UT_WINDOW__
-#define __MLX_UT_WINDOW__
+#ifndef __MLX_UT_MAIN_MENU_BAR__
+#define __MLX_UT_MAIN_MENU_BAR__
 
 #include <pch.h>
 
 namespace mlxut
 {
-	class Window
+	class MainMenuBar
 	{
 		public:
-			Window(const std::string& title, std::size_t w, std::size_t h);
-			inline SDL_Window* const getNativeWindow() const noexcept { return _win; }
-			void destroy() noexcept;
-			~Window();
-
-		private:
-			SDL_Window* _win = nullptr;
-			SDL_Surface* _icon = nullptr;
+			MainMenuBar() = default;
+			void render() noexcept;
+			~MainMenuBar() = default;
 	};
 }
 
