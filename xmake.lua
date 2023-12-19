@@ -34,6 +34,8 @@ target("MacroUnitTest")
 
 	set_pcxxheader("includes/pch.h")
 
+	add_defines("SDL_MAIN_HANDLED")
+
 	if is_mode("debug") then
 		add_defines("MLX_UT_DEBUG")
 	elseif is_mode("release") then

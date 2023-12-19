@@ -1,42 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   panel_stack.h                                      :+:      :+:    :+:   */
+/*   docks.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/19 18:14:22 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 23:53:05 by maldavid         ###   ########.fr       */
+/*   Created: 2023/12/19 21:40:02 by maldavid          #+#    #+#             */
+/*   Updated: 2023/12/19 21:41:29 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MLX_UT_PANEL_STACK__
-#define __MLX_UT_PANEL_STACK__
+#ifndef __MLX_UT_DOCKS__
+#define __MLX_UT_DOCKS__
 
 #include <pch.h>
 #include <components/panel.h>
 
 namespace mlxut
 {
-	class PanelStack
+	class Docks : public Panel
 	{
 		public:
-			PanelStack() = default;
-
-			void addPanel(Panel* const panel);
-
-			void removePanel(Panel* const panel);
-			void removePanel(const std::string& name);
-
-			Panel* const getPanel(const std::string& name);
-			Panel* const getPanel(std::size_t index);
-
-			inline const std::vector<Panel*>& getPanels() const { return _panels; }
-
-			~PanelStack() = default;
-
-		private:
-			std::vector<Panel*> _panels;
+			Docks();
+			void onUpdate(ivec2 size) override;
+			~Docks() override = default;
 	};
 }
 

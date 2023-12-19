@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 17:07:25 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 17:37:17 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/19 22:33:15 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ namespace mlxut
     	ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		
 		setDarkTheme();
 
@@ -150,6 +151,7 @@ namespace mlxut
 		style->ScrollbarSize = 13.0f;
 		style->TabBorderSize = 0.0f;
 		style->TabRounding = 5.0f;
+		style->WindowPadding = ImVec2(3.f, 3.f);
 		style->WindowRounding = 0.0f;
 		style->WindowBorderSize = 1.0f;
 		style->AntiAliasedLines = true;
