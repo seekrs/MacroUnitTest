@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 14:59:08 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 16:53:24 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/19 19:13:27 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <cstdarg>
 #include <utility>
+#include <algorithm>
 
 #include <SDL2/SDL.h>
 
@@ -27,6 +28,8 @@
 #include <imgui_internal.h>
 #include <backends/imgui_impl_sdl2.h>
 #include <backends/imgui_impl_sdlrenderer2.h>
+
+#include <vec2.h>
 
 constexpr const uint16_t WINDOW_WIDTH = 1280;
 constexpr const uint16_t WINDOW_HEIGHT = 750;

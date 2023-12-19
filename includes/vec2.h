@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   renderer.h                                         :+:      :+:    :+:   */
+/*   vec2.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/19 16:57:16 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 19:03:36 by maldavid         ###   ########.fr       */
+/*   Created: 2023/12/19 19:11:51 by maldavid          #+#    #+#             */
+/*   Updated: 2023/12/19 19:13:09 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MLX_UT_RENDERER__
-#define __MLX_UT_RENDERER__
-
-#include <pch.h>
+#ifndef __MLX_UT_VEC2__
+#define __MLX_UT_VEC2__
 
 namespace mlxut
 {
-	class Renderer
+	struct ivec2
 	{
-		public:
-			Renderer(const class Window& win);
-			inline SDL_Renderer* const getNativeRenderer() const noexcept { return _renderer; }
-			inline void getDrawableSize(int& w, int& h) const noexcept { SDL_GetRendererOutputSize(_renderer, &w, &h); }
-			void destroy() noexcept;
-			~Renderer();
+		int x;
+		int y;
 
-		private:
-			SDL_Renderer* _renderer = nullptr;
+		constexpr ivec2() : x(0), y(0) {}
+		constexpr ivec2(int _x, int _y) : x(_x), y(_y) {}
 	};
 }
 
