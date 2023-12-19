@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 14:59:08 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 19:13:27 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/19 20:36:34 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <string>
 #include <cstdlib>
 #include <cstdarg>
+#include <cstdint>
 #include <utility>
 #include <algorithm>
 

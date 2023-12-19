@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 17:19:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 17:24:52 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/19 20:38:30 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ namespace mlxut
 			core::error::report(e_kind::fatal_error, std::string("unable to init the SDL, ") + SDL_GetError());
 
 		#ifdef SDL_HINT_IME_SHOW_UI
-			SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
+		SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
 		#endif
 	}
 

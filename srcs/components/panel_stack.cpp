@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 18:19:21 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 18:26:16 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/19 23:30:10 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ namespace mlxut
 
 		if(it != _panels.cend())
 			return *it;
+		return nullptr;
 	}
 
 	Panel* const PanelStack::getPanel(std::size_t index)
