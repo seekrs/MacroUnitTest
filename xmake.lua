@@ -25,6 +25,8 @@ target("MacroUnitTest")
 	set_default(true)
 	set_license("MIT")
 	set_kind("binary")
+	
+	set_targetdir("./")
 
 	add_packages("libsdl", "libsdl_image", "imgui")
 

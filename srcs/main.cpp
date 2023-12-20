@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:04:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/20 02:16:22 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/20 02:26:50 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int main()
 	mlxut::Window win("MacroLibX Unit Tester", WINDOW_WIDTH, WINDOW_HEIGHT);
 	mlxut::Renderer renderer(win);
 	mlxut::ImGuiContext imgui(win, renderer);
-	mlxut::MainMenuBar menubar;
+	mlxut::MainMenuBar menubar(renderer);
 
 	mlxut::Docks docks;
 	mlxut::TestList test_list;
@@ -66,6 +66,7 @@ int main()
 		imgui.endFrame();
 	}
 
+	menubar.destroy();
 	imgui.destroy();
 	renderer.destroy();
 	win.destroy();
