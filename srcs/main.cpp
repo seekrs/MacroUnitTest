@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:04:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/20 18:56:41 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/21 00:22:59 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ int main()
 
 	if(mlxut::loadMLX())
 	{
+		void* mlx = mlx_init();
+		void* window = mlx_new_window(mlx, 400, 400, "test");
+		std::cout << mlx << "	" << window << "	" << *static_cast<int*>(window) << std::endl;
 		for(;;)
 		{
 			if(!imgui.checkEvents())
@@ -77,6 +80,8 @@ int main()
 			
 			cursorUpdate(win);
 		}
+		mlx_destroy_window(mlx, window);
+		mlx_destroy_display(mlx);
 		mlxut::unloadMLX();
 	}
 
