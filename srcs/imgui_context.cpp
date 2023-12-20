@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 17:07:25 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/20 02:06:20 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/20 13:52:30 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <pch.h>
 #include <window.h>
 #include <renderer.h>
+#include <material_font.h>
 
 namespace mlxut
 {
@@ -29,6 +30,16 @@ namespace mlxut
 
 		ImGui_ImplSDL2_InitForSDLRenderer(win.getNativeWindow(), renderer.getNativeRenderer());
 		ImGui_ImplSDLRenderer2_Init(renderer.getNativeRenderer());
+
+		io.Fonts->AddFontFromFileTTF("resources/fonts/opensans/OpenSans-Regular.ttf", 15.0f);
+
+		static const ImWchar icons_ranges[] = { MLXUT_ICON_MIN_MD, MLXUT_ICON_MAX_16_MD, 0 };
+		ImFontConfig config;
+		config.MergeMode = true;
+		config.GlyphOffset.y = 4.0f;
+
+		io.Fonts->AddFontFromFileTTF("./resources/fonts/material_icons-regular.ttf", 15.0f, &config, icons_ranges);
+		io.Fonts->AddFontDefault();
 
 		_is_init = true;
 	}
