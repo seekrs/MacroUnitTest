@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:04:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/20 14:54:14 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/20 18:56:41 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <components/tests_list.h>
 #include <components/test_stats.h>
 #include <components/docks.h>
+#include <loader/loader.h>
 
 SDL_HitTestResult hitTestCallback(SDL_Window* win, const SDL_Point* area, [[maybe_unused]] void* data);
 void cursorUpdate(const mlxut::Window& window) noexcept;
@@ -51,28 +52,32 @@ int main()
 	loadCursors();
 	SDL_SetWindowHitTest(win.getNativeWindow(), hitTestCallback, nullptr);
 
-	for(;;)
+	if(mlxut::loadMLX())
 	{
-		if(!imgui.checkEvents())
-			break;
-		if(menubar.quitRequested())
-			break;
-		imgui.beginFrame();
+		for(;;)
+		{
+			if(!imgui.checkEvents())
+				break;
+			if(menubar.quitRequested())
+				break;
+			imgui.beginFrame();
 
-		mlxut::ivec2 size;
-		renderer.getDrawableSize(size.x, size.y);
+			mlxut::ivec2 size;
+			renderer.getDrawableSize(size.x, size.y);
 
-		menubar.render(win, size);
+			menubar.render(win, size);
 
-		for(mlxut::Panel* const panel : stack.getPanels())
-			panel->onUpdate(size);
+			for(mlxut::Panel* const panel : stack.getPanels())
+				panel->onUpdate(size);
 
-		if(menubar.shouldRenderAboutWindow())
-			menubar.renderAboutWindow(size);
+			if(menubar.shouldRenderAboutWindow())
+				menubar.renderAboutWindow(size);
 
-		imgui.endFrame();
-		
-		cursorUpdate(win);
+			imgui.endFrame();
+			
+			cursorUpdate(win);
+		}
+		mlxut::unloadMLX();
 	}
 
 	menubar.destroy();
