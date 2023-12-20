@@ -6,14 +6,20 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 17:47:01 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/20 02:15:14 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/20 02:29:36 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <components/main_menu_bar.h>
+#include <renderer.h>
 
 namespace mlxut
 {
+	MainMenuBar::MainMenuBar(const Renderer& renderer)
+	{
+		_logo = IMG_LoadTexture(renderer.getNativeRenderer(), "./resources/assets/logo.png");
+	}
+
 	void MainMenuBar::render(ivec2 size) noexcept
 	{
 		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.f, 0.f, 0.f, 1.f));
@@ -22,6 +28,7 @@ namespace mlxut
 
 			if(!ImGui::BeginMainMenuBar())
 				return;
+			ImGui::Image(static_cast<void*>(_logo), ImVec2(20, 20));
 			if(ImGui::BeginMenu("Help"))
 			{
 				if(ImGui::MenuItem("About"))
@@ -42,5 +49,18 @@ namespace mlxut
 			return;
 
 		ImGui::End();
+	}
+
+	void MainMenuBar::destroy() noexcept
+	{
+		if(_logo == nullptr)
+			return;
+		SDL_DestroyTexture(_logo);
+		_logo = nullptr;
+	}
+
+	MainMenuBar::~MainMenuBar()
+	{
+		destroy();
 	}
 }

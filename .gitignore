@@ -1,6 +1,13 @@
-build/
-.xmake/
-.cache/
+/*
+/*/
+!.gitignore
+!README.md
+!LICENSE
+!xmake.lua
+!compile_commands.json
+!/includes/
+!/srcs/
+!/resources/
 *.o
 *.swp
 *.swx
