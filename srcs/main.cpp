@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:04:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 23:53:17 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/20 02:16:22 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,20 @@ int main()
 	{
 		if(!imgui.checkEvents())
 			break;
+		if(menubar.quitRequested())
+			break;
 		imgui.beginFrame();
 
 		mlxut::ivec2 size;
 		renderer.getDrawableSize(size.x, size.y);
 
 		menubar.render(size);
+
 		for(mlxut::Panel* const panel : stack.getPanels())
 			panel->onUpdate(size);
+
+		if(menubar.shouldRenderAboutWindow())
+			menubar.renderAboutWindow(size);
 
 		imgui.endFrame();
 	}

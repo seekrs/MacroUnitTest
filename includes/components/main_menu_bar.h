@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 17:41:43 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 21:52:03 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/20 02:11:29 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,14 @@ namespace mlxut
 		public:
 			MainMenuBar() = default;
 			void render(ivec2 size) noexcept;
+			void renderAboutWindow(ivec2 size);
+			inline bool shouldRenderAboutWindow() const noexcept { return _render_about_window; }
+			inline bool quitRequested() const noexcept { return _quit_requested; }
 			~MainMenuBar() = default;
 
 		private:
-			void renderAboutWindow(ivec2 size);
-
-		private:
 			bool _render_about_window = false;
+			bool _quit_requested = false;
 	};
 }
 
