@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 14:59:08 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/20 14:28:11 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/20 18:29:05 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@
 #include <algorithm>
 #include <unordered_map>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <backends/imgui_impl_sdl2.h>
 #include <backends/imgui_impl_sdlrenderer2.h>
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include <vec2.h>
 
