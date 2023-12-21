@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 18:36:30 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/20 23:52:12 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:50:32 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ namespace mlxut
 	void loadSymbols(void* module, void* (*load)(void*, const char*)) noexcept
 	{
 		*(void**)(&mlx_init) = load(module, "mlx_init");
-		*(void**)(&mlx_new_window) = load(module, "mlx_new_image");
+		*(void**)(&mlx_new_window) = load(module, "mlx_new_window");
 		*(void**)(&mlx_loop_hook) = load(module, "mlx_loop_hook");
 		*(void**)(&mlx_loop) = load(module, "mlx_loop");
 		*(void**)(&mlx_loop_end) = load(module, "mlx_loop_end");

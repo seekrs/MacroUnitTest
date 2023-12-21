@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 14:59:08 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/20 18:29:05 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/21 21:40:10 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <utility>
 #include <algorithm>
 #include <unordered_map>
+#include <memory>
 
 #include <imgui.h>
 #include <imgui_internal.h>
