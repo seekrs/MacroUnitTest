@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:04:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/21 00:22:59 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/21 22:09:42 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <components/test_stats.h>
 #include <components/docks.h>
 #include <loader/loader.h>
+#include <tests/tester.h>
 
 SDL_HitTestResult hitTestCallback(SDL_Window* win, const SDL_Point* area, [[maybe_unused]] void* data);
 void cursorUpdate(const mlxut::Window& window) noexcept;
@@ -41,6 +42,7 @@ int main()
 	mlxut::TestStats test_stats;
 	mlxut::RenderResults render_results;
 	mlxut::MLXinfos mlx_infos;
+	mlxut::Tester tester;
 
 	mlxut::PanelStack stack;
 	stack.addPanel(&docks);
@@ -54,9 +56,6 @@ int main()
 
 	if(mlxut::loadMLX())
 	{
-		void* mlx = mlx_init();
-		void* window = mlx_new_window(mlx, 400, 400, "test");
-		std::cout << mlx << "	" << window << "	" << *static_cast<int*>(window) << std::endl;
 		for(;;)
 		{
 			if(!imgui.checkEvents())
@@ -77,11 +76,12 @@ int main()
 				menubar.renderAboutWindow(size);
 
 			imgui.endFrame();
-			
+
 			cursorUpdate(win);
+
+			if(menubar.runAllTestsRequest())
+				tester.runAllTests();
 		}
-		mlx_destroy_window(mlx, window);
-		mlx_destroy_display(mlx);
 		mlxut::unloadMLX();
 	}
 

@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 17:47:01 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/20 14:25:28 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/21 22:09:10 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ namespace mlxut
 
 	void MainMenuBar::render(const Window& win, ivec2 size) noexcept
 	{
+		_run_all_tests_requested = false;
+
 		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.f, 0.f, 0.f, 1.f));
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.f, 0.f, 1.f));
 		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(0.f, 0.f, 0.f, 1.f));
@@ -34,9 +36,7 @@ namespace mlxut
 				return;
 			ImGui::Image(static_cast<void*>(_logo), ImVec2(20, 20));
 			if(ImGui::Button("Launch all tests"))
-			{
-
-			}
+				_run_all_tests_requested = true;
 			if(ImGui::BeginMenu("Help"))
 			{
 				if(ImGui::MenuItem("About"))
