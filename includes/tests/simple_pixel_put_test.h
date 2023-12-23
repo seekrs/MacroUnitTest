@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 20:20:17 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/21 22:00:13 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/22 22:14:49 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ namespace mlxut
 	class SimplePixelPutTest : public BaseTest
 	{
 		public:
-			SimplePixelPutTest(void* mlx, void* win) : BaseTest(mlx, win) {}
+			SimplePixelPutTest(void* mlx) : BaseTest(mlx) {}
 			void run() override;
 			~SimplePixelPutTest() override = default;
 	};

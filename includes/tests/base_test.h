@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:15:26 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/21 22:00:24 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/22 22:48:08 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ namespace mlxut
 		friend class Tester;
 
 		public:
-			BaseTest(void* mlx, void* win) : _mlx(mlx), _win(win) {}
+			BaseTest(void* mlx) : _mlx(mlx) {}
+			inline void setRenderData(void* win, void* render_target) noexcept { _win = win; _render_target = render_target; }
 			virtual void setup() {};
 			virtual void run() = 0;
 			virtual void cleanup() {};
@@ -32,7 +33,7 @@ namespace mlxut
 		protected:
 			void* _mlx = nullptr;
 			void* _win = nullptr;
-			SDL_Texture* _result = nullptr;
+			void* _render_target = nullptr;
 	};
 }
 
