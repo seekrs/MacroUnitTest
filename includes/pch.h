@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 14:59:08 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/21 21:40:10 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/23 00:03:21 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,17 @@
 
 constexpr const uint16_t WINDOW_WIDTH = 1280;
 constexpr const uint16_t WINDOW_HEIGHT = 750;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	constexpr const std::uint32_t rmask = 0xff000000;
+	constexpr const std::uint32_t gmask = 0x00ff0000;
+	constexpr const std::uint32_t bmask = 0x0000ff00;
+	constexpr const std::uint32_t amask = 0x000000ff;
+#else
+	constexpr const std::uint32_t rmask = 0x000000ff;
+	constexpr const std::uint32_t gmask = 0x0000ff00;
+	constexpr const std::uint32_t bmask = 0x00ff0000;
+	constexpr const std::uint32_t amask = 0xff000000;
+#endif
 
 #endif
