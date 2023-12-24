@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 14:59:08 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/23 00:03:21 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/24 16:48:25 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <utility>
 #include <algorithm>
+#include <filesystem>
 #include <unordered_map>
 #include <memory>
 
@@ -34,6 +35,13 @@
 #include <SDL2/SDL_image.h>
 
 #include <vec2.h>
+
+#if defined(_WIN32) || defined(_WIN64)
+	#ifndef NOMINMAX
+		#define NOMINMAX // For windows.h
+	#endif
+	#include <windows.h>
+#endif
 
 constexpr const uint16_t WINDOW_WIDTH = 1280;
 constexpr const uint16_t WINDOW_HEIGHT = 750;

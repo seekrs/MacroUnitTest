@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:04:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/22 22:46:31 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/24 16:44:08 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,11 @@ SDL_HitTestResult hitTestCallback(SDL_Window* win, const SDL_Point* area, [[mayb
 void cursorUpdate(const mlxut::Window& window) noexcept;
 void loadCursors() noexcept;
 
-int main()
+#if defined(_WIN32) || defined(_WIN64)
+	int WINAPI WinMain([[maybe_unused]]HINSTANCE hInstance, [[maybe_unused]]HINSTANCE hPrevInstance, [[maybe_unused]]LPSTR lpCmdLine, [[maybe_unused]]int nCmdShow)
+#else
+	int main()
+#endif
 {
 	mlxut::SDLContext sdl_context;
 	mlxut::Window win("MacroLibX Unit Tester", WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -37,12 +41,13 @@ int main()
 	mlxut::ImGuiContext imgui(win, renderer);
 	mlxut::MainMenuBar menubar(renderer);
 
-	mlxut::Docks docks;
-	mlxut::TestList test_list;
-	mlxut::TestStats test_stats;
-	mlxut::RenderResults render_results;
-	mlxut::MLXinfos mlx_infos;
 	mlxut::Tester tester;
+
+	mlxut::Docks docks;
+	mlxut::TestStats test_stats;
+	mlxut::RenderResults render_results(&tester);
+	mlxut::TestList test_list(&tester);
+	mlxut::MLXinfos mlx_infos;
 
 	mlxut::PanelStack stack;
 	stack.addPanel(&docks);
@@ -56,6 +61,7 @@ int main()
 
 	if(mlxut::loadMLX())
 	{
+		tester.createAllTests();
 		for(;;)
 		{
 			if(!imgui.checkEvents())
@@ -84,6 +90,8 @@ int main()
 		}
 		mlxut::unloadMLX();
 	}
+
+	render_results.clear();
 
 	menubar.destroy();
 	imgui.destroy();

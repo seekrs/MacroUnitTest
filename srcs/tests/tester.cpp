@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 21:38:52 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/23 01:49:29 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/24 17:04:53 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,61 +14,59 @@
 #include <tests/tester.h>
 #include <components/render_results.h>
 #include <tests/simple_pixel_put_test.h>
+#include <tests/simple_image_put_test.h>
+#include <tests/simple_text_put_test.h>
 
 namespace mlxut
 {
+	void Tester::createAllTests()
+	{
+		_tests.emplace_back(std::make_shared<SimplePixelPutTest>());
+		_tests.emplace_back(std::make_shared<SimpleImagePutTest>());
+		_tests.emplace_back(std::make_shared<SimpleTextPutTest>());
+	}
+
 	void Tester::runAllTests(const Renderer& renderer, RenderResults& render_results)
 	{
-		_mlx = mlx_init();
-		_tests.emplace_back(std::make_unique<SimplePixelPutTest>(_mlx));
-		for(auto it = _tests.begin(); it != _tests.end(); ++it)
+		render_results.clear();
+		for(auto& test : _tests)
 		{
-			void* render_target = mlx_new_image(_mlx, MLX_WIN_WIDTH, MLX_WIN_HEIGHT);
-			void* win = mlx_new_window(_mlx, MLX_WIN_WIDTH, MLX_WIN_HEIGHT, static_cast<const char*>(render_target));
-			void* test = mlx_png_file_to_image(_mlx, "resources/assets/logo.png", nullptr, nullptr);
-			mlx_put_image_to_window(_mlx, win, test, 10, 10);
-			void* win2 = mlx_new_window(_mlx, MLX_WIN_WIDTH, MLX_WIN_HEIGHT, "caca"); 
-			mlx_put_image_to_window(_mlx, win2, render_target, 0, 0);
-			(*it)->setRenderData(win, render_target);
+			void* mlx = mlx_init();
+			void* render_target = mlx_new_image(mlx, MLX_WIN_WIDTH, MLX_WIN_HEIGHT);
+			void* win = mlx_new_window(mlx, MLX_WIN_WIDTH, MLX_WIN_HEIGHT, static_cast<const char*>(render_target));
+			test->setRenderData(mlx, win);
 
-			(*it)->setup();
+			test->setup();
 
-			mlx_loop_hook(_mlx, [](void* data) -> int
+			mlx_loop_hook(mlx, [](void* data) -> int
 			{
 				BaseTest* test = static_cast<BaseTest*>(data);
-				//mlx_clear_window(test->_mlx, test->_win);
+				mlx_clear_window(test->_mlx, test->_win);
 				test->run();
-				static int i = 0;
-				std::cout << i << std::endl;
-				if(++i > 2000)
-					mlx_loop_end(test->_mlx);
+				mlx_loop_end(test->_mlx);
 				return 0;
-			}, it->get());
+			}, test.get());
 
-			mlx_loop(_mlx);
-			(*it)->cleanup();
+			mlx_loop(mlx);
+			test->cleanup();
 
-			mlx_destroy_window(_mlx, win);
-			mlx_destroy_window(_mlx, win2);
+			mlx_destroy_window(mlx, win);
 
 			// maybe find a better way to retrive texture data :/
 			std::vector<uint32_t> pixels;
 			for(int y = 0; y < MLX_WIN_HEIGHT; y++)
 			{
 				for(int x = 0; x < MLX_WIN_WIDTH; x++)
-				{
-					pixels.push_back(mlx_get_image_pixel(_mlx, render_target, x, y));
-//					std::cout << std::hex << pixels.back() << " ";
-				}
-//				std::cout << std::endl;
+					pixels.push_back(mlx_get_image_pixel(mlx, render_target, x, y));
 			}
-			SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+			SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, rmask, gmask, bmask, amask);
 			render_results.addResult(SDL_CreateTextureFromSurface(renderer.getNativeRenderer(), surface));
+			std::filesystem::path respath = "resources/assets/tests_references";
+			respath /= test->getName() + ".png";
+			IMG_SavePNG(surface, respath.string().c_str());
 			SDL_FreeSurface(surface);
-			mlx_destroy_image(_mlx, test);
-			mlx_destroy_image(_mlx, render_target);
+			mlx_destroy_image(mlx, render_target);
+			mlx_destroy_display(mlx);
 		}
-		_tests.clear();
-		mlx_destroy_display(_mlx);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 19:25:23 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/22 22:49:49 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/23 21:22:55 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,22 @@ namespace mlxut
 	class RenderResults : public Panel
 	{
 		public:
-			RenderResults();
+			RenderResults(class Tester* tester);
 			void onUpdate(ivec2 size) override;
 			inline void addResult(SDL_Texture* texture) noexcept { _textures.push_back(texture); }
-			inline void destroy() noexcept { std::for_each(_textures.begin(), _textures.end(), [](SDL_Texture* texture)
-											{
-												SDL_DestroyTexture(texture);
-											}); }
+			inline void clear() noexcept
+			{
+				std::for_each(_textures.begin(), _textures.end(), [](SDL_Texture* texture)
+				{
+					SDL_DestroyTexture(texture);
+				});
+				_textures.clear();
+			}
 			~RenderResults() override = default;
 
 		private:
 			std::vector<SDL_Texture*> _textures;
+			class Tester* _tester = nullptr;
 	};
 }
 
