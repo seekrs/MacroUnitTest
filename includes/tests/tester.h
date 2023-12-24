@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 21:35:21 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/22 22:46:36 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/24 16:44:15 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,21 @@ namespace mlxut
 	{
 		public:
 			Tester() = default;
+			void createAllTests();
 			void runAllTests(const class Renderer& renderer, class RenderResults& render_results);
+			inline const std::vector<std::shared_ptr<BaseTest>>& getAllTests() const { return _tests; }
+			inline std::size_t getActiveTestIndex() const noexcept { return _active_test; }
+			inline void changeActiveTest(std::size_t index) noexcept
+			{
+				if(index >= _tests.size())
+					return;
+				_active_test = index;
+			}
 			~Tester() = default;
 
 		private:
-			std::vector<std::unique_ptr<BaseTest>> _tests;
-			void* _mlx = nullptr;
+			std::vector<std::shared_ptr<BaseTest>> _tests;
+			std::size_t _active_test = 0;
 	};
 }
 

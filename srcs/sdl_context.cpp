@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 17:19:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 20:38:30 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/23 15:27:08 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ namespace mlxut
 {
 	SDLContext::SDLContext()
 	{
-		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
+		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0)
 			core::error::report(e_kind::fatal_error, std::string("unable to init the SDL, ") + SDL_GetError());
 
 		#ifdef SDL_HINT_IME_SHOW_UI
