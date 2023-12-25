@@ -1,33 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   simple_image_put_test.h                            :+:      :+:    :+:   */
+/*   multiple_image_put_test.h                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kbz_8 </var/spool/mail/kbz_8>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 20:56:31 by kbz_8             #+#    #+#             */
-/*   Updated: 2023/12/25 14:35:39 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/25 15:45:12 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MLX_UT_SIMPLE_IMAGE_PUT_TEST__
-#define __MLX_UT_SIMPLE_IMAGE_PUT_TEST__
+#ifndef __MLX_UT_MULTIPLE_IMAGE_PUT_TEST__
+#define __MLX_UT_MULTIPLE_IMAGE_PUT_TEST__
 
 #include <tests/base_test.h>
 
 namespace mlxut
 {
-	class SimpleImagePutTest final : public BaseTest
+	class MultipleImagePutTest final : public BaseTest
 	{
 		public:
-			SimpleImagePutTest(const Renderer& renderer) : BaseTest(renderer, "Simple Image Put") {}
+			MultipleImagePutTest(const Renderer& renderer) : BaseTest(renderer, "Multiple Image Put") {}
 			void setup() override;
 			void run() override;
 			void cleanup() override;
-			~SimpleImagePutTest() override = default;
+			~MultipleImagePutTest() override = default;
 
 		private:
 			void* _image = nullptr;
+			int _w;
+			int _h;
 	};
 }
 

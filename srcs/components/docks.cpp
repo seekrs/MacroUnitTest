@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 21:41:41 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/20 02:01:21 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/25 15:17:33 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ namespace mlxut
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
 		ImGui::SetNextWindowPos({static_cast<float>(size.x) / 4 + 1, 20});
-		ImGui::SetNextWindowSize({static_cast<float>(size.x) / 2, static_cast<float>(size.y) / 1.5f + 1});
+		ImGui::SetNextWindowSize({static_cast<float>(size.x) / 2, static_cast<float>(size.y) / 2.f + 1});
 		if(ImGui::Begin("CentralDockSpaceWindow", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking))
 		{
 			ImGuiID dockspace_id = ImGui::GetID("CentralDockSpace");

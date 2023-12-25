@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:36:51 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/23 00:03:12 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/25 15:05:20 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ namespace mlxut
 			core::error::report(e_kind::fatal_error, std::string("unable to open a new window, ") + SDL_GetError());
 		_icon = SDL_CreateRGBSurfaceFrom(static_cast<void*>(logo_mlx), logo_mlx_width, logo_mlx_height, 32, 4 * logo_mlx_width, rmask, gmask, bmask, amask);
 		SDL_SetWindowIcon(_win, _icon);
+		SDL_SetWindowMinimumSize(_win, 128, 75);
 	}
 
 	void Window::destroy() noexcept
