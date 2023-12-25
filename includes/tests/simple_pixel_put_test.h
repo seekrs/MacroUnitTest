@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 20:20:17 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/24 16:43:38 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/25 14:20:04 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ namespace mlxut
 	class SimplePixelPutTest final : public BaseTest
 	{
 		public:
-			SimplePixelPutTest() : BaseTest("Simple Pixel Put") {}
+			SimplePixelPutTest(const Renderer& renderer) : BaseTest(renderer, "Simple Pixel Put") {}
 			void run() override;
 			~SimplePixelPutTest() override = default;
 	};

@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:04:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/24 16:44:08 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/25 14:37:53 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void loadCursors() noexcept;
 
 	if(mlxut::loadMLX())
 	{
-		tester.createAllTests();
+		tester.createAllTests(renderer);
 		for(;;)
 		{
 			if(!imgui.checkEvents())
@@ -86,12 +86,10 @@ void loadCursors() noexcept;
 			cursorUpdate(win);
 
 			if(menubar.runAllTestsRequest())
-				tester.runAllTests(renderer, render_results);
+				tester.runAllTests(renderer);
 		}
 		mlxut::unloadMLX();
 	}
-
-	render_results.clear();
 
 	menubar.destroy();
 	imgui.destroy();

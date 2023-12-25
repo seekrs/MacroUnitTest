@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 21:38:52 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/24 17:04:53 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/25 15:46:19 by kbz_8            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,24 @@
 #include <tests/simple_pixel_put_test.h>
 #include <tests/simple_image_put_test.h>
 #include <tests/simple_text_put_test.h>
+#include <tests/multiple_image_put_test.h>
 
 namespace mlxut
 {
-	void Tester::createAllTests()
+	void Tester::createAllTests(const Renderer& renderer)
 	{
-		_tests.emplace_back(std::make_shared<SimplePixelPutTest>());
-		_tests.emplace_back(std::make_shared<SimpleImagePutTest>());
-		_tests.emplace_back(std::make_shared<SimpleTextPutTest>());
+		_tests.emplace_back(std::make_shared<SimplePixelPutTest>(renderer));
+		_tests.emplace_back(std::make_shared<SimpleImagePutTest>(renderer));
+		_tests.emplace_back(std::make_shared<SimpleTextPutTest>(renderer));
+		_tests.emplace_back(std::make_shared<MultipleImagePutTest>(renderer));
 	}
 
-	void Tester::runAllTests(const Renderer& renderer, RenderResults& render_results)
+	void Tester::runAllTests(const Renderer& renderer)
 	{
-		render_results.clear();
 		for(auto& test : _tests)
 		{
+			test->destroyResult();
+
 			void* mlx = mlx_init();
 			void* render_target = mlx_new_image(mlx, MLX_WIN_WIDTH, MLX_WIN_HEIGHT);
 			void* win = mlx_new_window(mlx, MLX_WIN_WIDTH, MLX_WIN_HEIGHT, static_cast<const char*>(render_target));
@@ -60,7 +63,7 @@ namespace mlxut
 					pixels.push_back(mlx_get_image_pixel(mlx, render_target, x, y));
 			}
 			SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, rmask, gmask, bmask, amask);
-			render_results.addResult(SDL_CreateTextureFromSurface(renderer.getNativeRenderer(), surface));
+			test->setResultTexture(SDL_CreateTextureFromSurface(renderer.getNativeRenderer(), surface));
 			std::filesystem::path respath = "resources/assets/tests_references";
 			respath /= test->getName() + ".png";
 			IMG_SavePNG(surface, respath.string().c_str());
