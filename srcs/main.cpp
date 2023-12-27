@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:04:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/25 14:37:53 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/27 19:24:02 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void loadCursors() noexcept;
 	mlxut::TestStats test_stats;
 	mlxut::RenderResults render_results(&tester);
 	mlxut::TestList test_list(&tester);
-	mlxut::MLXinfos mlx_infos;
+	mlxut::MLXinfos mlx_infos(&tester);
 
 	mlxut::PanelStack stack;
 	stack.addPanel(&docks);

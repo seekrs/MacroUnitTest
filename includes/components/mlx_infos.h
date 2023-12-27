@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 19:32:26 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/19 19:33:01 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/27 17:32:48 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,12 @@ namespace mlxut
 	class MLXinfos : public Panel
 	{
 		public:
-			MLXinfos();
+			MLXinfos(class Tester* tester);
 			void onUpdate(ivec2 size) override;
 			~MLXinfos() override = default;
+
+		private:
+			class Tester* _tester = nullptr;
 	};
 }
 

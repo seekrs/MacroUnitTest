@@ -6,12 +6,12 @@
 --    By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+         --
 --                                                 +#+#+#+#+#+   +#+            --
 --    Created: 2023/12/19 14:51:42 by maldavid          #+#    #+#              --
---    Updated: 2023/12/19 14:51:42 by maldavid         ###   ########.fr        --
+--    Updated: 2023/12/27 22:31:25 by maldavid         ###   ########.fr        --
 --                                                                              --
 -- **************************************************************************** --
 
 add_requires("imgui v1.90-docking", { configs = { sdl2 = true }})
-add_requires("libsdl", "libsdl_image")
+add_requires("libsdl", "libsdl_image", "sol2")
 
 add_rules("mode.debug", "mode.release")
 set_languages("cxx17")
@@ -28,7 +28,7 @@ target("MacroUnitTest")
 	
 	set_targetdir("./")
 
-	add_packages("libsdl", "libsdl_image", "imgui")
+	add_packages("libsdl", "libsdl_image", "imgui", "sol2")
 
 	add_includedirs("includes", "srcs")
 

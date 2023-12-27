@@ -1,28 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   simple_pixel_put_test.h                            :+:      :+:    :+:   */
+/*   lua_loader.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/21 20:20:17 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/25 14:20:04 by kbz_8            ###   ########.fr       */
+/*   Created: 2023/12/27 22:32:27 by maldavid          #+#    #+#             */
+/*   Updated: 2023/12/27 23:03:42 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MLX_UT_SIMPLE_PIXEL_PUT_TEST__
-#define __MLX_UT_SIMPLE_PIXEL_PUT_TEST__
+#ifndef __LUA_LOADER__
+#define __LUA_LOADER__
 
-#include <tests/base_test.h>
+#include <pch.h>
+#include <lua_script.h>
 
 namespace mlxut
 {
-	class SimplePixelPutTest final : public BaseTest
+	class LuaLoader
 	{
 		public:
-			SimplePixelPutTest(const Renderer& renderer) : BaseTest(renderer, "Simple Pixel Put") {}
-			void run() override;
-			~SimplePixelPutTest() override = default;
+			LuaLoader();
+			std::optional<LuaScript> loadScript(const std::filesystem::path& path);
+			~LuaLoader() = default;
+
+		private:
+			sol::state _state;
 	};
 }
 

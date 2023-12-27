@@ -6,26 +6,53 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 21:38:52 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/25 15:46:19 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/27 23:56:37 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <renderer.h>
 #include <tests/tester.h>
 #include <components/render_results.h>
-#include <tests/simple_pixel_put_test.h>
-#include <tests/simple_image_put_test.h>
-#include <tests/simple_text_put_test.h>
-#include <tests/multiple_image_put_test.h>
 
 namespace mlxut
 {
+	class CoutRedirectGuard
+	{
+		public:
+			CoutRedirectGuard(std::streambuf* new_buffer)  : old(std::cout.rdbuf(new_buffer)) {}
+			~CoutRedirectGuard() { std::cout.rdbuf(old); }
+
+		private:
+			std::streambuf* old = nullptr;
+	};
+
+	class CerrRedirectGuard
+	{
+		public:
+			CerrRedirectGuard(std::streambuf* new_buffer)  : old(std::cerr.rdbuf(new_buffer)) {}
+			~CerrRedirectGuard() { std::cerr.rdbuf(old); }
+
+		private:
+			std::streambuf* old = nullptr;
+	};
+
 	void Tester::createAllTests(const Renderer& renderer)
 	{
-		_tests.emplace_back(std::make_shared<SimplePixelPutTest>(renderer));
-		_tests.emplace_back(std::make_shared<SimpleImagePutTest>(renderer));
-		_tests.emplace_back(std::make_shared<SimpleTextPutTest>(renderer));
-		_tests.emplace_back(std::make_shared<MultipleImagePutTest>(renderer));
+		for(auto const& dir_entry : std::filesystem::directory_iterator{"./tests/"})
+		{
+			std::string name = dir_entry.path().stem().string();
+			std::replace(name.begin(), name.end(), '_', ' ');
+			name[0] = std::toupper(name[0]);
+			for(int i = 0; i < name.length(); i++)
+			{
+				if(name[i] != ' ')
+					continue;
+				if(std::islower(name[i + 1]) != 0)
+					name[i + 1] = std::toupper(name[i + 1]);
+			}
+			std::optional<LuaScript> script = _loader.loadScript(dir_entry.path());
+			_tests.emplace_back(std::make_shared<Test>(renderer, script.value(), name));
+		}
 	}
 
 	void Tester::runAllTests(const Renderer& renderer)
@@ -34,24 +61,29 @@ namespace mlxut
 		{
 			test->destroyResult();
 
+			std::stringstream buffer;
+			CoutRedirectGuard cout_redirection(buffer.rdbuf());
+			CerrRedirectGuard cerr_redirection(buffer.rdbuf());
+
 			void* mlx = mlx_init();
 			void* render_target = mlx_new_image(mlx, MLX_WIN_WIDTH, MLX_WIN_HEIGHT);
 			void* win = mlx_new_window(mlx, MLX_WIN_WIDTH, MLX_WIN_HEIGHT, static_cast<const char*>(render_target));
+
 			test->setRenderData(mlx, win);
 
-			test->setup();
+			test->onSetup(mlx, win);
 
 			mlx_loop_hook(mlx, [](void* data) -> int
 			{
-				BaseTest* test = static_cast<BaseTest*>(data);
+				Test* test = static_cast<Test*>(data);
 				mlx_clear_window(test->_mlx, test->_win);
-				test->run();
+				test->onUpdate(test->_mlx, test->_win);
 				mlx_loop_end(test->_mlx);
 				return 0;
 			}, test.get());
 
 			mlx_loop(mlx);
-			test->cleanup();
+			test->onQuit(mlx, win);
 
 			mlx_destroy_window(mlx, win);
 
@@ -70,6 +102,15 @@ namespace mlxut
 			SDL_FreeSurface(surface);
 			mlx_destroy_image(mlx, render_target);
 			mlx_destroy_display(mlx);
+
+			std::string infos = buffer.str();
+			test->setMLXinfos(infos);
+			if(infos.find("[1;31m") != std::string::npos)
+				test->failed();
+			if(test->hasScriptFailed())
+				test->failed();
+			if(!test->hasFailed())
+				test->succeeded();
 		}
 	}
 }

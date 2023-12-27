@@ -6,6 +6,7 @@
 !xmake.lua
 !compile_commands.json
 !/includes/
+!/tests/
 !/srcs/
 !/resources/
 *.o
