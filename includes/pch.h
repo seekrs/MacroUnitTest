@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 14:59:08 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/24 16:48:25 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/27 22:35:36 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 #include <filesystem>
 #include <unordered_map>
 #include <memory>
+#include <sstream>
+#include <cstring>
+#include <optional>
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -33,6 +36,9 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+
+#define SOL_ALL_SAFETIES_ON 1
+#include <sol/sol.hpp>
 
 #include <vec2.h>
 
