@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 19:25:23 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/25 14:25:56 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/28 12:29:55 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,12 @@ namespace mlxut
 	class RenderResults : public Panel
 	{
 		public:
-			RenderResults(class Tester* tester);
+			RenderResults(class Tester* tester, const class Renderer& renderer);
 			void onUpdate(ivec2 size) override;
 			~RenderResults() override = default;
 
 		private:
+			const class Renderer& _renderer;
 			class Tester* _tester = nullptr;
 	};
 }

@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 19:33:11 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/28 00:00:35 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/28 02:08:19 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ namespace mlxut
 		if(ImGui::BeginChild("##mlx_infos", {0.f, 0.f}, ImGuiChildFlags_Border, ImGuiWindowFlags_HorizontalScrollbar))
 		{
 			auto& test = _tester->getAllTests()[_tester->getActiveTestIndex()];
-			if(test->getMLXinfos().empty())
+			if(test->getMLXinfos().empty() || _tester->testsAreRunning())
 			{
 				ImGui::Dummy(ImVec2(42.0f, (ImGui::GetWindowHeight() - 90.0f) / 2.0f));
 				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 0.5f));

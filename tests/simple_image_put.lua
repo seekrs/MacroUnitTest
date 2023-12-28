@@ -3,7 +3,7 @@ local image
 function TestOnSetup(mlx, win)
 	local w
 	local h
-	image = mlx_png_file_to_image(mlx, "resources/assets/logo.png", w, h);
+	image = mlx_png_file_to_image(mlx, "resources/assets/logo.png", w, h)
 end
 
 function TestOnUpdate(mlx, win)
@@ -13,4 +13,3 @@ end
 function TestOnQuit(mlx, win)
 	mlx_destroy_image(mlx, image)
 end
-

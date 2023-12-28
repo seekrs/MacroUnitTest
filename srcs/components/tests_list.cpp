@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 18:53:46 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/27 22:23:46 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/28 13:54:02 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,20 @@ namespace mlxut
 		if(!ImGui::Begin("Tests List", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus))
 			return;
 
+		ImGui::Text("All %ld tests", _tester->getAllTests().size());
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(.2f, .5f, 1.f, 1.f));
+			ImGui::Text("%ld pending", _tester->getTestsPendingNumber());
+		ImGui::PopStyleColor();
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(.2f, .8f, .1f, 1.f));
+			ImGui::Text("%ld passed", _tester->getTestsPassedNumber());
+		ImGui::PopStyleColor();
+		ImGui::SameLine();
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, .365f, .365f, 1.f));
+			ImGui::Text("%ld failed", _tester->getTestsFailedNumber());
+		ImGui::PopStyleColor();
+
 		if(ImGui::BeginChild("##tests_list_content", {0.f, 0.f}, ImGuiChildFlags_Border))
 		{
 			const auto& tests = _tester->getAllTests();
@@ -39,12 +53,12 @@ namespace mlxut
 				else if(tests[n]->hasPassed())
 				{
 					name += MLXUT_ICON_MD_DONE" ";
-					printColor = ImVec4(.2f, .8f, 0.1f, 1.f);
+					printColor = ImVec4(.2f, .8f, .1f, 1.f);
 				}
 				else
 				{
 					name += MLXUT_ICON_MD_ERROR" ";
-					printColor = ImVec4(1.0f, 0.365f, 0.365f, 1.0f);
+					printColor = ImVec4(1.f, .365f, .365f, 1.f);
 				}
 				name += tests[n]->getName();
 				ImGui::PushStyleColor(ImGuiCol_Text, printColor);

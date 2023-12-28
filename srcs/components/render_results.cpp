@@ -6,16 +6,17 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 19:26:29 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/25 15:32:30 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/28 12:33:37 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <components/render_results.h>
 #include <tests/tester.h>
+#include <renderer.h>
 
 namespace mlxut
 {
-	RenderResults::RenderResults(Tester* tester) : Panel("render_results"), _tester(tester) {}
+	RenderResults::RenderResults(Tester* tester, const Renderer& renderer) : Panel("render_results"), _tester(tester), _renderer(renderer) {}
 
 	void RenderResults::onUpdate(ivec2 size)
 	{
@@ -31,8 +32,14 @@ namespace mlxut
 		ImGui::TextUnformatted("Reference");
 		if(ImGui::BeginChild("Result", {ImGui::GetWindowWidth() / 2.f - 5.f, 0.f}, ImGuiChildFlags_Border))
 		{
-			if(test->getResult())
+			if(!_tester->testsAreRunning())
 			{
+				if(test->getResult() == nullptr)
+				{
+					test->tryCreateResultTexture(_renderer);
+					if(test->getResult() == nullptr)
+						goto endChild;
+				}
 				float size_reference = ImGui::GetWindowWidth();
 				if(size_reference > ImGui::GetWindowHeight())
 					size_reference = ImGui::GetWindowHeight();
@@ -42,10 +49,11 @@ namespace mlxut
 				ImGui::SetCursorPos({ (ImGui::GetWindowWidth() - size.x) * 0.5f, (ImGui::GetWindowHeight() - size.y) * 0.5f });
 				ImGui::Image(static_cast<void*>(test->getResult()), size);
 			}
+endChild:
 			ImGui::EndChild();
 		}
 		ImGui::SameLine();
-		if(ImGui::BeginChild("Reference", {ImGui::GetWindowWidth() / 2.f - 5.f, 0.f}, ImGuiChildFlags_Border))
+		if(ImGui::BeginChild("Reference", {ImGui::GetWindowWidth() / 2.f - 5.f - 3.f, 0.f}, ImGuiChildFlags_Border))
 		{
 			float size_reference = ImGui::GetWindowWidth();
 			if(size_reference > ImGui::GetWindowHeight())

@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 15:04:27 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/27 19:24:02 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/28 12:30:24 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,12 @@ void loadCursors() noexcept;
 	mlxut::Window win("MacroLibX Unit Tester", WINDOW_WIDTH, WINDOW_HEIGHT);
 	mlxut::Renderer renderer(win);
 	mlxut::ImGuiContext imgui(win, renderer);
-	mlxut::MainMenuBar menubar(renderer);
-
 	mlxut::Tester tester;
+	mlxut::MainMenuBar menubar(renderer, &tester);
 
 	mlxut::Docks docks;
 	mlxut::TestStats test_stats;
-	mlxut::RenderResults render_results(&tester);
+	mlxut::RenderResults render_results(&tester, renderer);
 	mlxut::TestList test_list(&tester);
 	mlxut::MLXinfos mlx_infos(&tester);
 
@@ -68,6 +67,7 @@ void loadCursors() noexcept;
 				break;
 			if(menubar.quitRequested())
 				break;
+
 			imgui.beginFrame();
 
 			mlxut::ivec2 size;
@@ -84,9 +84,6 @@ void loadCursors() noexcept;
 			imgui.endFrame();
 
 			cursorUpdate(win);
-
-			if(menubar.runAllTestsRequest())
-				tester.runAllTests(renderer);
 		}
 		mlxut::unloadMLX();
 	}

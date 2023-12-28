@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 14:59:08 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/27 22:35:36 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/28 12:22:43 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@
 #include <sstream>
 #include <cstring>
 #include <optional>
+#include <future>
+#include <atomic>
+#include <mutex>
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -63,5 +66,8 @@ constexpr const uint16_t WINDOW_HEIGHT = 750;
 	constexpr const std::uint32_t bmask = 0x00ff0000;
 	constexpr const std::uint32_t amask = 0xff000000;
 #endif
+
+constexpr const int MLX_WIN_WIDTH = 400;
+constexpr const int MLX_WIN_HEIGHT = 400;
 
 #endif
