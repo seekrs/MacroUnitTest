@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:15:26 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/27 23:56:27 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/28 14:13:02 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,40 @@ namespace mlxut
 
 			inline void setRenderData(void* mlx, void* win) noexcept { _mlx = mlx; _win = win;}
 			inline void setMLXinfos(const std::string& mlx_infos) { _mlx_infos = mlx_infos; }
-			inline void destroyResult() noexcept { SDL_DestroyTexture(_result); _result = nullptr; }
-			inline void setResultTexture(SDL_Texture* result) noexcept { _result = result; }
+			inline void destroyResult() noexcept
+			{
+				const std::lock_guard<std::mutex> lock(_vector_mutex);
+				SDL_DestroyTexture(_result);
+				_result = nullptr;
+				_results_pixels.clear();
+			}
+			inline void setResultPixelsData(std::vector<uint32_t>&& data)
+			{
+				const std::lock_guard<std::mutex> lock(_vector_mutex);
+				_results_pixels = data;
+			}
 
+			inline void tryCreateResultTexture(const Renderer& renderer)
+			{
+				const std::lock_guard<std::mutex> lock(_vector_mutex);
+				if(_results_pixels.empty())
+					return;
+				SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(_results_pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, rmask, gmask, bmask, amask);
+				_result = SDL_CreateTextureFromSurface(renderer.getNativeRenderer(), surface);
+				std::filesystem::path respath = "resources/assets/tests_references";
+				respath /= _name + ".png";
+				if(!std::filesystem::exists(respath))
+					IMG_SavePNG(surface, respath.string().c_str());
+				SDL_FreeSurface(surface);
+			}
+
+			inline constexpr void pend() noexcept { _state = state::pending; }
 			inline constexpr void failed() noexcept { _state = state::fail; } 
 			inline constexpr void succeeded() noexcept { _state = state::success; } 
 
 			inline SDL_Texture* getResult() const noexcept { return _result; }
 			inline SDL_Texture* getReference() const noexcept { return _reference; }
-			
+
 			inline const std::string& getName() const noexcept { return _name; }
 			inline const std::string& getMLXinfos() const noexcept { return _mlx_infos; }
 
@@ -70,13 +95,15 @@ namespace mlxut
 
 		protected:
 			LuaScript _script;
+			std::vector<uint32_t> _results_pixels;
+			std::string _mlx_infos;
 			std::string _name;
+			std::mutex _vector_mutex;
 			SDL_Texture* _reference = nullptr;
 			SDL_Texture* _result = nullptr;
 			void* _mlx = nullptr;
 			void* _win = nullptr;
-			std::string _mlx_infos;
-			state _state = state::pending;
+			std::atomic<state> _state = state::pending;
 	};
 }
 

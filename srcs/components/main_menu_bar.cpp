@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/19 17:47:01 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/23 19:49:35 by kbz_8            ###   ########.fr       */
+/*   Updated: 2023/12/28 12:48:14 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,18 @@
 #include <renderer.h>
 #include <window.h>
 #include <material_font.h>
+#include <imspinner.h>
+#include <tests/tester.h>
 
 namespace mlxut
 {
-	MainMenuBar::MainMenuBar(const Renderer& renderer)
+	MainMenuBar::MainMenuBar(const Renderer& renderer, Tester* tester) : _renderer(renderer), _tester(tester)
 	{
 		_logo = IMG_LoadTexture(renderer.getNativeRenderer(), "./resources/assets/logo.png");
 	}
 
 	void MainMenuBar::render(const Window& win, ivec2 size) noexcept
 	{
-		_run_all_tests_requested = false;
-
 		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.f, 0.f, 0.f, 1.f));
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.f, 0.f, 1.f));
 		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(0.f, 0.f, 0.f, 1.f));
@@ -36,7 +36,7 @@ namespace mlxut
 				return;
 			ImGui::Image(static_cast<void*>(_logo), ImVec2(20, 20));
 			if(ImGui::Button("Launch all tests"))
-				_run_all_tests_requested = true;
+				_tester->runAllTests();
 			if(ImGui::BeginMenu("Help"))
 			{
 				if(ImGui::MenuItem("About"))
@@ -61,6 +61,27 @@ namespace mlxut
 			ImGui::EndMainMenuBar();
 
 		ImGui::PopStyleColor(4);
+
+		if(_tester->testsAreRunning())
+			ImGui::OpenPopup("Running All Tests");
+
+		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize("All the tests are running...").x + 50, 100), ImGuiCond_Appearing);
+		if(ImGui::BeginPopupModal("Running All Tests", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+		{
+			float windowWidth = ImGui::GetWindowWidth();
+			float textWidth = ImGui::CalcTextSize("All the tests are running...").x;
+			ImGui::SetCursorPosX((windowWidth - textWidth) / 2.0f);
+			ImGui::TextUnformatted("All the tests are running...");
+
+			const ImU32 bg = ImGui::GetColorU32(ImGuiCol_WindowBg);
+			ImGui::SetCursorPosX((windowWidth - 45) / 2.0f);
+			ImSpinner::SpinnerLoadingRing("##runningSpinner", 15, 3, ImSpinner::white, bg);
+
+			if(!_tester->testsAreRunning())
+				ImGui::CloseCurrentPopup();
+			ImGui::EndPopup();
+		}
 	}
 
 	void MainMenuBar::renderAboutWindow(ivec2 size)

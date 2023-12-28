@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 22:38:54 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/28 00:22:32 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/28 16:55:53 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@ namespace mlxut
 	LuaLoader::LuaLoader() : _state()
 	{
 		_state.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::table, sol::lib::os, sol::lib::string);
+
+		// sets some useful variables
+		_state.set("MLX_WIN_WIDTH", MLX_WIN_WIDTH);
+		_state.set("MLX_WIN_HEIGHT", MLX_WIN_HEIGHT);
 
 		// bind mlx functions
 		_state.set_function("mlx_new_window", [](void* mlx, int w, int h, std::string title)
