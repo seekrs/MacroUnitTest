@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 21:35:21 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/28 13:49:01 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/29 01:41:10 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ namespace mlxut
 				_active_test = index;
 			}
 			~Tester() = default;
+
+		private:
+			double compareImages(const std::vector<uint32_t>& test_res, const std::vector<uint32_t>& ref);
 
 		private:
 			LuaLoader _loader;

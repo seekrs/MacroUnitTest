@@ -6,13 +6,15 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:15:26 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/28 14:13:02 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/29 01:49:34 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __MLX_UT_TEST__
 #define __MLX_UT_TEST__
 
+#include <SDL_render.h>
+#include <SDL_surface.h>
 #include <pch.h>
 #include <loader/loader.h>
 #include <renderer.h>
@@ -25,11 +27,19 @@ namespace mlxut
 		friend class Tester;
 
 		public:
-			enum class state
+			enum class State
 			{
 				pending,
 				success,
 				fail
+			};
+
+			enum class DiffResult
+			{
+				unprocessed,
+				negligible,
+				acceptable,
+				unacceptable
 			};
 
 		public:
@@ -39,7 +49,16 @@ namespace mlxut
 				ref_path /= name + ".png";
 				if(!std::filesystem::exists(ref_path))
 					return;
-				_reference = IMG_LoadTexture(renderer.getNativeRenderer(), ref_path.string().c_str());
+				SDL_Surface* surface = IMG_Load(ref_path.string().c_str());
+				SDL_LockSurface(surface);
+				for(int y = 0; y < surface->h; y++)
+				{
+					for(int x = 0; x < surface->w; x++)
+						_ref_pixels.push_back(*(const uint32_t*)((const char*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel));
+				}
+				SDL_UnlockSurface(surface);
+				_reference = SDL_CreateTextureFromSurface(renderer.getNativeRenderer(), surface);
+				SDL_FreeSurface(surface);
 			}
 
 			inline void setRenderData(void* mlx, void* win) noexcept { _mlx = mlx; _win = win;}
@@ -71,9 +90,11 @@ namespace mlxut
 				SDL_FreeSurface(surface);
 			}
 
-			inline constexpr void pend() noexcept { _state = state::pending; }
-			inline constexpr void failed() noexcept { _state = state::fail; } 
-			inline constexpr void succeeded() noexcept { _state = state::success; } 
+			inline const std::vector<uint32_t>& getReferencePixels() const noexcept { return _ref_pixels; }
+
+			inline constexpr void pend() noexcept { _state = State::pending; }
+			inline constexpr void failed() noexcept { _state = State::fail; } 
+			inline constexpr void succeeded() noexcept { _state = State::success; } 
 
 			inline SDL_Texture* getResult() const noexcept { return _result; }
 			inline SDL_Texture* getReference() const noexcept { return _reference; }
@@ -81,9 +102,12 @@ namespace mlxut
 			inline const std::string& getName() const noexcept { return _name; }
 			inline const std::string& getMLXinfos() const noexcept { return _mlx_infos; }
 
-			inline bool hasPassed() const noexcept { return _state == state::success; }
-			inline bool hasFailed() const noexcept { return _state == state::fail; }
-			inline bool isPending() const noexcept { return _state == state::pending; }
+			inline bool hasPassed() const noexcept { return _state == State::success; }
+			inline bool hasFailed() const noexcept { return _state == State::fail; }
+			inline bool isPending() const noexcept { return _state == State::pending; }
+
+			inline void setDiffRes(DiffResult res) noexcept  { _diff_res = res;}
+			inline DiffResult getDiffRes() const noexcept { return _diff_res; }
 
 			inline void onSetup(void* mlx, void* win) noexcept { _script.runOnSetup(mlx, win); }
 			inline void onUpdate(void* mlx, void* win) noexcept { _script.runOnUpdate(mlx, win); }
@@ -96,14 +120,16 @@ namespace mlxut
 		protected:
 			LuaScript _script;
 			std::vector<uint32_t> _results_pixels;
+			std::vector<uint32_t> _ref_pixels;
 			std::string _mlx_infos;
 			std::string _name;
 			std::mutex _vector_mutex;
+			DiffResult _diff_res = DiffResult::unprocessed;
 			SDL_Texture* _reference = nullptr;
 			SDL_Texture* _result = nullptr;
 			void* _mlx = nullptr;
 			void* _win = nullptr;
-			std::atomic<state> _state = state::pending;
+			std::atomic<State> _state = State::pending;
 	};
 }
 
