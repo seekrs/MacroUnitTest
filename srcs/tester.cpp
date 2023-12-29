@@ -6,18 +6,22 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 21:38:52 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/28 16:43:54 by maldavid         ###   ########.fr       */
+/*   Updated: 2023/12/29 02:04:05 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "loader/loader.h"
-#include "pch.h"
+#include <pch.h>
 #include <renderer.h>
 #include <tests/tester.h>
 #include <components/render_results.h>
 
+#include <nvidia-flip/FLIP.h>
+
 namespace mlxut
 {
+	constexpr const double ACCEPTABLE_THRESHOLD = 0.1;
+	constexpr const double NEGLIGIBLE_THRESHOLD = 0.001;
+
 	class CoutRedirectGuard
 	{
 		public:
@@ -67,13 +71,15 @@ namespace mlxut
 	void Tester::runAllTests()
 	{
 		_tests_pending = 0;
+		_tests_failed = 0;
+		_tests_passed = 0;
 		for(auto& test : _tests)
 		{
 			test->pend();
+			test->setDiffRes(Test::DiffResult::unprocessed);
 			_tests_pending++;
-			_tests_failed = 0;
-			_tests_passed = 0;
 		}
+
 		_async_holder = std::async(std::launch::async, [this]
 		{
 			_is_running = true;
@@ -115,9 +121,32 @@ namespace mlxut
 					for(int x = 0; x < MLX_WIN_WIDTH; x++)
 						pixels.push_back(mlx_get_image_pixel(mlx, render_target, x, y));
 				}
-				test->setResultPixelsData(std::move(pixels));
+
 				mlx_destroy_image(mlx, render_target);
 				mlx_destroy_display(mlx);
+
+				Test::DiffResult diff_res = Test::DiffResult::unprocessed;
+				if(pixels.size() == test->getReferencePixels().size())
+				{
+					double comp_res = compareImages(pixels, test->getReferencePixels());
+					if(comp_res < ACCEPTABLE_THRESHOLD)
+					{
+						if(comp_res < NEGLIGIBLE_THRESHOLD)
+							diff_res = Test::DiffResult::negligible;
+						else
+							diff_res = Test::DiffResult::acceptable;
+					}
+					else
+						diff_res = Test::DiffResult::unacceptable;
+				}
+				else
+					diff_res = Test::DiffResult::unacceptable;
+
+				if(diff_res == Test::DiffResult::unacceptable)
+					test->failed();
+
+				test->setDiffRes(diff_res);
+				test->setResultPixelsData(std::move(pixels));
 
 				std::string infos = buffer.str();
 				test->setMLXinfos(infos);
@@ -136,5 +165,10 @@ namespace mlxut
 			}
 			_is_running = false;
 		});
+	}
+
+	double Tester::compareImages(const std::vector<uint32_t>& test_res, const std::vector<uint32_t>& ref)
+	{
+
 	}
 }
