@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 16:15:26 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/29 01:49:34 by maldavid         ###   ########.fr       */
+/*   Updated: 2024/01/08 00:22:12 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,20 +65,14 @@ namespace mlxut
 			inline void setMLXinfos(const std::string& mlx_infos) { _mlx_infos = mlx_infos; }
 			inline void destroyResult() noexcept
 			{
-				const std::lock_guard<std::mutex> lock(_vector_mutex);
 				SDL_DestroyTexture(_result);
 				_result = nullptr;
 				_results_pixels.clear();
 			}
-			inline void setResultPixelsData(std::vector<uint32_t>&& data)
-			{
-				const std::lock_guard<std::mutex> lock(_vector_mutex);
-				_results_pixels = data;
-			}
+			inline void setResultPixelsData(std::vector<uint32_t>&& data) { _results_pixels = data; }
 
 			inline void tryCreateResultTexture(const Renderer& renderer)
 			{
-				const std::lock_guard<std::mutex> lock(_vector_mutex);
 				if(_results_pixels.empty())
 					return;
 				SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(_results_pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, rmask, gmask, bmask, amask);
@@ -123,13 +117,12 @@ namespace mlxut
 			std::vector<uint32_t> _ref_pixels;
 			std::string _mlx_infos;
 			std::string _name;
-			std::mutex _vector_mutex;
 			DiffResult _diff_res = DiffResult::unprocessed;
 			SDL_Texture* _reference = nullptr;
 			SDL_Texture* _result = nullptr;
 			void* _mlx = nullptr;
 			void* _win = nullptr;
-			std::atomic<State> _state = State::pending;
+			State _state = State::pending;
 	};
 }
 
