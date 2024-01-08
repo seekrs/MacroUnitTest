@@ -6,7 +6,7 @@
 /*   By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/21 21:35:21 by maldavid          #+#    #+#             */
-/*   Updated: 2023/12/29 01:41:10 by maldavid         ###   ########.fr       */
+/*   Updated: 2024/01/08 00:44:22 by maldavid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,16 @@ namespace mlxut
 
 		private:
 			double compareImages(const std::vector<uint32_t>& test_res, const std::vector<uint32_t>& ref);
+			void testRunner(struct SharedMemoryData* data);
 
 		private:
 			LuaLoader _loader;
-			std::future<void> _async_holder;
 			std::vector<std::shared_ptr<Test>> _tests;
 			std::size_t _active_test = 0;
-			std::atomic<bool> _is_running = false;
-			std::atomic<std::size_t> _tests_passed = 0;
-			std::atomic<std::size_t> _tests_failed = 0;
-			std::atomic<std::size_t> _tests_pending = 0;
+			std::size_t _tests_passed = 0;
+			std::size_t _tests_failed = 0;
+			std::size_t _tests_pending = 0;
+			bool _is_running = false;
 	};
 }
 
