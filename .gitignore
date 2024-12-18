@@ -5,10 +5,8 @@
 !LICENSE
 !xmake.lua
 !compile_commands.json
-!/includes/
-!/tests/
-!/srcs/
-!/resources/
+!/Runtime/
+!/Tests/
 *.o
 *.swp
 *.swx

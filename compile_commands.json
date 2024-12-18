@@ -1,43 +1,86 @@
 [
-  {
-    "arguments": [
-      "/usr/bin/clang",
-      "-c",
-      "-Qunused-arguments",
-      "-m64",
-      "-g",
-      "-O3",
-      "-std=c++17",
-      "-Iincludes",
-      "-Isrcs",
-      "-DSDL_MAIN_HANDLED",
-      "-DMLX_UT_DEBUG",
-      "-D_REENTRANT",
-      "-isystem",
-      "/usr/include/libpng16",
-      "-isystem",
-      "/usr/include/webp",
-      "-isystem",
-      "/home/kbz_8/.xmake/packages/i/imgui/v1.90-docking/9970192d4fc347acbdefbb3c96bbaaf0/include",
-      "-isystem",
-      "/home/kbz_8/.xmake/packages/i/imgui/v1.90-docking/9970192d4fc347acbdefbb3c96bbaaf0/include/imgui",
-      "-isystem",
-      "/home/kbz_8/.xmake/packages/i/imgui/v1.90-docking/9970192d4fc347acbdefbb3c96bbaaf0/include/backends",
-      "-isystem",
-      "/home/kbz_8/.xmake/packages/i/imgui/v1.90-docking/9970192d4fc347acbdefbb3c96bbaaf0/include/misc/cpp",
-      "-isystem",
-      "/usr/include/SDL2",
-      "-isystem",
-      "/home/kbz_8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include",
-      "-fdiagnostics-color=always",
-      "-x",
-      "c++-header",
-      "-o",
-      "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/debug/includes/cxx/pch.h.pch",
-      "includes/pch.h"
-    ],
-    "directory": "/home/kbz_8/Documents/Programmation/42/other/MacroUnitTest",
-    "file": "/home/kbz_8/Documents/Programmation/42/other/MacroUnitTest/includes/pch.h",
-    "output": "/home/kbz_8/Documents/Programmation/42/other/MacroUnitTest/build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/debug/includes/cxx/pch.h.pch"
-  }
-]
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/Components/panel_stack.cpp.o", "Sources/Components/panel_stack.cpp"],
+  "file": "Sources/Components/panel_stack.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/Components/tests_list.cpp.o", "Sources/Components/tests_list.cpp"],
+  "file": "Sources/Components/tests_list.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/Components/test_stats.cpp.o", "Sources/Components/test_stats.cpp"],
+  "file": "Sources/Components/test_stats.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/Components/mlx_infos.cpp.o", "Sources/Components/mlx_infos.cpp"],
+  "file": "Sources/Components/mlx_infos.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/Components/docks.cpp.o", "Sources/Components/docks.cpp"],
+  "file": "Sources/Components/docks.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/Components/render_results.cpp.o", "Sources/Components/render_results.cpp"],
+  "file": "Sources/Components/render_results.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/Components/main_menu_bar.cpp.o", "Sources/Components/main_menu_bar.cpp"],
+  "file": "Sources/Components/main_menu_bar.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/imgui_context.cpp.o", "Sources/imgui_context.cpp"],
+  "file": "Sources/imgui_context.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/main.cpp.o", "Sources/main.cpp"],
+  "file": "Sources/main.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/lua_loader.cpp.o", "Sources/lua_loader.cpp"],
+  "file": "Sources/lua_loader.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/errors.cpp.o", "Sources/errors.cpp"],
+  "file": "Sources/errors.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/tester.cpp.o", "Sources/tester.cpp"],
+  "file": "Sources/tester.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/sdl_context.cpp.o", "Sources/sdl_context.cpp"],
+  "file": "Sources/sdl_context.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/window.cpp.o", "Sources/window.cpp"],
+  "file": "Sources/window.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/renderer.cpp.o", "Sources/renderer.cpp"],
+  "file": "Sources/renderer.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/lua_script.cpp.o", "Sources/lua_script.cpp"],
+  "file": "Sources/lua_script.cpp"
+},
+{
+  "directory": "/home/kbz8/Documents/Code/42/Other/MacroLibX/UnitTester",
+  "arguments": ["/usr/bin/gcc", "-c", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-std=c++17", "-IIncludes", "-ISources", "-DSDL_MAIN_HANDLED", "-DMLX_UT_RELEASE", "-D_REENTRANT", "-I", "/usr/include/libpng16", "-I", "/usr/include/rav1e", "-I", "/usr/include/svt-av1", "-I", "/usr/include/webp", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/imgui", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/backends", "-I", "/home/kbz8/.xmake/packages/i/imgui/v1.90-docking/aafd756f976d4665b8aa3e90fd66d0a7/include/misc/cpp", "-I", "/usr/include/SDL2", "-I", "/home/kbz8/.xmake/packages/s/sol2/v3.3.0/ed14d3f6fd6848919b24915606479909/include", "-DNDEBUG", "-o", "build/objects/linux_x86_64/MacroUnitTest/linux/x86_64/release/Sources/Loader/loader.cpp.o", "Sources/Loader/loader.cpp"],
+  "file": "Sources/Loader/loader.cpp"
+}]
