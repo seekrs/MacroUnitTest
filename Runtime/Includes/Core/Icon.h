@@ -1,7 +1,7 @@
 #ifndef ICON_MLX
 #define ICON_MLX
 
-#include <Pch.h>
+#include <PreCompiled.h>
 
 constexpr const int logo_mlx_height = 125;
 constexpr const int logo_mlx_width = 125;

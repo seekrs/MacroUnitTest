@@ -1,7 +1,6 @@
 #ifndef MLX_UT_CORE_LOGS
 #define MLX_UT_CORE_LOGS
 
-#include <Pch.h>
 #include <Core/Enums.h>
 
 namespace mlxut

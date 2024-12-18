@@ -6,7 +6,9 @@
 !xmake.lua
 !compile_commands.json
 !/Runtime/
+!/Resources/
 !/Tests/
+!/Xmake/
 *.o
 *.swp
 *.swx

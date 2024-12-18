@@ -3,14 +3,19 @@
 
 namespace mlxut
 {
-	struct ivec2
+	template <typename T>
+	struct Vec2
 	{
-		int x;
-		int y;
-
-		constexpr ivec2() : x(0), y(0) {}
-		constexpr ivec2(int _x, int _y) : x(_x), y(_y) {}
+		T x;
+		T y;
+		constexpr Vec2() : x(T(0)), y(T(0)) {}
+		constexpr Vec2(T x, T y) : x(x), y(y) {}
 	};
+
+	using Vec2i = Vec2<int>;
+	using Vec2ui = Vec2<unsigned int>;
+	using Vec2f = Vec2<float>;
+	using Vec2d = Vec2<double>;
 }
 
 #endif
