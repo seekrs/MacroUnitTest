@@ -1,15 +1,3 @@
--- **************************************************************************** --
---                                                                              --
---                                                         :::      ::::::::    --
---    xmake.lua                                          :+:      :+:    :+:    --
---                                                     +:+ +:+         +:+      --
---    By: maldavid <kbz_8.dev@akel-engine.com>       +#+  +:+       +#+         --
---                                                 +#+#+#+#+#+   +#+            --
---    Created: 2023/12/19 14:51:42 by maldavid          #+#    #+#              --
---    Updated: 2023/12/27 22:31:25 by maldavid         ###   ########.fr        --
---                                                                              --
--- **************************************************************************** --
-
 add_requires("imgui v1.90-docking", { configs = { sdl2 = true }})
 add_requires("libsdl", "libsdl_image", "sol2")
 
@@ -30,11 +18,11 @@ target("MacroUnitTest")
 
 	add_packages("libsdl", "libsdl_image", "imgui", "sol2")
 
-	add_includedirs("includes", "srcs")
+	add_includedirs("Runtime/Includes", "Runtime/Sources")
 
-	add_files("srcs/**.cpp")
+	add_files("Runtime/Sources/**.cpp")
 
-	set_pcxxheader("includes/pch.h")
+	set_pcxxheader("Runtime/Includes/Pch.h")
 
 	add_defines("SDL_MAIN_HANDLED")
 
