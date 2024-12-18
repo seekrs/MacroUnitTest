@@ -6,7 +6,7 @@
 
 namespace mlxut
 {
-	bool LoadMLX() noexcept;
+	bool LoadMLX(const std::filesystem& path) noexcept;
 	void UnloadMLX() noexcept;
 }
 
