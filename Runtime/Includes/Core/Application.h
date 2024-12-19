@@ -6,6 +6,7 @@
 #include <Graphics/ImGuiContext.h>
 #include <Graphics/MenuBar.h>
 #include <Graphics/PanelStack.h>
+#include <Core/Loader/Loader.h>
 
 namespace mlxut
 {
@@ -21,6 +22,7 @@ namespace mlxut
 			void UpdateCursor() noexcept;
 
 		private:
+			MLXLoader m_loader;
 			std::unordered_map<SDL_SystemCursor, SDL_Cursor*> m_cursors;
 			MenuBar m_menubar;
 			PanelStack m_stack;

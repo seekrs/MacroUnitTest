@@ -24,14 +24,16 @@ namespace mlxut
 				ImGui::DockBuilderSetNodeSize(dockspace_id, work_size);
 
 				ImGuiID dock_left_id = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 1.f, nullptr, &dockspace_id);
-				ImGuiID dock_right_id = ImGui::DockBuilderSplitNode(dock_left_id, ImGuiDir_Right, 0.85f, nullptr, &dock_left_id);
-				ImGuiID dock_bottom_id = ImGui::DockBuilderSplitNode(dock_right_id, ImGuiDir_Down, 0.2f, nullptr, &dock_right_id);
+				ImGuiID dock_center_id = ImGui::DockBuilderSplitNode(dock_left_id, ImGuiDir_Right, 0.85f, nullptr, &dock_left_id);
+				ImGuiID dock_right_id = ImGui::DockBuilderSplitNode(dock_center_id, ImGuiDir_Right, 0.2f, nullptr, &dock_center_id);
+				ImGuiID dock_bottom_id = ImGui::DockBuilderSplitNode(dock_center_id, ImGuiDir_Down, 0.4f, nullptr, &dock_center_id);
 
-				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_VIEW_IN_AR" Parameters", dock_left_id);
-				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_INFO" About", dock_right_id);
-				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_MONITOR" Render", dock_right_id);
-				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_SETTINGS" Settings", dock_right_id);
-				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_TERMINAL" Logs", dock_bottom_id);
+				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_LIST" Tests", dock_left_id);
+				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_MONITOR" Render", dock_center_id);
+				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_INFO" About", dock_center_id);
+				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_SETTINGS" Settings", dock_center_id);
+				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_TERMINAL" Logs", dock_right_id);
+				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_RULE" Results", dock_bottom_id);
 
 				ImGui::DockBuilderFinish(dockspace_id);
 			}

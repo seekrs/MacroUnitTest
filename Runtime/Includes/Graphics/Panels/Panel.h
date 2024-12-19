@@ -12,7 +12,7 @@ namespace mlxut
 
 			virtual void OnAttach() {}
 			virtual void OnOpen() {}
-			virtual bool IsOpen() { return false; }
+			bool IsOpen() { return m_is_open; }
 			virtual void OnUpdate([[maybe_unused]] ImVec2 size) {}
 			virtual void OnQuit() {}
 
@@ -22,6 +22,7 @@ namespace mlxut
 
 		protected:
 			std::string m_name;
+			bool m_is_open;
 	};
 }
 

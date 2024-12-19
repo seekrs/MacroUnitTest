@@ -2,24 +2,31 @@
 #include <Graphics/ImGuiContext.h>
 #include <Graphics/Window.h>
 #include <Core/MaterialFont.h>
+#include <Core/Loader/Loader.h>
 
 namespace mlxut
 {
 	void MenuBar::Render(const Window& win, ImVec2 size) noexcept
 	{
 		ImGuiStyle* style = &ImGui::GetStyle();
-		//ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.f, 0.f, 0.f, 1.f));
-		//ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.f, 0.f, 1.f));
-		//ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(0.f, 0.f, 0.f, 1.f));
-		//ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.19f, 0.19f, 0.19f, 0.54f));
+
+		if(m_dialog.IsFinished())
+		{
+			if(m_dialog_libmlx_openned)
+			{
+				MLXLoader::Get().Load(m_dialog.GetResult());
+				m_dialog_libmlx_openned = false;
+			}
+		}
 
 		if(ImGui::BeginMainMenuBar())
 		{
 			if(ImGui::BeginMenu(MLX_UT_ICON_MD_FOLDER" File"))
 			{
-				if(ImGui::MenuItem("Open"))
+				if(ImGui::MenuItem("Open") || !m_dialog.IsFinished())
 				{
-					auto file = pfd::open_file("Open result file", "", { "dynamic library (" MLX_UT_LIB_EXTENSION ")", "*" MLX_UT_LIB_EXTENSION }).result();
+					m_dialog.Open("Open result file", { "dynamic library (" MLX_UT_LIB_EXTENSION ")", "*" MLX_UT_LIB_EXTENSION });
+					m_dialog_libmlx_openned = true;
 				}
 				if(ImGui::MenuItem("Quit"))
 					m_quit_requested = true;
@@ -27,12 +34,6 @@ namespace mlxut
 			}
 			if(ImGui::BeginMenu(MLX_UT_ICON_MD_TUNE" Edit"))
 			{
-				if(ImGui::BeginMenu("Panels"))
-				{
-					if(ImGui::MenuItem("Logs"))
-					{}
-					ImGui::EndMenu();
-				}
 				if(ImGui::MenuItem("Settings"))
 					m_render_settings_window = true;
 				ImGui::EndMenu();
@@ -61,13 +62,11 @@ namespace mlxut
 			m_height = ImGui::GetContentRegionAvail().y;
 			ImGui::EndMainMenuBar();
 		}
-
-		//ImGui::PopStyleColor(4);
 	}
 
 	void MenuBar::RenderAboutWindow()
 	{
-		if(ImGui::Begin(MLX_UT_ICON_MD_INFO" About", &m_render_about_window, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_HorizontalScrollbar))
+		if(ImGui::Begin(MLX_UT_ICON_MD_INFO" About", &m_render_about_window, ImGuiWindowFlags_NoMove |  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_HorizontalScrollbar))
 		{
 			ImGui::End();
 		}
@@ -75,15 +74,13 @@ namespace mlxut
 
 	void MenuBar::RenderSettingsWindow()
 	{
-		if(ImGui::Begin(MLX_UT_ICON_MD_SETTINGS" Settings", &m_render_settings_window, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse))
+		if(ImGui::Begin(MLX_UT_ICON_MD_SETTINGS" Settings", &m_render_settings_window, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse))
 		{
 			static int selected = -1;
 			if(ImGui::BeginChild("Setting selector", ImVec2{ 200.f, 0.f }, true))
 			{
 				if(ImGui::Selectable("General", selected == 0))
 					selected = 0;
-				if(ImGui::Selectable("Render", selected == 1))
-					selected = 1;
 				ImGui::EndChild();
 			}
 			ImGui::SameLine(0);
