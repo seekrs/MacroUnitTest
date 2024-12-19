@@ -101,7 +101,7 @@ target("MacroUnitTest")
 	end
 
 	set_pcxxheader("Runtime/Includes/PreCompiled.h")
-	add_includedirs("Runtime/Includes", "Runtime/Sources")
+	add_includedirs("Runtime/Includes", "Runtime/Sources", "Runtime/ThirdParty")
 	add_files("Runtime/Sources/**.cpp|Drivers/**.cpp")
 
 	for name, module in table.orderpairs(os_interfaces) do

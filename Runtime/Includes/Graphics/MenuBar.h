@@ -2,6 +2,7 @@
 #define MLX_UT_MENU_BAR
 
 #include <PreCompiled.h>
+#include <Core/FileDialog.h>
 
 namespace mlxut
 {
@@ -25,10 +26,12 @@ namespace mlxut
 			void RenderGeneralSettings();
 
 		private:
+			FileDialog m_dialog;
 			float m_height;
 			bool m_render_about_window = false;
 			bool m_render_settings_window = false;
 			bool m_quit_requested = false;
+			bool m_dialog_libmlx_openned = false;
 	};
 }
 

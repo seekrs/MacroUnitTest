@@ -1,4 +1,5 @@
 #include <Core/CompilationProfile.h>
+#include <Core/CLI.h>
 #include <Core/Application.h>
 
 #if defined(MLX_UT_PLAT_WINDOWS)
@@ -7,6 +8,7 @@
 
 	int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow)
 	{
+		mlxut::CommandLineInterface cli;
 		mlxut::WindowsInstance os;
 		os.Init();
 		mlxut::Application app;
@@ -21,6 +23,7 @@
 
 	int main(int ac, char** av)
 	{
+		mlxut::CommandLineInterface cli;
 		mlxut::UnixInstance os;
 		os.Init(ac, av);
 		mlxut::Application app;
@@ -35,6 +38,7 @@
 
 	int main(int ac, char** av)
 	{
+		mlxut::CommandLineInterface cli;
 		mlxut::MacOSInstance os;
 		os.Init(ac, av);
 		mlxut::Application app;

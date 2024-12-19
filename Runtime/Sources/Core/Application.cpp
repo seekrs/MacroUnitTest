@@ -1,8 +1,13 @@
 #include <Core/Application.h>
 #include <Core/OS/OSInstance.h>
 #include <Core/EventBus.h>
+#include <Core/CLI.h>
 
 #include <Graphics/Panels/Docks.h>
+#include <Graphics/Panels/Logs.h>
+#include <Graphics/Panels/Render.h>
+#include <Graphics/Panels/Result.h>
+#include <Graphics/Panels/Tests.h>
 
 namespace mlxut
 {
@@ -17,17 +22,23 @@ namespace mlxut
 
 		if(!std::filesystem::exists(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources"))
 			FatalError("Cannot find resources folder");
-		/* Remove this comment if you want to prioritise Wayland over X11/XWayland, at your own risks */
-		//SDL_SetHint(SDL_HINT_VIDEODRIVER, "wayland,x11");
 
 		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) != 0)
-			FatalError("SDL error : unable to init all subsystems : %", SDL_GetError());
+			FatalError("SDL error: unable to init all subsystems, %", SDL_GetError());
 		LoadSystemCursors();
 		p_window = std::make_unique<Window>("MLX UnitTester", MLX_UT_WINDOW_WIDTH, MLX_UT_WINDOW_HEIGHT);
 		p_renderer = std::make_unique<Renderer>(*p_window);
 		p_imgui = std::make_unique<ImGuiContext>(*p_window, *p_renderer);
 
 		m_stack.AddPanel(std::make_shared<Docks>(m_menubar));
+		m_stack.AddPanel(std::make_shared<LogsPanel>());
+		m_stack.AddPanel(std::make_shared<Render>());
+		m_stack.AddPanel(std::make_shared<Results>());
+		m_stack.AddPanel(std::make_shared<TestsPanel>());
+
+		auto mlx_path = CommandLineInterface::Get().GetOption("path");
+		if(mlx_path.has_value())
+			m_loader.Load(*mlx_path);
 	}
 
 	void Application::Run()
@@ -50,13 +61,20 @@ namespace mlxut
 				m_menubar.Render(*p_window, im_render_size);
 				for(auto panel : m_stack.GetPanels())
 					panel->OnUpdate(im_render_size);
-				m_menubar.RenderSettingsWindow();
+				if(m_menubar.ShouldRenderSettingsWindow())
+					m_menubar.RenderSettingsWindow();
+				if(m_menubar.ShouldRenderAboutWindow())
+					m_menubar.RenderAboutWindow();
 			p_imgui->EndFrame();
+
+			if(m_menubar.IsQuitRequested())
+				break;
 
 			UpdateCursor();
 		}
 
 EndLoop:
+		m_loader.Unload();
 		return;
 	}
 

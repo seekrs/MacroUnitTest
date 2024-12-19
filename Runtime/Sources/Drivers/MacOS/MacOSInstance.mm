@@ -1,5 +1,6 @@
 #include <Drivers/MacOS/MacOSLibLoader.h>
 #include <Drivers/MacOS/MacOSInstance.h>
+#include <Core/CLI.h>
 
 #import <Cocoa/Cocoa.h>
 
@@ -9,6 +10,7 @@ namespace mlxut
 	{
 		OSInstance::SetInstance(this);
 		OSInstance::SetLibLoader(new MacOSLibLoader);
+		CommandLineInterface::Get().Feed(ac, av);
 	}
 
 	void MacOSInstance::Shutdown()

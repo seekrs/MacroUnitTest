@@ -1,5 +1,6 @@
 #include <Drivers/Unix/UnixLibLoader.h>
 #include <Drivers/Unix/UnixInstance.h>
+#include <Core/CLI.h>
 
 namespace mlxut
 {
@@ -17,6 +18,7 @@ namespace mlxut
 		signal(SIGINT, SignalsHandler);
 		signal(SIGQUIT, SignalsHandler);
 		OSInstance::SetLibLoader(new UnixLibLoader);
+		CommandLineInterface::Get().Feed(ac, av);
 	}
 
 	void UnixInstance::Shutdown()
