@@ -1,7 +1,7 @@
 add_repositories("local-repo Xmake")
 
 add_requires("imgui v1.91.0-docking", { configs = { sdl2 = true }})
-add_requires("libsdl", "pfd", "libsdl_image", "sol2")
+add_requires("libsdl", "pfd", "libsdl_image", "sol2", "tiny-process-library")
 
 add_rules("mode.debug", "mode.release")
 set_languages("cxx20")
@@ -29,8 +29,8 @@ local os_interfaces = {
 	MacOS = {
 		dir = "Drivers/",
 		enabled = is_plat("macosx"),
-		custom = function()
-			add_files("Runtime/Sources/Drivers/MacOS/**.mm")
+		custom = function(subdir)
+			add_files("Runtime/" .. subdir .. "/Sources/Drivers/MacOS/**.mm")
 		end
 	},
 	Windows = {
@@ -41,28 +41,28 @@ local os_interfaces = {
 
 option("unitybuild", { description = "Build the engine using unity build", default = false })
 
-function ModuleTargetConfig(name, module)
+function ModuleTargetConfig(name, module, subdir)
 	-- Add header and source files
 	for _, ext in ipairs({".h", ".hpp", ".inl"}) do
 		if module.dir then
-			add_headerfiles("Runtime/Includes/" .. module.dir .. name .. "/**" .. ext)
-			add_headerfiles("Runtime/Sources/" .. module.dir .. name .. "/**" .. ext, { prefixdir = "private", install = false })
+			add_headerfiles("Runtime/" .. subdir .. "/Includes/" .. module.dir .. name .. "/**" .. ext)
+			add_headerfiles("Runtime/" .. subdir .. "/Sources/" .. module.dir .. name .. "/**" .. ext, { prefixdir = "private", install = false })
 		else
-			add_headerfiles("Runtime/Includes/" .. name .. "/**" .. ext)
-			add_headerfiles("Runtime/Sources/" .. name .. "/**" .. ext, { prefixdir = "private", install = false })
+			add_headerfiles("Runtime/" .. subdir .. "/Includes/" .. name .. "/**" .. ext)
+			add_headerfiles("Runtime/" .. subdir .. "/Sources/" .. name .. "/**" .. ext, { prefixdir = "private", install = false })
 		end
 	end
 
 	if module.dir then
-		remove_headerfiles("Runtime/Sources/" .. module.dir .. name .. "/Resources/**.h")
+		remove_headerfiles("Runtime/" .. subdir .. "/Sources/" .. module.dir .. name .. "/Resources/**.h")
 	else
-		remove_headerfiles("Runtime/Sources/" .. name .. "/Resources/**.h")
+		remove_headerfiles("Runtime/" .. subdir .. "/Sources/" .. name .. "/Resources/**.h")
 	end
 
 	if module.dir then
-		set_pcxxheader("Runtime/Includes/" .. module.dir .. name .. "/PreCompiled.h")
+		set_pcxxheader("Runtime/" .. subdir .. "/Includes/" .. module.dir .. name .. "/PreCompiled.h")
 	else
-		set_pcxxheader("Runtime/Includes/" .. name .. "/PreCompiled.h")
+		set_pcxxheader("Runtime/" .. subdir .. "/Includes/" .. name .. "/PreCompiled.h")
 	end
 
 	if module.packages then
@@ -80,13 +80,13 @@ function ModuleTargetConfig(name, module)
 	end
 
 	if module.dir then
-		add_files("Runtime/Sources/" .. module.dir .. name .. "/**.cpp")
+		add_files("Runtime/" .. subdir .. "/Sources/" .. module.dir .. name .. "/**.cpp")
 	else
-		add_files("Runtime/Sources/" .. name .. "/**.cpp")
+		add_files("Runtime/" .. subdir .. "/Sources/" .. name .. "/**.cpp")
 	end
 
 	if module.custom then
-		module.custom()
+		module.custom(subdir)
 	end
 end
 
@@ -94,19 +94,20 @@ target("MacroUnitTest")
 	set_license("MIT")
 	set_kind("binary")
 
-	add_packages("libsdl", "pfd", "libsdl_image", "imgui", "sol2")
+	add_packages("libsdl", "pfd", "libsdl_image", "imgui", "tiny-process-library")
 
 	if has_config("unitybuild") then
 		add_rules("c++.unity_build", { batchsize = 6 })
 	end
 
-	set_pcxxheader("Runtime/Includes/PreCompiled.h")
-	add_includedirs("Runtime/Includes", "Runtime/Sources", "Runtime/ThirdParty")
-	add_files("Runtime/Sources/**.cpp|Drivers/**.cpp")
+	set_pcxxheader("Runtime/Software/Includes/PreCompiled.h")
+	add_includedirs("Runtime/Software/Includes", "Runtime/Software/Sources", "Runtime/ThirdParty")
+	add_includedirs("Runtime/Common/Includes", "Runtime/Common/Sources")
+	add_files("Runtime/Software/Sources/**.cpp|Drivers/**.cpp")
 
 	for name, module in table.orderpairs(os_interfaces) do
 		if module.enabled then
-			ModuleTargetConfig(name, module)
+			ModuleTargetConfig(name, module, "Common")
 		end
 	end
 
@@ -133,4 +134,48 @@ target("MacroUnitTest")
 	end)
 
 	add_defines("SDL_MAIN_HANDLED")
+target_end()
+
+target("TestRunner")
+	set_license("MIT")
+	set_kind("binary")
+
+	add_packages("sol2")
+
+	if has_config("unitybuild") then
+		add_rules("c++.unity_build", { batchsize = 6 })
+	end
+
+	set_pcxxheader("Runtime/Runner/Includes/PreCompiled.h")
+	add_includedirs("Runtime/Runner/Includes", "Runtime/Runner/Sources", "Runtime/ThirdParty")
+	add_includedirs("Runtime/Common/Includes", "Runtime/Common/Sources")
+	add_files("Runtime/Runner/Sources/**.cpp")
+
+	for name, module in table.orderpairs(os_interfaces) do
+		if module.enabled then
+			ModuleTargetConfig(name, module, "Common")
+		end
+	end
+
+	on_load(function(target)
+		if not os.exists("$(buildir)/Bin/$(os)_$(arch)/Resources") then
+			os.ln("$(scriptdir)/Resources", "$(buildir)/Bin/$(os)_$(arch)/Resources")
+			print("Created resources symlink")
+		end
+	end)
+
+	on_clean(function(target)
+		if target:objectfiles() then
+			for _, file in ipairs(target:objectfiles()) do
+				if os.exists(file) then
+					print("Removing " .. file)
+					os.rm(file)
+				end
+			end
+		end
+		if target:targetfile() and os.exists(target:targetfile()) then
+			print("Removing " .. target:targetfile())
+			os.rm(target:targetfile())
+		end
+	end)
 target_end()
