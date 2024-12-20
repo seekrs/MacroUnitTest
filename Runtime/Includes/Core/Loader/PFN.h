@@ -7,6 +7,10 @@
 
 #define MLX_DEFINE_HANDLE(object) typedef struct object##_handler* object
 
+MLX_DEFINE_HANDLE(mlx_context);
+MLX_DEFINE_HANDLE(mlx_window);
+MLX_DEFINE_HANDLE(mlx_image);
+
 typedef enum mlx_event_type
 {
 	MLX_KEYDOWN = 0,
@@ -16,10 +20,6 @@ typedef enum mlx_event_type
 	MLX_MOUSEWHEEL = 4,
 	MLX_WINDOW_EVENT = 5
 } mlx_event_type;
-
-MLX_DEFINE_HANDLE(mlx_context);
-MLX_DEFINE_HANDLE(mlx_window);
-MLX_DEFINE_HANDLE(mlx_image);
 
 typedef union mlx_color
 {
@@ -42,6 +42,7 @@ typedef union mlx_color
 
 typedef struct mlx_window_create_info
 {
+	mlx_image render_target;
 	const char* title;
 	int width;
 	int height;
