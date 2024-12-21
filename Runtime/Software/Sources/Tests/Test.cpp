@@ -18,13 +18,13 @@ namespace mlxut
 		m_state = TestState::Pending;
 	}
 
-	void Test::Run(std::filesystem::path mlx_path)
+	void Test::Run(const std::filesystem::path& mlx_path)
 	{
 		p_process.reset();
 		p_process = std::make_unique<TinyProcessLib::Process>(
 			std::vector<std::string>{
 				OSInstance::Get().GetCurrentWorkingDirectoryPath() / "TestRunner",
-				"--path=" + std::move(mlx_path).string(),
+				"--path=" + mlx_path.string(),
 				m_name
 			},
 			"",
