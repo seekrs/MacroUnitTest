@@ -20,6 +20,9 @@ namespace mlxut
 
 		SetDarkTheme();
 
+		ImGui_ImplSDL2_InitForSDLRenderer(win.Get(), renderer.Get());
+		ImGui_ImplSDLRenderer2_Init(renderer.Get());
+
 		io.Fonts->ClearFonts();
 		const ImWchar icons_ranges[] = { MLX_UT_ICON_MIN_MD, MLX_UT_ICON_MAX_16_MD, 0 };
 		ImFontConfig config;
@@ -33,9 +36,6 @@ namespace mlxut
 			if(size == 18)
 				io.FontDefault = font;
 		}
-
-		ImGui_ImplSDL2_InitForSDLRenderer(win.Get(), renderer.Get());
-		ImGui_ImplSDLRenderer2_Init(renderer.Get());
 	}
 
 	void ImGuiContext::CheckEvents(const SDL_Event* event) noexcept

@@ -11,9 +11,10 @@ namespace mlxut
 		public:
 			MenuBar();
 
-			void Render(const class Window& win, ImVec2 size) noexcept;
+			void Render(const class Window& win, const class Renderer& renderer, ImVec2 size) noexcept;
 			void RenderAboutWindow();
 			void RenderSettingsWindow();
+			void DestroyResources();
 
 			[[nodiscard]] inline bool ShouldRenderAboutWindow() const noexcept { return m_render_about_window; }
 			[[nodiscard]] inline bool ShouldRenderSettingsWindow() const noexcept { return m_render_settings_window; }
@@ -30,6 +31,7 @@ namespace mlxut
 		private:
 			std::filesystem::path m_mlx_lib_path;
 			FileDialog m_dialog;
+			SDL_Texture* p_logo = nullptr;
 			float m_height;
 			bool m_render_about_window = false;
 			bool m_render_settings_window = false;

@@ -1,7 +1,10 @@
+#include "SDL_render.h"
 #include <Graphics/MenuBar.h>
 #include <Graphics/ImGuiContext.h>
 #include <Graphics/Window.h>
+#include <Graphics/Renderer.h>
 #include <Core/MaterialFont.h>
+#include <Core/OS/OSInstance.h>
 #include <Core/CLI.h>
 
 namespace mlxut
@@ -13,9 +16,12 @@ namespace mlxut
 			m_mlx_lib_path = *mlx_path;
 	}
 
-	void MenuBar::Render(const Window& win, ImVec2 size) noexcept
+	void MenuBar::Render(const Window& win, const Renderer& renderer, ImVec2 size) noexcept
 	{
 		ImGuiStyle* style = &ImGui::GetStyle();
+
+		if(p_logo == nullptr)
+			p_logo = IMG_LoadTexture(renderer.Get(), (OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Assets/Logo.png").string().c_str());
 
 		if(m_dialog.IsFinished())
 			m_mlx_lib_path = m_dialog.GetResult();
@@ -24,6 +30,7 @@ namespace mlxut
 
 		if(ImGui::BeginMainMenuBar())
 		{
+			ImGui::Image(reinterpret_cast<void*>(p_logo), ImVec2{ 20.0f, 20.0f });
 			if(ImGui::BeginMenu(MLX_UT_ICON_MD_FOLDER" File"))
 			{
 				if(ImGui::MenuItem("Open") || !m_dialog.IsFinished())
@@ -98,6 +105,12 @@ namespace mlxut
 			}
 			ImGui::End();
 		}
+	}
+
+	void MenuBar::DestroyResources()
+	{
+		if(p_logo != nullptr)
+			SDL_DestroyTexture(p_logo);
 	}
 
 	void MenuBar::RenderGeneralSettings()

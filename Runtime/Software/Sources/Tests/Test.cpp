@@ -84,14 +84,17 @@ namespace mlxut
 
 	void Test::CreateRenderTextures()
 	{
-		if(m_result_pixels.empty())
-			return;
-		SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(m_result_pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);
-		p_result = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
+		SDL_Surface* surface = nullptr;
+		if(!m_result_pixels.empty())
+		{
+			surface = SDL_CreateRGBSurfaceFrom(m_result_pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);
+			p_result = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
+		}
 		std::filesystem::path ref_path = OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Assets/TestsReferences" / (m_name + ".png");
 		if(std::filesystem::exists(ref_path))
 		{
-			SDL_FreeSurface(surface);
+			if(surface)
+				SDL_FreeSurface(surface);
 			surface = IMG_Load(ref_path.string().c_str());
 			SDL_LockSurface(surface);
 			for(int y = 0; y < surface->h; y++)
@@ -103,7 +106,7 @@ namespace mlxut
 			p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			SDL_FreeSurface(surface);
 		}
-		else
+		else if(surface)
 		{
 			IMG_SavePNG(surface, ref_path.string().c_str());
 			SDL_FreeSurface(surface);

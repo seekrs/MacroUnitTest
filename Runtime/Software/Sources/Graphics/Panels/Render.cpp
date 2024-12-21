@@ -30,9 +30,9 @@ namespace mlxut
 						size_reference = MLX_WIN_WIDTH;
 					ImVec2 size(size_reference - 16.f, size_reference - 16.f);
 					ImGui::SetCursorPos({ (ImGui::GetWindowWidth() - size.x) * 0.5f, (ImGui::GetWindowHeight() - size.y) * 0.5f });
-					ImGui::Image(static_cast<void*>(test->GetResult()), size);
+					if(test->GetResult() != nullptr)
+						ImGui::Image(static_cast<void*>(test->GetResult()), size);
 				}
-			EndChild:
 				ImGui::EndChild();
 			}
 			ImGui::SameLine();
@@ -45,8 +45,8 @@ namespace mlxut
 					size_reference = MLX_WIN_WIDTH;
 				ImVec2 size(size_reference - 16.f, size_reference - 16.f);
 				ImGui::SetCursorPos({ (ImGui::GetWindowWidth() - size.x) * 0.5f, (ImGui::GetWindowHeight() - size.y) * 0.5f });
-				ImGui::Image(static_cast<void*>(test->GetReference()), size);
-
+				if(test->GetReference() != nullptr)
+					ImGui::Image(static_cast<void*>(test->GetReference()), size);
 				ImGui::EndChild();
 			}
 			ImGui::End();

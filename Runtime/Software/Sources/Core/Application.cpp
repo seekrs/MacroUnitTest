@@ -56,7 +56,7 @@ namespace mlxut
 			ImVec2 im_render_size = ImVec2{ static_cast<float>(render_size.x), static_cast<float>(render_size.y) };
 
 			p_imgui->BeginFrame();
-				m_menubar.Render(*p_window, im_render_size);
+				m_menubar.Render(*p_window, *p_renderer, im_render_size);
 				for(auto panel : m_stack.GetPanels())
 					panel->OnUpdate(im_render_size);
 				if(m_menubar.ShouldRenderSettingsWindow())
@@ -85,6 +85,7 @@ namespace mlxut
 		}
 
 EndLoop:
+		m_menubar.DestroyResources();
 		return;
 	}
 
