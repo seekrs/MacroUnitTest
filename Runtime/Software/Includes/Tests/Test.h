@@ -15,6 +15,8 @@ namespace mlxut
 
 			void Run(const std::filesystem::path& mlx_path);
 			bool IsTestFinished();
+			void FetchResult();
+			void CreateRenderTextures();
 
 			[[nodiscard]] inline SDL_Texture* GetResult() const noexcept { return p_result; }
 			[[nodiscard]] inline SDL_Texture* GetReference() const noexcept { return p_reference; }

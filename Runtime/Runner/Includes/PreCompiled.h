@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <filesystem>
+#include <fstream>
 #include <memory>
 
 #define SOL_ALL_SAFETIES_ON 1

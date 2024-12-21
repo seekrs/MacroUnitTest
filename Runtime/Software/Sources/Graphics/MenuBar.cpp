@@ -2,15 +2,25 @@
 #include <Graphics/ImGuiContext.h>
 #include <Graphics/Window.h>
 #include <Core/MaterialFont.h>
+#include <Core/CLI.h>
 
 namespace mlxut
 {
+	MenuBar::MenuBar()
+	{
+		auto mlx_path = CommandLineInterface::Get().GetOption("path");
+		if(mlx_path.has_value())
+			m_mlx_lib_path = *mlx_path;
+	}
+
 	void MenuBar::Render(const Window& win, ImVec2 size) noexcept
 	{
 		ImGuiStyle* style = &ImGui::GetStyle();
 
 		if(m_dialog.IsFinished())
 			m_mlx_lib_path = m_dialog.GetResult();
+
+		m_launch_all_tests = false;
 
 		if(ImGui::BeginMainMenuBar())
 		{
@@ -34,6 +44,8 @@ namespace mlxut
 					m_render_about_window = true;
 				ImGui::EndMenu();
 			}
+			if(ImGui::Button("Launch All Tests"))
+				m_launch_all_tests = true;
 			ImGui::SameLine(static_cast<float>(size.x) / 2.0f - ImGui::CalcTextSize("MLX UnitTester").x / 2.0f);
 			ImGui::TextUnformatted("MLX UnitTester");
 			ImGui::SameLine(size.x - (ImGui::CalcTextSize("X").x * 3 + style->ItemSpacing.x * 3 + style->WindowPadding.x) * 2);

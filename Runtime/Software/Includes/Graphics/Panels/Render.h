@@ -8,11 +8,12 @@ namespace mlxut
 	class Render : public Panel
 	{
 		public:
-			Render();
+			Render(class Tester& tester);
 			void OnUpdate(ImVec2 size) override;
 			~Render() override = default;
 
 		private:
+			class Tester& m_tester;
 	};
 }
 

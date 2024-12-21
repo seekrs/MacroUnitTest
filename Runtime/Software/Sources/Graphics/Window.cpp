@@ -37,7 +37,7 @@ namespace mlxut
 		p_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_BORDERLESS);
 		if(!p_window)
 			FatalError("Unable to open a window, %", SDL_GetError());
-		p_icon = SDL_CreateRGBSurfaceFrom(static_cast<void*>(logo_mlx), logo_mlx_width, logo_mlx_height, 32, 4 * logo_mlx_width, rmask, gmask, bmask, amask);
+		p_icon = SDL_CreateRGBSurfaceFrom(static_cast<void*>(logo_mlx), logo_mlx_width, logo_mlx_height, 32, 4 * logo_mlx_width, R_MASK, G_MASK, B_MASK, A_MASK);
 		SDL_SetWindowIcon(p_window, p_icon);
 		SDL_SetWindowMinimumSize(p_window, 128, 75);
 		SDL_SetWindowHitTest(p_window, HitTestCallback, nullptr);

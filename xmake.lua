@@ -140,7 +140,7 @@ target("TestRunner")
 	set_license("MIT")
 	set_kind("binary")
 
-	add_packages("sol2")
+	add_packages("libsdl", "sol2")
 
 	if has_config("unitybuild") then
 		add_rules("c++.unity_build", { batchsize = 6 })
