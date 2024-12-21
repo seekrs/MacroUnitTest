@@ -47,7 +47,7 @@ namespace mlxut
 					arg.remove_prefix(1);
 				std::size_t finder = arg.find_first_of('=');
 				if(finder != std::string_view::npos)
-					m_options.emplace(std::make_pair(arg.substr(0, finder - 1), arg.substr(finder)));
+					m_options.emplace(std::make_pair(arg.substr(0, finder), arg.substr(finder + 1)));
 				else
 					m_flags.emplace(arg);
 			}

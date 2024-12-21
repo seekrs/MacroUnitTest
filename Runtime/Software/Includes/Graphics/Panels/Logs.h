@@ -8,11 +8,12 @@ namespace mlxut
 	class LogsPanel : public Panel
 	{
 		public:
-			LogsPanel();
+			LogsPanel(class Tester& tester);
 			void OnUpdate(ImVec2 size) override;
 			~LogsPanel() override = default;
 
 		private:
+			class Tester& m_tester;
 	};
 }
 

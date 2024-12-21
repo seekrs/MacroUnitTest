@@ -28,8 +28,7 @@ namespace mlxut
 			if(ImGui::BeginChild("##tests_list_content", {0.f, 0.f}, ImGuiChildFlags_Border))
 			{
 				static std::string name;
-				static int test_index = 0;
-				for(int n = 0; n < tests.size(); n++)
+				for(std::size_t n = 0; n < tests.size(); n++)
 				{
 					name.clear();
 					ImVec4 printColor(1.f, 1.f, 1.f, 1.f);
@@ -47,8 +46,8 @@ namespace mlxut
 					}
 					name += tests[n]->GetName();
 					ImGui::PushStyleColor(ImGuiCol_Text, printColor);
-						if(ImGui::Selectable(name.c_str(), test_index == n))
-							test_index = n;
+						if(ImGui::Selectable(name.c_str(), m_tester.GetSelectedTest() == n))
+							m_tester.SelectTest(n);
 					ImGui::PopStyleColor();
 				}
 				ImGui::EndChild();

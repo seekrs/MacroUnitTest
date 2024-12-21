@@ -1,5 +1,6 @@
 #include <Loader/Loader.h>
 #include <Core/OS/OSInstance.h>
+#include <Utils/Ansi.h>
 
 namespace mlxut
 {
@@ -8,7 +9,7 @@ namespace mlxut
 		LibFunc fn = OSInstance::GetLibLoader().GetSymbol(module, name);
 		if(!fn)
 		{
-			std::cerr << "could not load " << name << std::endl;
+			std::cerr << Ansi::red << "Error: " << Ansi::def << "could not load " << name << std::endl;
 			std::exit(1);
 		}
 		return fn;
@@ -21,8 +22,8 @@ namespace mlxut
 		m_module = OSInstance::GetLibLoader().Load(path);
 		if(m_module == NullModule)
 		{
-			std::cerr << "could not load " << std::move(path) << std::endl;
-			return;
+			std::cerr << Ansi::red << "Error: " << Ansi::def << "could not load " << std::move(path) << std::endl;
+			std::exit(1);
 		}
 		#define MLX_UT_MLX_FUNCTION(fn) fn = reinterpret_cast<PFN_##fn>(GetMlxProcAddr(m_module, #fn));
 			#include <Loader/Prototypes.h>

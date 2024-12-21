@@ -1,7 +1,6 @@
 #include <Core/Application.h>
 #include <Core/OS/OSInstance.h>
 #include <Core/EventBus.h>
-#include <Core/CLI.h>
 
 #include <Graphics/Panels/Docks.h>
 #include <Graphics/Panels/Logs.h>
@@ -31,18 +30,17 @@ namespace mlxut
 		p_imgui = std::make_unique<ImGuiContext>(*p_window, *p_renderer);
 
 		m_stack.AddPanel(std::make_shared<Docks>(m_menubar));
-		m_stack.AddPanel(std::make_shared<LogsPanel>());
-		m_stack.AddPanel(std::make_shared<Render>());
+		m_stack.AddPanel(std::make_shared<LogsPanel>(m_tester));
+		m_stack.AddPanel(std::make_shared<Render>(m_tester));
 		m_stack.AddPanel(std::make_shared<Results>());
 		m_stack.AddPanel(std::make_shared<TestsPanel>(m_tester));
 
 		m_tester.CreateAllTests(*p_renderer);
-
-		//auto mlx_path = CommandLineInterface::Get().GetOption("path");
 	}
 
 	void Application::Run()
 	{
+		bool have_tests_been_launched = false;
 		for(;;)
 		{
 			while(SDL_PollEvent(&m_event))
@@ -67,8 +65,21 @@ namespace mlxut
 					m_menubar.RenderAboutWindow();
 			p_imgui->EndFrame();
 
+			if(have_tests_been_launched && m_tester.HaveAllTestsFinished())
+			{
+				m_tester.FetchAllResults();
+				m_tester.CreateAllRenderTextures();
+				have_tests_been_launched = false;
+			}
+
 			if(m_menubar.IsQuitRequested())
 				break;
+
+			if(m_menubar.ShouldStartAllTests() && !m_menubar.GetMLXPath().empty())
+			{
+				m_tester.RunAllTests(m_menubar.GetMLXPath());
+				have_tests_been_launched = true;
+			}
 
 			UpdateCursor();
 		}

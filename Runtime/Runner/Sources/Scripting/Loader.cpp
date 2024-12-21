@@ -1,5 +1,6 @@
 #include <Scripting/Loader.h>
 #include <Loader/Loader.h>
+#include <Utils/Ansi.h>
 
 namespace mlxut
 {
@@ -28,7 +29,7 @@ namespace mlxut
 	{
 		if(!std::filesystem::exists(lua_file))
 		{
-			std::cerr << "Lua Loader: invalid script path " << lua_file << std::endl;
+			std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Loader: invalid script path " << lua_file << std::endl;
 			return std::nullopt;
 		}
 
@@ -38,7 +39,8 @@ namespace mlxut
 		if(!sol_script.valid())
 		{
 			sol::error err = sol_script;
-			std::cerr << "Lua Error: " << err.what() << "\nFailed to load and execute Lua script" << std::endl;
+			std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Error: " << err.what() << std::endl;
+			std::cerr << Ansi::red << "Error: " << Ansi::def << "Failed to load and execute Lua script" << std::endl;
 			return std::nullopt;
 		}
 

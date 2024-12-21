@@ -25,7 +25,7 @@ namespace mlxut
 
 				ImGuiID dock_left_id = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 1.f, nullptr, &dockspace_id);
 				ImGuiID dock_center_id = ImGui::DockBuilderSplitNode(dock_left_id, ImGuiDir_Right, 0.85f, nullptr, &dock_left_id);
-				ImGuiID dock_right_id = ImGui::DockBuilderSplitNode(dock_center_id, ImGuiDir_Right, 0.2f, nullptr, &dock_center_id);
+				ImGuiID dock_right_id = ImGui::DockBuilderSplitNode(dock_center_id, ImGuiDir_Right, 0.3f, nullptr, &dock_center_id);
 				ImGuiID dock_bottom_id = ImGui::DockBuilderSplitNode(dock_center_id, ImGuiDir_Down, 0.4f, nullptr, &dock_center_id);
 
 				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_LIST" Tests", dock_left_id);

@@ -13,7 +13,7 @@ namespace mlxut
 	bool FileDialog::IsFinished()
 	{
 		if(!p_dialog)
-			return true;
+			return false;
 		return p_dialog->ready();
 	}
 
