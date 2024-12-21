@@ -34,7 +34,9 @@ namespace mlxut
 		m_stack.AddPanel(std::make_shared<LogsPanel>());
 		m_stack.AddPanel(std::make_shared<Render>());
 		m_stack.AddPanel(std::make_shared<Results>());
-		m_stack.AddPanel(std::make_shared<TestsPanel>());
+		m_stack.AddPanel(std::make_shared<TestsPanel>(m_tester));
+
+		m_tester.CreateAllTests(*p_renderer);
 
 		//auto mlx_path = CommandLineInterface::Get().GetOption("path");
 	}

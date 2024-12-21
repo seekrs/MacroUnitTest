@@ -10,22 +10,14 @@ namespace mlxut
 		ImGuiStyle* style = &ImGui::GetStyle();
 
 		if(m_dialog.IsFinished())
-		{
-			if(m_dialog_libmlx_openned)
-			{
-				m_dialog_libmlx_openned = false;
-			}
-		}
+			m_mlx_lib_path = m_dialog.GetResult();
 
 		if(ImGui::BeginMainMenuBar())
 		{
 			if(ImGui::BeginMenu(MLX_UT_ICON_MD_FOLDER" File"))
 			{
 				if(ImGui::MenuItem("Open") || !m_dialog.IsFinished())
-				{
 					m_dialog.Open("Open result file", { "dynamic library (" MLX_UT_LIB_EXTENSION ")", "*" MLX_UT_LIB_EXTENSION });
-					m_dialog_libmlx_openned = true;
-				}
 				if(ImGui::MenuItem("Quit"))
 					m_quit_requested = true;
 				ImGui::EndMenu();

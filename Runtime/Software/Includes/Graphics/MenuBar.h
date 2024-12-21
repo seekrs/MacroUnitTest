@@ -19,6 +19,7 @@ namespace mlxut
 			[[nodiscard]] inline bool ShouldRenderSettingsWindow() const noexcept { return m_render_settings_window; }
 			[[nodiscard]] inline bool IsQuitRequested() const noexcept { return m_quit_requested; }
 			[[nodiscard]] inline float GetHeight() const noexcept { return m_height; }
+			[[nodiscard]] inline const std::filesystem::path& GetMLXPath() const noexcept { return m_mlx_lib_path; }
 
 			~MenuBar() = default;
 
@@ -26,12 +27,12 @@ namespace mlxut
 			void RenderGeneralSettings();
 
 		private:
+			std::filesystem::path m_mlx_lib_path;
 			FileDialog m_dialog;
 			float m_height;
 			bool m_render_about_window = false;
 			bool m_render_settings_window = false;
 			bool m_quit_requested = false;
-			bool m_dialog_libmlx_openned = false;
 	};
 }
 

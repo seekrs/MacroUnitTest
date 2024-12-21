@@ -13,7 +13,7 @@ namespace mlxut
 
 			void Reset() noexcept;
 
-			void Run(std::filesystem::path mlx_path);
+			void Run(const std::filesystem::path& mlx_path);
 			bool IsTestFinished();
 
 			[[nodiscard]] inline SDL_Texture* GetResult() const noexcept { return p_result; }
@@ -41,7 +41,7 @@ namespace mlxut
 			SDL_Texture* p_reference = nullptr;
 			SDL_Texture* p_result = nullptr;
 
-			TestState m_state;
+			TestState m_state = TestState::Pending;
 	};
 }
 
