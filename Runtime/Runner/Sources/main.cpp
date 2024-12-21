@@ -82,11 +82,10 @@
 		mlx_loader.mlx_loop(mlx);
 
 		script->RunOnQuit(mlx, window);
-
 		mlx_loader.mlx_destroy_window(mlx, window);
 
 		{
-			std::vector<mlx_color> result(MLX_WIN_WIDTH * MLX_WIN_HEIGHT);
+			std::vector<mlx_color> result;
 			// FIX THIS FUNCTION !!!
 			//mlx_loader.mlx_get_image_region(mlx, render_target, 0, 0, MLX_WIN_WIDTH, MLX_WIN_HEIGHT, result.data());
 			for(int y = 0; y < MLX_WIN_HEIGHT; y++)

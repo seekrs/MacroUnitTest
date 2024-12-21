@@ -13,6 +13,7 @@ namespace mlxut
 			if(dir_entry.path().extension() != ".lua")
 				continue;
 			m_tests.emplace_back(std::make_shared<Test>(renderer, std::move(dir_entry.path().stem().string())));
+			m_tests.back()->CreateRenderTextures();
 		}
 		m_pending_tests = m_tests.size();
 	}

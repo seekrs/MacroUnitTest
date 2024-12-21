@@ -1,5 +1,5 @@
 #ifdef MLX_UT_MLX_FUNCTION
-	#ifndef MLX_UT_ONLY_TESTS_FUNCTION
+	#ifndef MLX_UT_ONLY_TESTS_FUNCTIONS
 		MLX_UT_MLX_FUNCTION(mlx_init)
 		MLX_UT_MLX_FUNCTION(mlx_destroy_context)
 		MLX_UT_MLX_FUNCTION(mlx_new_window)
@@ -27,22 +27,25 @@
 		MLX_UT_MLX_FUNCTION(mlx_restore_window)
 	#endif
 
-	MLX_UT_MLX_FUNCTION(mlx_get_window_size)
+	#ifndef MLX_UT_ONLY_DIRECTLY_BINDABLE_FUNCTIONS
+		MLX_UT_MLX_FUNCTION(mlx_get_window_size)
+		MLX_UT_MLX_FUNCTION(mlx_new_image_from_file)
+		MLX_UT_MLX_FUNCTION(mlx_string_put)
+		MLX_UT_MLX_FUNCTION(mlx_set_font)
+		MLX_UT_MLX_FUNCTION(mlx_set_font_scale)
+
+		MLX_UT_MLX_FUNCTION(mlx_pixel_put_array)
+		MLX_UT_MLX_FUNCTION(mlx_pixel_put_region)
+		MLX_UT_MLX_FUNCTION(mlx_get_image_region)
+		MLX_UT_MLX_FUNCTION(mlx_set_image_region)
+	#endif
+
 	MLX_UT_MLX_FUNCTION(mlx_clear_window)
-	MLX_UT_MLX_FUNCTION(mlx_pixel_put)
-	MLX_UT_MLX_FUNCTION(mlx_new_image)
-	MLX_UT_MLX_FUNCTION(mlx_new_image_from_file)
 	MLX_UT_MLX_FUNCTION(mlx_destroy_image)
+	MLX_UT_MLX_FUNCTION(mlx_new_image)
+	MLX_UT_MLX_FUNCTION(mlx_pixel_put)
 	MLX_UT_MLX_FUNCTION(mlx_get_image_pixel)
 	MLX_UT_MLX_FUNCTION(mlx_set_image_pixel)
 	MLX_UT_MLX_FUNCTION(mlx_put_image_to_window)
-	MLX_UT_MLX_FUNCTION(mlx_string_put)
-	MLX_UT_MLX_FUNCTION(mlx_set_font)
-	MLX_UT_MLX_FUNCTION(mlx_set_font_scale)
-
-	MLX_UT_MLX_FUNCTION(mlx_pixel_put_array)
-	MLX_UT_MLX_FUNCTION(mlx_pixel_put_region)
-	MLX_UT_MLX_FUNCTION(mlx_get_image_region)
-	MLX_UT_MLX_FUNCTION(mlx_set_image_region)
 	MLX_UT_MLX_FUNCTION(mlx_put_transformed_image_to_window)
 #endif
