@@ -4,10 +4,8 @@
 !README.md
 !LICENSE
 !xmake.lua
-!compile_commands.json
 !/Runtime/
 !/Resources/
-!/Tests/
 !/Xmake/
 *.o
 *.swp

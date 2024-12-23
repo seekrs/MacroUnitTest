@@ -45,7 +45,7 @@ namespace mlxut
 							continue;
 
 						std::string sub_string;
-						ImVec4 print_color(1.f, 1.f, 1.f, 1.f);
+						ImVec4 print_color;
 						for(std::size_t i = 0; i <= line.length(); i++)
 						{
 							if(line[i] == '\033' || i == line.length())
@@ -84,7 +84,7 @@ namespace mlxut
 								else if(line.compare(i, 6, "\033[1;0m") == 0)
 								{
 									i += 6;
-									print_color = ImVec4(1.f, 1.f, 1.f, 1.f);
+									print_color = ImGui::GetStyle().Colors[ImGuiCol_Text];
 								}
 							}
 							sub_string.push_back(line[i]);

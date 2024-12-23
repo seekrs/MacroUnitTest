@@ -31,21 +31,24 @@ namespace mlxut
 				for(std::size_t n = 0; n < tests.size(); n++)
 				{
 					name.clear();
-					ImVec4 printColor(1.f, 1.f, 1.f, 1.f);
-					if(tests[n]->IsPending())
-						name += MLX_UT_ICON_MD_SCHEDULE" ";
+					ImVec4 print_color;
+					if(tests[n]->HasFailed())
+					{
+						name += MLX_UT_ICON_MD_ERROR" ";
+						print_color = ImVec4(1.f, .365f, .365f, 1.f);
+					}
 					else if(tests[n]->HasPassed())
 					{
 						name += MLX_UT_ICON_MD_DONE" ";
-						printColor = ImVec4(.2f, .8f, .1f, 1.f);
+						print_color = ImVec4(.2f, .8f, .1f, 1.f);
 					}
 					else
 					{
-						name += MLX_UT_ICON_MD_ERROR" ";
-						printColor = ImVec4(1.f, .365f, .365f, 1.f);
+						name += MLX_UT_ICON_MD_SCHEDULE" ";
+						print_color = ImVec4(.2f, .5f, 1.f, 1.f);
 					}
 					name += tests[n]->GetName();
-					ImGui::PushStyleColor(ImGuiCol_Text, printColor);
+					ImGui::PushStyleColor(ImGuiCol_Text, print_color);
 						if(ImGui::Selectable(name.c_str(), m_tester.GetSelectedTest() == n))
 							m_tester.SelectTest(n);
 					ImGui::PopStyleColor();

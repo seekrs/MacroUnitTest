@@ -32,7 +32,7 @@ namespace mlxut
 		m_stack.AddPanel(std::make_shared<Docks>(m_menubar));
 		m_stack.AddPanel(std::make_shared<LogsPanel>(m_tester));
 		m_stack.AddPanel(std::make_shared<Render>(m_tester));
-		m_stack.AddPanel(std::make_shared<Results>());
+		m_stack.AddPanel(std::make_shared<Results>(m_tester));
 		m_stack.AddPanel(std::make_shared<TestsPanel>(m_tester));
 
 		m_tester.CreateAllTests(*p_renderer);
@@ -69,6 +69,7 @@ namespace mlxut
 			{
 				m_tester.FetchAllResults();
 				m_tester.CreateAllRenderTextures();
+				m_tester.ComputeAllErrorMaps();
 				have_tests_been_launched = false;
 			}
 

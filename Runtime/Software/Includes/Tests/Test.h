@@ -17,9 +17,13 @@ namespace mlxut
 			bool IsTestFinished();
 			void FetchResult();
 			void CreateRenderTextures();
+			void ComputeErrorMap();
 
 			[[nodiscard]] inline SDL_Texture* GetResult() const noexcept { return p_result; }
 			[[nodiscard]] inline SDL_Texture* GetReference() const noexcept { return p_reference; }
+			[[nodiscard]] inline SDL_Texture* GetErrorMap() const noexcept { return p_error_map; }
+
+			[[nodiscard]] inline float GetMean() const noexcept { return m_error_mean; }
 
 			[[nodiscard]] inline const std::string& GetName() const noexcept { return m_name; }
 			[[nodiscard]] inline const std::string& GetLogs() const noexcept { return m_logs; }
@@ -42,8 +46,11 @@ namespace mlxut
 
 			SDL_Texture* p_reference = nullptr;
 			SDL_Texture* p_result = nullptr;
+			SDL_Texture* p_error_map = nullptr;
 
 			TestState m_state = TestState::Pending;
+
+			float m_error_mean = 0.0f;
 	};
 }
 

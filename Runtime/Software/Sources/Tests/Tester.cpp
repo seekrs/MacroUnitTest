@@ -20,7 +20,7 @@ namespace mlxut
 
 	void Tester::RunAllTests(const std::filesystem::path& mlx_path)
 	{
-		m_pending_tests = 0;
+		m_pending_tests = m_tests.size();
 		for(auto test : m_tests)
 			test->Run(mlx_path);
 		m_is_running = true;
@@ -42,6 +42,8 @@ namespace mlxut
 				m_failed_tests++;
 			else if(test->HasPassed())
 				m_passed_tests++;
+			if(m_pending_tests > 0)
+				m_pending_tests--;
 		}
 		if(all_finished)
 			m_is_running = false;
@@ -58,5 +60,11 @@ namespace mlxut
 	{
 		for(auto test : m_tests)
 			test->CreateRenderTextures();
+	}
+
+	void Tester::ComputeAllErrorMaps()
+	{
+		for(auto test : m_tests)
+			test->ComputeErrorMap();
 	}
 }
