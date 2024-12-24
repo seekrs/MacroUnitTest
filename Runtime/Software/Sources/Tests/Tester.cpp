@@ -28,8 +28,6 @@ namespace mlxut
 
 	bool Tester::HaveAllTestsFinished()
 	{
-		m_passed_tests = 0;
-		m_failed_tests = 0;
 		bool all_finished = true;
 		for(auto test : m_tests)
 		{
@@ -38,10 +36,6 @@ namespace mlxut
 				all_finished = false;
 				continue;
 			}
-			if(test->HasFailed())
-				m_failed_tests++;
-			else if(test->HasPassed())
-				m_passed_tests++;
 			if(m_pending_tests > 0)
 				m_pending_tests--;
 		}
@@ -66,5 +60,18 @@ namespace mlxut
 	{
 		for(auto test : m_tests)
 			test->ComputeErrorMap();
+	}
+
+	void Tester::FetchSuccess()
+	{
+		m_passed_tests = 0;
+		m_failed_tests = 0;
+		for(auto test : m_tests)
+		{
+			if(test->HasFailed())
+				m_failed_tests++;
+			else if(test->HasPassed())
+				m_passed_tests++;
+		}
 	}
 }

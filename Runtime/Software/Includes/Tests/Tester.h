@@ -17,6 +17,7 @@ namespace mlxut
 			void FetchAllResults();
 			void CreateAllRenderTextures();
 			void ComputeAllErrorMaps();
+			void FetchSuccess();
 
 			[[nodiscard]] const auto& GetAllTests() const noexcept { return m_tests; }
 			[[nodiscard]] inline bool AreTestsRunning() const noexcept { return m_is_running; }

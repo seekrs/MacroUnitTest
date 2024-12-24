@@ -4,6 +4,7 @@
 #include <Core/OS/OSInstance.h>
 
 #include <FLIP.h>
+#include <cstdint>
 
 namespace mlxut
 {
@@ -99,17 +100,53 @@ namespace mlxut
 				SDL_FreeSurface(surface);
 			surface = IMG_Load(ref_path.string().c_str());
 			SDL_LockSurface(surface);
-			for(int y = 0; y < surface->h; y++)
+
+			m_reference_pixels.resize(surface->h * surface->w);
+
+			auto get_pixel = [](SDL_Surface* surface, int x, int y) -> std::uint32_t
 			{
-				for(int x = 0; x < surface->w; x++)
-					m_reference_pixels.push_back(*reinterpret_cast<const std::uint32_t*>(reinterpret_cast<const std::uint8_t*>(surface->pixels) + y * surface->pitch + x * surface->format->BytesPerPixel));
+				int bpp = surface->format->BytesPerPixel;
+				std::uint8_t* p = reinterpret_cast<std::uint8_t*>(surface->pixels) + y * surface->pitch + x * bpp;
+
+				switch (bpp)
+				{
+					case 1: return *p; break;
+					case 2: return *reinterpret_cast<std::uint16_t*>(p); break;
+					case 3:
+					{
+						if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+							return p[0] << 16 | p[1] << 8 | p[2];
+						else
+							return p[0] | p[1] << 8 | p[2] << 16;
+						break;
+					}
+					case 4:
+					{
+						if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+							return p[0] | p[1] << 8 | p[2] << 16 | p[3] << 24;
+						else
+							return p[0] << 24 | p[1] << 16 | p[2] << 8 | p[3];
+						break;
+					}
+
+					default: return 0;
+				}
+			};
+
+
+			for(std::size_t y = 0; y < MLX_WIN_HEIGHT; y++)
+			{
+				for(std::size_t x = 0; x < MLX_WIN_WIDTH; x++)
+					m_reference_pixels[y * MLX_WIN_WIDTH + x] = get_pixel(surface, x, y);
 			}
+
 			SDL_UnlockSurface(surface);
 			p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			SDL_FreeSurface(surface);
 		}
 		else if(surface)
 		{
+			m_reference_pixels = m_result_pixels;
 			IMG_SavePNG(surface, ref_path.string().c_str());
 			SDL_FreeSurface(surface);
 		}
@@ -117,32 +154,6 @@ namespace mlxut
 
 	void Test::ComputeErrorMap()
 	{
-		/*
-		auto logarithmic_diff = [](std::int16_t diff, std::uint8_t src) -> std::uint8_t
-		{
-			auto ddiff = std::log2(diff);
-			return std::min(255.0, (ddiff * 10.0 + double(src) * 2.0) / 5.0);
-		};
-
-		std::vector<std::uint32_t> error_map_data(MLX_WIN_WIDTH * MLX_WIN_HEIGHT);
-		for(std::size_t y = 0; y < MLX_WIN_HEIGHT; y++)
-		{
-			for(std::size_t x = 0; x < MLX_WIN_WIDTH; x++)
-			{
-				std::uint32_t res_pixel = m_result_pixels[y * MLX_WIN_WIDTH + x];
-				std::uint32_t ref_pixel = m_reference_pixels[y * MLX_WIN_WIDTH + x];
-				std::uint8_t r = logarithmic_diff((res_pixel >> 24) - (ref_pixel >> 24), (ref_pixel >> 24));
-				std::uint8_t g = logarithmic_diff((res_pixel >> 16) - (ref_pixel >> 16), (ref_pixel >> 16));
-				std::uint8_t b = logarithmic_diff((res_pixel >>  8) - (ref_pixel >>  8), (ref_pixel >>  8));
-				error_map_data[y * MLX_WIN_WIDTH + x] = (r << 24) | (g << 16) | (b << 8) | 0xFF;
-			}
-		}
-
-		SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(error_map_data.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);
-		p_error_map = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
-		SDL_FreeSurface(surface);
-		*/
-
 		FLIP::image<FLIP::color3> reference_image;
 		{
 			std::vector<float> flip_reference_pixels(m_reference_pixels.size() * 3);
@@ -183,6 +194,10 @@ namespace mlxut
 					sum += error_map.get(x, y);
 			}
 			m_error_mean = sum / (error_map.getWidth() * error_map.getHeight());
+			if(m_error_mean > MEAN_THRESHOLD)
+				m_state = TestState::Failed;
+			else if(m_state != TestState::Failed)
+				m_state = TestState::Succeeded;
 		}
 
 		{
@@ -196,10 +211,20 @@ namespace mlxut
 				for(std::size_t x = 0; x < MLX_WIN_WIDTH; x++)
 				{
 					FLIP::color3 pixel = magma_mapped_image.getHostData()[y * MLX_WIN_WIDTH + x];
-					*err_it = pixel.r * 255.0f; ++err_it;
-					*err_it = pixel.g * 255.0f; ++err_it;
-					*err_it = pixel.b * 255.0f; ++err_it;
-					*err_it = 0xFF; ++err_it;
+					if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+					{
+						*err_it = pixel.r * 255.0f; ++err_it;
+						*err_it = pixel.g * 255.0f; ++err_it;
+						*err_it = pixel.b * 255.0f; ++err_it;
+						*err_it = 0xFF; ++err_it;
+					}
+					else
+					{
+						*err_it = 0xFF; ++err_it;
+						*err_it = pixel.b * 255.0f; ++err_it;
+						*err_it = pixel.g * 255.0f; ++err_it;
+						*err_it = pixel.r * 255.0f; ++err_it;
+					}
 				}
 			}
 			SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(error_map_data.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);

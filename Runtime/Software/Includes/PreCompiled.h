@@ -59,4 +59,6 @@ constexpr const std::uint16_t MLX_WIN_HEIGHT = 400;
 
 constexpr int RESIZE_MARGIN = 7;
 
+constexpr float MEAN_THRESHOLD = 0.001f;
+
 #endif
