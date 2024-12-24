@@ -6,11 +6,6 @@ namespace mlxut
 {
 	ImGuiContext::ImGuiContext(const class Window& win, const class Renderer& renderer) : m_renderer(renderer)
 	{
-		if(!std::filesystem::exists(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Fonts/OpenSans/OpenSans-Regular.ttf"))
-			FatalError("Cannot find open sans font");
-		if(!std::filesystem::exists(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Fonts/MaterialIcons-Regular.ttf"))
-			FatalError("Cannot find material font");
-
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
@@ -24,15 +19,18 @@ namespace mlxut
 		ImGui_ImplSDLRenderer2_Init(renderer.Get());
 
 		io.Fonts->ClearFonts();
-		const ImWchar icons_ranges[] = { MLX_UT_ICON_MIN_MD, MLX_UT_ICON_MAX_16_MD, 0 };
-		ImFontConfig config;
+		static const ImWchar icons_ranges[] = { MLX_UT_ICON_MIN_MD, MLX_UT_ICON_MAX_16_MD, 0 };
+		static ImFontConfig config;
 		config.MergeMode = true;
 		config.GlyphOffset.y = 4.0f;
+		config.GlyphRanges = icons_ranges;
 
 		for(std::size_t size = 14; size < 32; size += 2)
 		{
 			ImFont* font = io.Fonts->AddFontFromFileTTF((OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Fonts/OpenSans/OpenSans-Regular.ttf").string().c_str(), static_cast<float>(size));
-			io.Fonts->AddFontFromFileTTF((OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Fonts/MaterialIcons-Regular.ttf").string().c_str(), static_cast<float>(size), &config, icons_ranges);
+			ImFont* icon_font = io.Fonts->AddFontFromFileTTF((OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Fonts/MaterialIcons-Regular.ttf").string().c_str(), static_cast<float>(size), &config, icons_ranges);
+			Verify(font != nullptr, "could not load open sans font");
+			Verify(icon_font != nullptr, "could not load material font");
 			if(size == 18)
 				io.FontDefault = font;
 		}

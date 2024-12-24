@@ -10,7 +10,6 @@ function Test(mlx, win)
 	mlx_set_font_scale(mlx, "default", 32.0)
 	color.rgba = 0x0000FFFF
 	mlx_string_put(mlx, win, 150, 250, color, "yes")
-	mlx_string_put(mlx, win, 300, 250, color, "yes")
 	mlx_set_font_scale(mlx, "Resources/Fonts/OpenSans/OpenSans-ExtraBold.ttf", 45.0)
 	color.rgba = 0xB4A8FFFFF
 	mlx_string_put(mlx, win, 10, 350, color, "another string")

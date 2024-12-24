@@ -73,10 +73,6 @@
 
 		script->RunOnSetup(mlx, window);
 
-		mlx_color clear_color;
-		clear_color.SetRGBA(0xFFFFFFFF);
-		mlx_loader.mlx_clear_window(mlx, window, clear_color);
-
 		mlx_loader.mlx_add_loop_hook(mlx, [](void* data) -> void
 		{
 			LoopData* loop_data = reinterpret_cast<LoopData*>(data);

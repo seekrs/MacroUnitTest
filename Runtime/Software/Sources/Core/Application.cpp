@@ -70,6 +70,7 @@ namespace mlxut
 				m_tester.FetchAllResults();
 				m_tester.CreateAllRenderTextures();
 				m_tester.ComputeAllErrorMaps();
+				m_tester.FetchSuccess();
 				have_tests_been_launched = false;
 			}
 
