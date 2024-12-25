@@ -14,7 +14,12 @@ namespace mlxut
 	{
 		public:
 			Application();
+
 			void Run();
+			inline void SetCursor(SDL_SystemCursor cursor) const noexcept { SDL_SetCursor(m_cursors.at(cursor)); }
+
+			inline static Application& Get() noexcept { return *s_instance; }
+
 			~Application();
 
 		private:
@@ -22,6 +27,8 @@ namespace mlxut
 			void UpdateCursor() noexcept;
 
 		private:
+			inline static Application* s_instance = nullptr;
+
 			Tester m_tester;
 			std::unordered_map<SDL_SystemCursor, SDL_Cursor*> m_cursors;
 			MenuBar m_menubar;

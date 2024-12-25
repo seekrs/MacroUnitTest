@@ -12,6 +12,8 @@ namespace mlxut
 {
 	Application::Application()
 	{
+		s_instance = this;
+
 		std::function<void(const EventBase&)> functor = [](const EventBase& event)
 		{
 			if(event.What() == Event::FatalErrorEventCode)
@@ -51,6 +53,7 @@ namespace mlxut
 					goto EndLoop;
 				p_imgui->CheckEvents(&m_event);
 			}
+			UpdateCursor();
 
 			Vec2i render_size = p_renderer->GetDrawableSize();
 			ImVec2 im_render_size = ImVec2{ static_cast<float>(render_size.x), static_cast<float>(render_size.y) };
@@ -82,8 +85,6 @@ namespace mlxut
 				m_tester.RunAllTests(m_menubar.GetMLXPath());
 				have_tests_been_launched = true;
 			}
-
-			UpdateCursor();
 		}
 
 EndLoop:
@@ -103,6 +104,8 @@ EndLoop:
 		SDL_QuitSubSystem(SDL_INIT_TIMER);
 		SDL_QuitSubSystem(SDL_INIT_EVENTS);
 		SDL_Quit();
+
+		s_instance = nullptr;
 	}
 
 	void Application::LoadSystemCursors() noexcept

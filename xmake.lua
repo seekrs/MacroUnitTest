@@ -90,11 +90,125 @@ function ModuleTargetConfig(name, module, subdir)
 	end
 end
 
+function CraeteEmbeddedResources(target)
+	if is_mode("debug") and not os.exists("$(buildir)/Bin/$(os)_$(arch)/Resources") then
+		os.ln("$(scriptdir)/Resources", "$(buildir)/Bin/$(os)_$(arch)/Resources")
+		print("Created resources symlink")
+	end
+	if is_mode("release") then
+		if os.exists("Runtime/Software/Includes/Embedded") then
+			os.rm("Runtime/Software/Includes/Embedded")
+		end
+		os.mkdir("Runtime/Software/Includes/Embedded")
+		io.writefile("Runtime/Software/Includes/Embedded/Logo.h", [[
+#ifndef MLX_UT_EMBEDDED_LOGO
+#define MLX_UT_EMBEDDED_LOGO
+
+// Generated File
+
+#include <vector>
+#include <cstdint>
+
+static const std::vector<std::uint8_t> logo_data = {
+	#include <Logo.png.h>
+};
+
+#endif // MLX_UT_EMBEDDED_LOGO]])
+
+		local references = ""
+		local references_names = ""
+
+		for _, file in ipairs(os.files("Resources/Assets/TestsReferences/*.png")) do
+			_, filename, _ = file:match("^(.-)([^\\/]-)%.([^\\/%.]-)%.?$")
+			references = references .. "static const std::vector<std::uint8_t> " .. filename .. "_data = {\n\t#include <" .. filename .. ".png.h>\n};\n"
+			references_names = references_names .. "if(name == \"" .. filename .. "\")\n\t\treturn " .. filename .. "_data;\n\t"
+		end
+
+		io.writefile("Runtime/Software/Includes/Embedded/References.h", [[
+#ifndef MLX_UT_EMBEDDED_REFERENCES
+#define MLX_UT_EMBEDDED_REFERENCES
+
+// Generated File
+
+#include <vector>
+#include <cstdint>
+#include <string_view>
+
+]] .. references ..[[
+
+inline const std::vector<std::uint8_t> GetDataFromFilename(std::string_view name)
+{
+// Ugly generated function
+	]] .. references_names .. [[return {};
+}
+
+#endif // MLX_UT_EMBEDDED_REFERENCES]])
+
+		local fonts = ""
+
+		for _, file in ipairs(os.files("Resources/Fonts/**.ttf")) do
+			_, filename, _ = file:match("^(.-)([^\\/]-)%.([^\\/%.]-)%.?$")
+			fonts = fonts .. "static const std::vector<std::uint8_t> " .. filename .. "_data = {\n\t#include <" .. filename .. ".ttf.h>\n};\n"
+		end
+
+		io.writefile("Runtime/Software/Includes/Embedded/Fonts.h", [[
+#ifndef MLX_UT_EMBEDDED_FONTS
+#define MLX_UT_EMBEDDED_FONTS
+
+// Generated File
+
+#include <vector>
+#include <cstdint>
+
+]] .. fonts ..[[
+
+#endif // MLX_UT_EMBEDDED_FONTS]])
+
+		if os.exists("Runtime/Runner/Includes/Embedded") then
+			os.rm("Runtime/Runner/Includes/Embedded")
+		end
+		os.mkdir("Runtime/Runner/Includes/Embedded")
+
+		local tests = ""
+		local tests_names = ""
+
+		for _, file in ipairs(os.files("Resources/Tests/**.lua")) do
+			_, filename, _ = file:match("^(.-)([^\\/]-)%.([^\\/%.]-)%.?$")
+			tests = tests .. "static const std::string " .. filename .. "_data = R\"test(\n" .. io.readfile(file) .. ")test\";\n\n"
+			tests_names = tests_names .. "if(name == \"" .. filename .. "\")\n\t\treturn " .. filename .. "_data;\n\t"
+		end
+
+		io.writefile("Runtime/Runner/Includes/Embedded/Tests.h", [[
+#ifndef MLX_UT_EMBEDDED_TESTS
+#define MLX_UT_EMBEDDED_TESTS
+
+// Generated File
+
+#include <string>
+
+]] .. tests ..[[
+
+inline const std::string GetDataFromFilename(std::string_view name)
+{
+// Ugly generated function
+	]] .. tests_names .. [[return {};
+}
+
+#endif // MLX_UT_EMBEDDED_TESTS]])
+	end
+end
+
 target("MacroUnitTest")
 	set_license("MIT")
 	set_kind("binary")
 
 	add_packages("libsdl", "pfd", "libsdl_image", "imgui", "tiny-process-library")
+
+	if is_mode("release") then
+		add_rules("utils.bin2c", { extensions = { ".png", ".ttf" } } )
+		add_files("Resources/Assets/**.png")
+		add_files("Resources/Fonts/**.ttf")
+	end
 
 	if has_config("unitybuild") then
 		add_rules("c++.unity_build", { batchsize = 6 })
@@ -111,12 +225,7 @@ target("MacroUnitTest")
 		end
 	end
 
-	on_load(function(target)
-		if not os.exists("$(buildir)/Bin/$(os)_$(arch)/Resources") then
-			os.ln("$(scriptdir)/Resources", "$(buildir)/Bin/$(os)_$(arch)/Resources")
-			print("Created resources symlink")
-		end
-	end)
+	before_build(CraeteEmbeddedResources)
 
 	on_clean(function(target)
 		if target:objectfiles() then

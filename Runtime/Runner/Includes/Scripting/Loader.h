@@ -10,7 +10,13 @@ namespace mlxut
 	{
 		public:
 			LuaLoader();
-			std::optional<LuaScript> LoadScript(std::filesystem::path path);
+
+			#ifndef MLX_UT_RELEASE
+				std::optional<LuaScript> LoadScript(std::filesystem::path path);
+			#else
+				std::optional<LuaScript> LoadScript(std::string name);
+			#endif
+
 			~LuaLoader() = default;
 
 		private:

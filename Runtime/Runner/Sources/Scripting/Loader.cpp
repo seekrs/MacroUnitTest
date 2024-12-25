@@ -2,6 +2,10 @@
 #include <Loader/Loader.h>
 #include <Utils/Ansi.h>
 
+#ifdef MLX_UT_RELEASE
+	#include <Embedded/Tests.h>
+#endif
+
 namespace mlxut
 {
 	LuaLoader::LuaLoader() : m_state()
@@ -51,57 +55,102 @@ namespace mlxut
 			MLXLoader::Get().mlx_set_font_scale(mlx, const_cast<char*>(font.data()), scale);
 		});
 
-		m_state.set_function("mlx_pixel_put_array", [](mlx_context mlx, mlx_window window)
+		m_state.set_function("mlx_pixel_put_array", [](mlx_context mlx, mlx_window window, int x, int y, sol::table pixels)
 		{
-			MLXLoader::Get();
+			std::size_t sz = pixels.size();
+			std::vector<mlx_color> vec(sz);
+			for(int i = 1; i <= sz; i++)
+				vec[i - 1] = pixels[i];
+			MLXLoader::Get().mlx_pixel_put_array(mlx, window, x, y, vec.data(), vec.size() * sizeof(mlx_color));
 		});
 
-		m_state.set_function("mlx_pixel_put_region", [](mlx_context mlx, mlx_window window)
+		m_state.set_function("mlx_pixel_put_region", [](mlx_context mlx, mlx_window window, int x, int y, int w, int h, sol::table pixels)
 		{
-			MLXLoader::Get();
+			std::size_t sz = pixels.size();
+			std::vector<mlx_color> vec(sz);
+			for(int i = 1; i <= sz; i++)
+				vec[i - 1] = pixels[i];
+			MLXLoader::Get().mlx_pixel_put_region(mlx, window, x, y, w, h, vec.data());
 		});
 
-		m_state.set_function("mlx_get_image_region", [](mlx_context mlx)
+		m_state.set_function("mlx_get_image_region", [](mlx_context mlx, mlx_image image, int x, int y, int w, int h, sol::table pixels)
 		{
-			MLXLoader::Get();
+			std::vector<mlx_color> tmp(w * h);
+			MLXLoader::Get().mlx_get_image_region(mlx, image, x, y, w, h, tmp.data());
+			for(auto pixel : tmp)
+				pixels.add(pixel);
 		});
 
-		m_state.set_function("mlx_set_image_region", [](mlx_context mlx)
+		m_state.set_function("mlx_set_image_region", [](mlx_context mlx, mlx_image image, int x, int y, int w, int h, sol::table pixels)
 		{
-			MLXLoader::Get();
+			std::size_t sz = pixels.size();
+			std::vector<mlx_color> vec(sz);
+			for(int i = 1; i <= sz; i++)
+				vec[i - 1] = pixels[i];
+			MLXLoader::Get().mlx_set_image_region(mlx, image, x, y, w, h, vec.data());
 		});
 	}
 
-	std::optional<LuaScript> LuaLoader::LoadScript(std::filesystem::path lua_file)
-	{
-		if(!std::filesystem::exists(lua_file))
+	#ifndef MLX_UT_RELEASE
+		std::optional<LuaScript> LuaLoader::LoadScript(std::filesystem::path lua_file)
 		{
-			std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Loader: invalid script path " << lua_file << std::endl;
-			return std::nullopt;
+			if(!std::filesystem::exists(lua_file))
+			{
+				std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Loader: invalid script path " << lua_file << std::endl;
+				return std::nullopt;
+			}
+
+			sol::environment env(m_state, sol::create, m_state.globals());
+
+			auto sol_script = m_state.script_file(lua_file.string(), env, sol::script_pass_on_error);
+			if(!sol_script.valid())
+			{
+				sol::error err = sol_script;
+				std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Error: " << err.what() << std::endl;
+				std::cerr << Ansi::red << "Error: " << Ansi::def << "Failed to load and execute Lua script" << std::endl;
+				return std::nullopt;
+			}
+
+			std::optional<LuaScript> script;
+			script.emplace();
+
+			script->m_env = std::move(env);
+
+			script->f_on_setup = script->m_env["Setup"];
+			script->f_on_test = script->m_env["Test"];
+			script->f_on_quit = script->m_env["Cleanup"];
+
+			m_state.collect_garbage();
+
+			return script;
 		}
-
-		sol::environment env(m_state, sol::create, m_state.globals());
-
-		auto sol_script = m_state.script_file(lua_file.string(), env, sol::script_pass_on_error);
-		if(!sol_script.valid())
+	#else
+		std::optional<LuaScript> LuaLoader::LoadScript(std::string name)
 		{
-			sol::error err = sol_script;
-			std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Error: " << err.what() << std::endl;
-			std::cerr << Ansi::red << "Error: " << Ansi::def << "Failed to load and execute Lua script" << std::endl;
-			return std::nullopt;
+			sol::environment env(m_state, sol::create, m_state.globals());
+
+			std::string script_data = GetDataFromFilename(name);
+			auto sol_script = m_state.script(script_data, env, sol::script_pass_on_error);
+			if(!sol_script.valid())
+			{
+				sol::error err = sol_script;
+				std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Error: " << err.what() << std::endl;
+				std::cerr << Ansi::red << "Error: " << Ansi::def << "Failed to load and execute Lua script" << std::endl;
+				return std::nullopt;
+			}
+
+			std::optional<LuaScript> script;
+			script.emplace();
+
+			script->m_env = std::move(env);
+
+			script->f_on_setup = script->m_env["Setup"];
+			script->f_on_test = script->m_env["Test"];
+			script->f_on_quit = script->m_env["Cleanup"];
+
+			m_state.collect_garbage();
+
+			return script;
 		}
-
-		std::optional<LuaScript> script;
-		script.emplace();
-
-		script->m_env = std::move(env);
-
-		script->f_on_setup = script->m_env["Setup"];
-		script->f_on_test = script->m_env["Test"];
-		script->f_on_quit = script->m_env["Cleanup"];
-
-		m_state.collect_garbage();
-
-		return script;
-	}
+	#endif
 }
