@@ -1,10 +1,12 @@
-#include "PreCompiled.h"
 #include <Tests/Test.h>
 #include <Graphics/Renderer.h>
 #include <Core/OS/OSInstance.h>
 
 #include <FLIP.h>
-#include <cstdint>
+
+#ifdef MLX_UT_RELEASE
+	#include <Embedded/References.h>
+#endif
 
 namespace mlxut
 {
@@ -30,7 +32,11 @@ namespace mlxut
 		p_process = std::make_unique<TinyProcessLib::Process>(
 			std::vector<std::string>{
 				OSInstance::Get().GetCurrentWorkingDirectoryPath() / "TestRunner",
-				"--script=" + (OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (m_name + ".lua")).string(),
+				#ifndef MLX_UT_RELEASE
+					"--script-path=" + (OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (m_name + ".lua")).string(),
+				#else
+					"--script=" + m_name,
+				#endif
 				"--path=" + mlx_path.string(),
 				m_name
 			},
@@ -93,15 +99,24 @@ namespace mlxut
 			surface = SDL_CreateRGBSurfaceFrom(m_result_pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);
 			p_result = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 		}
+
+#ifndef MLX_UT_RELEASE
 		std::filesystem::path ref_path = OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Assets/TestsReferences" / (m_name + ".png");
 		if(std::filesystem::exists(ref_path))
 		{
+#endif
 			if(surface)
 				SDL_FreeSurface(surface);
+	#ifndef MLX_UT_RELEASE
 			surface = IMG_Load(ref_path.string().c_str());
+	#else
+			const auto& ref_data = GetDataFromFilename(m_name);
+			SDL_RWops* rw = SDL_RWFromMem(reinterpret_cast<void*>(const_cast<std::uint8_t*>(ref_data.data())), ref_data.size());
+			surface = IMG_Load_RW(rw, 1);
+	#endif
 			SDL_LockSurface(surface);
 
-			m_reference_pixels.resize(surface->h * surface->w);
+			m_reference_pixels.resize(MLX_WIN_WIDTH * MLX_WIN_HEIGHT);
 
 			auto get_pixel = [](SDL_Surface* surface, int x, int y) -> std::uint32_t
 			{
@@ -133,7 +148,6 @@ namespace mlxut
 				}
 			};
 
-
 			for(std::size_t y = 0; y < MLX_WIN_HEIGHT; y++)
 			{
 				for(std::size_t x = 0; x < MLX_WIN_WIDTH; x++)
@@ -143,6 +157,7 @@ namespace mlxut
 			SDL_UnlockSurface(surface);
 			p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			SDL_FreeSurface(surface);
+#ifndef MLX_UT_RELEASE
 		}
 		else if(surface)
 		{
@@ -150,6 +165,7 @@ namespace mlxut
 			IMG_SavePNG(surface, ref_path.string().c_str());
 			SDL_FreeSurface(surface);
 		}
+#endif
 	}
 
 	void Test::ComputeErrorMap()

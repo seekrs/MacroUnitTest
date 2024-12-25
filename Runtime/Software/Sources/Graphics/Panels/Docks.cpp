@@ -33,7 +33,7 @@ namespace mlxut
 				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_INFO" About", dock_center_id);
 				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_SETTINGS" Settings", dock_center_id);
 				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_TERMINAL" Logs", dock_right_id);
-				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_RULE" Results", dock_bottom_id);
+				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_RULE" Errors", dock_bottom_id);
 
 				ImGui::DockBuilderFinish(dockspace_id);
 			}

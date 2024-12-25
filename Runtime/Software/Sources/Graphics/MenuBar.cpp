@@ -1,4 +1,4 @@
-#include "SDL_render.h"
+#include <Core/Application.h>
 #include <Graphics/MenuBar.h>
 #include <Graphics/ImGuiContext.h>
 #include <Graphics/Window.h>
@@ -6,6 +6,10 @@
 #include <Core/MaterialFont.h>
 #include <Core/OS/OSInstance.h>
 #include <Core/CLI.h>
+
+#ifdef MLX_UT_RELEASE
+	#include <Embedded/Logo.h>
+#endif
 
 namespace mlxut
 {
@@ -21,7 +25,16 @@ namespace mlxut
 		ImGuiStyle* style = &ImGui::GetStyle();
 
 		if(p_logo == nullptr)
-			p_logo = IMG_LoadTexture(renderer.Get(), (OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Assets/Logo.png").string().c_str());
+		{
+			#ifndef MLX_UT_RELEASE
+				p_logo = IMG_LoadTexture(renderer.Get(), (OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Assets/Logo.png").string().c_str());
+			#else
+				SDL_RWops* rw = SDL_RWFromMem(reinterpret_cast<void*>(const_cast<std::uint8_t*>(logo_data.data())), logo_data.size());
+				SDL_Surface* surface = IMG_Load_RW(rw, 1);
+				p_logo = SDL_CreateTextureFromSurface(renderer.Get(), surface);
+				SDL_FreeSurface(surface);
+			#endif
+		}
 
 		if(m_dialog.IsFinished())
 			m_mlx_lib_path = m_dialog.GetResult();
@@ -73,10 +86,52 @@ namespace mlxut
 		}
 	}
 
+	void WebLink(const char* text, const char* url, ImVec2 pos)
+	{
+		ImGui::SetCursorPos(pos);
+		ImGui::TextUnformatted(text);
+		ImGui::SetCursorPos(pos);
+		if(ImGui::InvisibleButton(text, ImGui::CalcTextSize(text)))
+			OSInstance::Get().OpenURL(url);
+		if(ImGui::IsItemHovered())
+		{
+			ImGui::SetCursorPos(pos);
+			ImDrawList* draw_list = ImGui::GetForegroundDrawList();
+			ImVec2 text_size = ImGui::CalcTextSize(text);
+			ImVec2 abs_pos = ImGui::GetCursorScreenPos();
+			ImVec4* colors = ImGui::GetStyle().Colors;
+			draw_list->AddLine(ImVec2(abs_pos.x, abs_pos.y + text_size.y), ImVec2(abs_pos.x + text_size.x, abs_pos.y + text_size.y), ImGui::GetColorU32(ImGui::ColorConvertFloat4ToU32(colors[ImGuiCol_Text])));
+			Application::Get().SetCursor(SDL_SYSTEM_CURSOR_HAND);
+		}
+	}
+
 	void MenuBar::RenderAboutWindow()
 	{
 		if(ImGui::Begin(MLX_UT_ICON_MD_INFO" About", &m_render_about_window, ImGuiWindowFlags_NoMove |  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_HorizontalScrollbar))
 		{
+			ImVec2 size = ImGui::GetWindowSize();
+			ImGui::SetCursorPos(ImVec2(size.x / 7.0f, size.y / 7.0f));
+			ImGui::Image(p_logo, ImVec2(size.x / 4.0f, size.x / 4.0f));
+
+			#ifdef MLX_UT_DEBUG
+				ImGui::SetCursorPos(ImVec2(size.x - ImGui::CalcTextSize("Debug version").x - 30.0f, size.y - ImGui::GetTextLineHeightWithSpacing() * 3.0f));
+				ImGui::TextUnformatted("Debug version");
+			#else
+				ImGui::SetCursorPos(ImVec2(size.x - ImGui::CalcTextSize("Release version").x - 30, size.y - ImGui::GetTextLineHeightWithSpacing() * 3));
+				ImGui::TextUnformatted("Release version");
+			#endif
+			ImGui::SetCursorPos(ImVec2(size.x / 2.0f, size.y / 3.0f));
+			ImGui::TextWrapped(R"text(MacroLibX Unit Tester is a graphical unit tester for the MLX.
+			)text");
+
+			const std::string license_name = "License";
+			const std::string mlx_name = "MacroLibX";
+			const std::string sources_name = "Sources";
+
+			WebLink(license_name.data(), "https://github.com/seekrs/MacroUnitTest/blob/master/LICENSE", ImVec2(size.x / 2.0f - ImGui::CalcTextSize(mlx_name.c_str()).x * 2.0f - ImGui::CalcTextSize(license_name.c_str()).x, size.y - size.y / 5.0f));
+			WebLink(mlx_name.data(), "https://macrolibx.kbz8.me", ImVec2(size.x / 2.0f - ImGui::CalcTextSize(mlx_name.c_str()).x / 2.0f, size.y - size.y / 5.0f));
+			WebLink(sources_name.data(), "https://github.com/seekrs/MacroUnitTest", ImVec2(size.x / 2.0f + ImGui::CalcTextSize(mlx_name.c_str()).x * 2.0f, size.y - size.y / 5.0f));
+
 			ImGui::End();
 		}
 	}

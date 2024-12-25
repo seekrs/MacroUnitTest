@@ -32,12 +32,21 @@
 
 	os.Init(ac, av);
 
-	auto script_path = mlxut::CommandLineInterface::Get().GetOption("script");
-	if(!script_path.has_value() || !std::filesystem::exists(*script_path))
-	{
-		std::cerr << mlxut::Ansi::red << "Error: " << mlxut::Ansi::def << "invalid script path " << *script_path << std::endl;
-		return 1;
-	}
+	#ifndef MLX_UT_RELEASE
+		auto script_path = mlxut::CommandLineInterface::Get().GetOption("script-path");
+		if(!script_path.has_value() || !std::filesystem::exists(*script_path))
+		{
+			std::cerr << mlxut::Ansi::red << "Error: " << mlxut::Ansi::def << "invalid script path " << *script_path << std::endl;
+			return 1;
+		}
+	#else
+		auto script_name = mlxut::CommandLineInterface::Get().GetOption("script");
+		if(!script_name.has_value())
+		{
+			std::cerr << mlxut::Ansi::red << "Error: " << mlxut::Ansi::def << "invalid script name" << std::endl;
+			return 1;
+		}
+	#endif
 
 	auto mlx_path = mlxut::CommandLineInterface::Get().GetOption("path");
 	if(!mlx_path.has_value() || !std::filesystem::exists(*mlx_path))
@@ -50,7 +59,12 @@
 	mlx_loader.Load(*mlx_path);
 
 	mlxut::LuaLoader lua_loader;
-	auto script = lua_loader.LoadScript(*script_path);
+	#ifndef MLX_UT_RELEASE
+		auto script = lua_loader.LoadScript(*script_path);
+	#else
+		auto script = lua_loader.LoadScript(*script_name);
+	#endif
+
 	if(script.has_value())
 	{
 		mlx_context mlx = mlx_loader.mlx_init();
@@ -94,7 +108,11 @@
 					result.push_back(mlx_loader.mlx_get_image_pixel(mlx, render_target, x, y));
 			}
 
-			std::filesystem::path transfer_file_path = std::filesystem::temp_directory_path() / std::filesystem::path{ *script_path }.stem();
+			#ifndef MLX_UT_RELEASE
+				std::filesystem::path transfer_file_path = std::filesystem::temp_directory_path() / std::filesystem::path{ *script_path }.stem();
+			#else
+				std::filesystem::path transfer_file_path = std::filesystem::temp_directory_path() / *script_name;
+			#endif
 			std::fstream transfer_file(transfer_file_path, std::ios::out | std::ios::binary | std::ios::trunc);
 			if(!transfer_file.is_open())
 			{

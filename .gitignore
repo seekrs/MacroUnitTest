@@ -7,6 +7,8 @@
 !/Runtime/
 !/Resources/
 !/Xmake/
+Runtime/Software/Includes/Embedded/
+Runtime/Runner/Includes/Embedded/
 *.o
 *.swp
 *.swx

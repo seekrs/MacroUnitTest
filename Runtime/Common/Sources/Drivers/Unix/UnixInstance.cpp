@@ -54,7 +54,7 @@ namespace mlxut
 	bool UnixInstance::OpenURL([[maybe_unused]] const std::string& url)
 	{
 		using namespace std::literals;
-		std::string command = "xdg-open"s + url;
+		std::string command = "xdg-open "s + url;
 		return std::system(command.c_str()) == 0;
 	}
 

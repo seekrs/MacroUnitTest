@@ -2,6 +2,10 @@
 #include <Core/MaterialFont.h>
 #include <Core/OS/OSInstance.h>
 
+#ifdef MLX_UT_RELEASE
+	#include <Embedded/Fonts.h>
+#endif
+
 namespace mlxut
 {
 	ImGuiContext::ImGuiContext(const class Window& win, const class Renderer& renderer) : m_renderer(renderer)
@@ -27,8 +31,13 @@ namespace mlxut
 
 		for(std::size_t size = 14; size < 32; size += 2)
 		{
-			ImFont* font = io.Fonts->AddFontFromFileTTF((OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Fonts/OpenSans/OpenSans-Regular.ttf").string().c_str(), static_cast<float>(size));
-			ImFont* icon_font = io.Fonts->AddFontFromFileTTF((OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Fonts/MaterialIcons-Regular.ttf").string().c_str(), static_cast<float>(size), &config, icons_ranges);
+			#ifndef MLX_UT_RELEASE
+				ImFont* font = io.Fonts->AddFontFromFileTTF((OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Fonts/OpenSans/OpenSans_Regular.ttf").string().c_str(), static_cast<float>(size));
+				ImFont* icon_font = io.Fonts->AddFontFromFileTTF((OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Fonts/MaterialIcons_Regular.ttf").string().c_str(), static_cast<float>(size), &config, icons_ranges);
+			#else
+				ImFont* font = io.Fonts->AddFontFromMemoryTTF(reinterpret_cast<void*>(const_cast<std::uint8_t*>(OpenSans_Regular_data.data())), OpenSans_Regular_data.size(), static_cast<float>(size));
+				ImFont* icon_font = io.Fonts->AddFontFromMemoryTTF(reinterpret_cast<void*>(const_cast<std::uint8_t*>(MaterialIcons_Regular_data.data())), MaterialIcons_Regular_data.size(), static_cast<float>(size), &config, icons_ranges);
+			#endif
 			Verify(font != nullptr, "could not load open sans font");
 			Verify(icon_font != nullptr, "could not load material font");
 			if(size == 18)
