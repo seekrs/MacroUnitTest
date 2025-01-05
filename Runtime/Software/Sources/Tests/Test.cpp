@@ -11,6 +11,8 @@
 namespace mlxut
 {
 	Test::Test(const class Renderer& renderer, std::string name) :
+		m_result_pixels(MLX_WIN_WIDTH * MLX_WIN_HEIGHT, 0),
+		m_reference_pixels(MLX_WIN_WIDTH * MLX_WIN_HEIGHT, 0),
 		m_name(std::move(name)),
 		m_renderer(renderer)
 	{
@@ -18,17 +20,16 @@ namespace mlxut
 
 	void Test::Reset() noexcept
 	{
-		m_result_pixels.clear();
+		std::fill(m_result_pixels.begin(), m_result_pixels.end(), 0);
 		SDL_DestroyTexture(p_result);
 		m_logs.clear();
 		m_state = TestState::Pending;
+		p_process.reset();
 	}
 
 	void Test::Run(const std::filesystem::path& mlx_path)
 	{
-		m_result_pixels.clear();
-		m_logs.clear();
-		p_process.reset();
+		Reset();
 		p_process = std::make_unique<TinyProcessLib::Process>(
 			std::vector<std::string>{
 				OSInstance::Get().GetCurrentWorkingDirectoryPath() / "TestRunner",
@@ -72,21 +73,22 @@ namespace mlxut
 
 	void Test::FetchResult()
 	{
-		if(m_state == TestState::Running || !m_result_pixels.empty())
+		if(m_state == TestState::Running)
 			return;
 
 		std::filesystem::path transfer_file_path = std::filesystem::temp_directory_path() / m_name;
 		std::ifstream transfer_file(transfer_file_path, std::ios::binary);
 		if(!transfer_file.is_open())
-		{
-			Error("could not open transfer file %", transfer_file_path);
 			return;
-		}
 
 		transfer_file.seekg(0);
 		std::uint32_t part = 0;
+		std::size_t i = 0;
 		while(transfer_file.read(reinterpret_cast<char*>(&part), sizeof(part)))
-			m_result_pixels.push_back(part);
+		{
+			m_result_pixels[i] = part;
+			i++;
+		}
 		transfer_file.close();
 		std::filesystem::remove(std::move(transfer_file_path));
 	}
@@ -94,29 +96,27 @@ namespace mlxut
 	void Test::CreateRenderTextures()
 	{
 		SDL_Surface* surface = nullptr;
-		if(!m_result_pixels.empty())
+		if(m_result_pixels[0] != 0)
 		{
 			surface = SDL_CreateRGBSurfaceFrom(m_result_pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);
 			p_result = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 		}
 
-#ifndef MLX_UT_RELEASE
+	#ifndef MLX_UT_RELEASE
 		std::filesystem::path ref_path = OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Assets/TestsReferences" / (m_name + ".png");
 		if(std::filesystem::exists(ref_path))
 		{
-#endif
+	#endif
 			if(surface)
 				SDL_FreeSurface(surface);
-	#ifndef MLX_UT_RELEASE
+		#ifndef MLX_UT_RELEASE
 			surface = IMG_Load(ref_path.string().c_str());
-	#else
+		#else
 			const auto& ref_data = GetDataFromFilename(m_name);
 			SDL_RWops* rw = SDL_RWFromMem(reinterpret_cast<void*>(const_cast<std::uint8_t*>(ref_data.data())), ref_data.size());
 			surface = IMG_Load_RW(rw, 1);
-	#endif
+		#endif
 			SDL_LockSurface(surface);
-
-			m_reference_pixels.resize(MLX_WIN_WIDTH * MLX_WIN_HEIGHT);
 
 			auto get_pixel = [](SDL_Surface* surface, int x, int y) -> std::uint32_t
 			{
@@ -157,7 +157,7 @@ namespace mlxut
 			SDL_UnlockSurface(surface);
 			p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			SDL_FreeSurface(surface);
-#ifndef MLX_UT_RELEASE
+	#ifndef MLX_UT_RELEASE
 		}
 		else if(surface)
 		{
@@ -165,7 +165,7 @@ namespace mlxut
 			IMG_SavePNG(surface, ref_path.string().c_str());
 			SDL_FreeSurface(surface);
 		}
-#endif
+	#endif
 	}
 
 	void Test::ComputeErrorMap()
