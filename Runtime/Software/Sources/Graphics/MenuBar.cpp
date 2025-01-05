@@ -46,8 +46,8 @@ namespace mlxut
 			ImGui::Image(reinterpret_cast<void*>(p_logo), ImVec2{ 20.0f, 20.0f });
 			if(ImGui::BeginMenu(MLX_UT_ICON_MD_FOLDER" File"))
 			{
-				if(ImGui::MenuItem("Open") || !m_dialog.IsFinished())
-					m_dialog.Open("Open result file", { "dynamic library (" MLX_UT_LIB_EXTENSION ")", "*" MLX_UT_LIB_EXTENSION });
+				if(ImGui::MenuItem("Open") && !m_dialog.IsFinished())
+					m_dialog.Open("Select lib mlx", { "dynamic library (" MLX_UT_LIB_EXTENSION ")", "*" MLX_UT_LIB_EXTENSION });
 				if(ImGui::MenuItem("Quit"))
 					m_quit_requested = true;
 				ImGui::EndMenu();
@@ -83,6 +83,28 @@ namespace mlxut
 				m_quit_requested = true;
 			m_height = ImGui::GetContentRegionAvail().y;
 			ImGui::EndMainMenuBar();
+		}
+
+		if(m_launch_all_tests && m_mlx_lib_path.empty())
+		{
+			ImGui::OpenPopup("No mlx path");
+			m_launch_all_tests = false;
+		}
+
+		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowSize(ImVec2(0, 80), ImGuiCond_Appearing);
+
+		if(ImGui::BeginPopupModal("No mlx path", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+		{
+			ImGui::Text("Cannot start testing, no mlx path given");
+			if(ImGui::Button("Select mlx path", ImVec2(120, 0)))
+				m_dialog.Open("Select lib mlx", { "dynamic library (" MLX_UT_LIB_EXTENSION ")", "*" MLX_UT_LIB_EXTENSION });
+
+			ImGui::SameLine();
+
+			if(ImGui::Button("Continue", ImVec2(120, 0)))
+				ImGui::CloseCurrentPopup();
+			ImGui::EndPopup();
 		}
 	}
 

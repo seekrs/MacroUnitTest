@@ -21,9 +21,6 @@ namespace mlxut
 		};
 		EventBus::RegisterListener({ functor, "Application" });
 
-		if(!std::filesystem::exists(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources"))
-			FatalError("Cannot find resources folder");
-
 		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) != 0)
 			FatalError("SDL error: unable to init all subsystems, %", SDL_GetError());
 		LoadSystemCursors();
@@ -77,14 +74,14 @@ namespace mlxut
 				have_tests_been_launched = false;
 			}
 
-			if(m_menubar.IsQuitRequested())
-				break;
-
-			if(m_menubar.ShouldStartAllTests() && !m_menubar.GetMLXPath().empty())
+			if(m_menubar.ShouldStartAllTests())
 			{
 				m_tester.RunAllTests(m_menubar.GetMLXPath());
 				have_tests_been_launched = true;
 			}
+
+			if(m_menubar.IsQuitRequested())
+				break;
 		}
 
 EndLoop:

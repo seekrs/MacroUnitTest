@@ -8,6 +8,11 @@ namespace mlxut
 
 	void SignalsHandler([[maybe_unused]] int sig)
 	{
+		if(sig == SIGSEGV)
+		{
+			std::cerr << "Segmentation Fault" << std::endl;
+			std::abort();
+		}
 	}
 
 	void UnixInstance::Init(int ac, char** av)
@@ -17,6 +22,7 @@ namespace mlxut
 		OSInstance::SetInstance(this);
 		signal(SIGINT, SignalsHandler);
 		signal(SIGQUIT, SignalsHandler);
+		signal(SIGSEGV, SignalsHandler);
 		OSInstance::SetLibLoader(new UnixLibLoader);
 		CommandLineInterface::Get().Feed(ac, av);
 	}

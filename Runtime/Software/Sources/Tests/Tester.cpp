@@ -2,19 +2,31 @@
 #include <Core/OS/OSInstance.h>
 #include <Graphics/Renderer.h>
 
+#ifdef MLX_UT_RELEASE
+	#include <Embedded/Tests.h>
+#endif
+
 namespace mlxut
 {
 	void Tester::CreateAllTests(const Renderer& renderer)
 	{
-		for(auto const& dir_entry : std::filesystem::directory_iterator{ OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" })
-		{
-			if(std::filesystem::is_directory(dir_entry.path()))
-				continue;
-			if(dir_entry.path().extension() != ".lua")
-				continue;
-			m_tests.emplace_back(std::make_shared<Test>(renderer, std::move(dir_entry.path().stem().string())));
-			m_tests.back()->CreateRenderTextures();
-		}
+		#ifndef MLX_UT_RELEASE
+			for(auto const& dir_entry : std::filesystem::directory_iterator{ OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" })
+			{
+				if(std::filesystem::is_directory(dir_entry.path()))
+					continue;
+				if(dir_entry.path().extension() != ".lua")
+					continue;
+				m_tests.emplace_back(std::make_shared<Test>(renderer, std::move(dir_entry.path().stem().string())));
+				m_tests.back()->CreateRenderTextures();
+			}
+		#else
+			for(const std::string& name : all_test_names)
+			{
+				m_tests.emplace_back(std::make_shared<Test>(renderer, name));
+				m_tests.back()->CreateRenderTextures();
+			}
+		#endif
 		m_pending_tests = m_tests.size();
 	}
 

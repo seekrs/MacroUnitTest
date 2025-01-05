@@ -45,10 +45,10 @@ namespace mlxut
 							continue;
 
 						std::string sub_string;
-						ImVec4 print_color;
+						ImVec4 print_color = ImGui::GetStyle().Colors[ImGuiCol_Text];
 						for(std::size_t i = 0; i <= line.length(); i++)
 						{
-							if(line[i] == '\033' || i == line.length())
+							if(line[i] == '\033' || i >= line.length())
 							{
 								if(!sub_string.empty())
 								{
@@ -56,7 +56,7 @@ namespace mlxut
 										ImGui::TextUnformatted(sub_string.c_str());
 									ImGui::PopStyleColor();
 
-									if(i != line.length())
+									if(i < line.length())
 										ImGui::SameLine();
 									sub_string.clear();
 								}

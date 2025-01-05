@@ -3,12 +3,12 @@ add_repositories("local-repo Xmake")
 add_requires("imgui v1.91.0-docking", { configs = { sdl2 = true }})
 add_requires("libsdl", "pfd", "libsdl_image", "sol2", "tiny-process-library")
 
-add_rules("mode.debug", "mode.release")
+add_rules("mode.debug", "mode.release", "mode.releasedbg")
 set_languages("cxx20")
 
 if is_mode("debug") then
 	add_defines("MLX_UT_DEBUG")
-elseif is_mode("release") then
+else
 	add_defines("MLX_UT_RELEASE")
 	set_fpmodels("fast")
 	add_vectorexts("sse", "sse2", "sse3", "ssse3")
@@ -41,61 +41,12 @@ local os_interfaces = {
 
 option("unitybuild", { description = "Build the engine using unity build", default = false })
 
-function ModuleTargetConfig(name, module, subdir)
-	-- Add header and source files
-	for _, ext in ipairs({".h", ".hpp", ".inl"}) do
-		if module.dir then
-			add_headerfiles("Runtime/" .. subdir .. "/Includes/" .. module.dir .. name .. "/**" .. ext)
-			add_headerfiles("Runtime/" .. subdir .. "/Sources/" .. module.dir .. name .. "/**" .. ext, { prefixdir = "private", install = false })
-		else
-			add_headerfiles("Runtime/" .. subdir .. "/Includes/" .. name .. "/**" .. ext)
-			add_headerfiles("Runtime/" .. subdir .. "/Sources/" .. name .. "/**" .. ext, { prefixdir = "private", install = false })
-		end
-	end
-
-	if module.dir then
-		remove_headerfiles("Runtime/" .. subdir .. "/Sources/" .. module.dir .. name .. "/Resources/**.h")
-	else
-		remove_headerfiles("Runtime/" .. subdir .. "/Sources/" .. name .. "/Resources/**.h")
-	end
-
-	if module.dir then
-		set_pcxxheader("Runtime/" .. subdir .. "/Includes/" .. module.dir .. name .. "/PreCompiled.h")
-	else
-		set_pcxxheader("Runtime/" .. subdir .. "/Includes/" .. name .. "/PreCompiled.h")
-	end
-
-	if module.packages then
-		add_packages(table.unpack(module.packages))
-	end
-
-	if module.publicPackages then
-		for _, pkg in ipairs(module.publicPackages) do
-			add_packages(pkg, { public = true })
-		end
-	end
-
-	if module.deps then
-		add_deps(table.unpack(module.deps))
-	end
-
-	if module.dir then
-		add_files("Runtime/" .. subdir .. "/Sources/" .. module.dir .. name .. "/**.cpp")
-	else
-		add_files("Runtime/" .. subdir .. "/Sources/" .. name .. "/**.cpp")
-	end
-
-	if module.custom then
-		module.custom(subdir)
-	end
-end
-
-function CraeteEmbeddedResources(target)
+function CreateEmbeddedResources(target)
 	if is_mode("debug") and not os.exists("$(buildir)/Bin/$(os)_$(arch)/Resources") then
 		os.ln("$(scriptdir)/Resources", "$(buildir)/Bin/$(os)_$(arch)/Resources")
 		print("Created resources symlink")
 	end
-	if is_mode("release") then
+	if not is_mode("debug") then
 		if os.exists("Runtime/Software/Includes/Embedded") then
 			os.rm("Runtime/Software/Includes/Embedded")
 		end
@@ -164,27 +115,34 @@ inline const std::vector<std::uint8_t> GetDataFromFilename(std::string_view name
 
 #endif // MLX_UT_EMBEDDED_FONTS]])
 
-		if os.exists("Runtime/Runner/Includes/Embedded") then
-			os.rm("Runtime/Runner/Includes/Embedded")
+		if os.exists("Runtime/Common/Includes/Embedded") then
+			os.rm("Runtime/Common/Includes/Embedded")
 		end
-		os.mkdir("Runtime/Runner/Includes/Embedded")
+		os.mkdir("Runtime/Common/Includes/Embedded")
 
 		local tests = ""
 		local tests_names = ""
+		local array_names = ""
 
 		for _, file in ipairs(os.files("Resources/Tests/**.lua")) do
 			_, filename, _ = file:match("^(.-)([^\\/]-)%.([^\\/%.]-)%.?$")
 			tests = tests .. "static const std::string " .. filename .. "_data = R\"test(\n" .. io.readfile(file) .. ")test\";\n\n"
 			tests_names = tests_names .. "if(name == \"" .. filename .. "\")\n\t\treturn " .. filename .. "_data;\n\t"
+			array_names = array_names .. "\"" .. filename .. "\", \n"
 		end
 
-		io.writefile("Runtime/Runner/Includes/Embedded/Tests.h", [[
+		io.writefile("Runtime/Common/Includes/Embedded/Tests.h", [[
 #ifndef MLX_UT_EMBEDDED_TESTS
 #define MLX_UT_EMBEDDED_TESTS
 
 // Generated File
 
 #include <string>
+#include <array>
+
+static const std::array all_test_names = {
+]] .. array_names .. [[
+};
 
 ]] .. tests ..[[
 
@@ -198,13 +156,62 @@ inline const std::string GetDataFromFilename(std::string_view name)
 	end
 end
 
+function ModuleTargetConfig(name, module, subdir)
+	-- Add header and source files
+	for _, ext in ipairs({".h", ".hpp", ".inl"}) do
+		if module.dir then
+			add_headerfiles("Runtime/" .. subdir .. "/Includes/" .. module.dir .. name .. "/**" .. ext)
+			add_headerfiles("Runtime/" .. subdir .. "/Sources/" .. module.dir .. name .. "/**" .. ext, { prefixdir = "private", install = false })
+		else
+			add_headerfiles("Runtime/" .. subdir .. "/Includes/" .. name .. "/**" .. ext)
+			add_headerfiles("Runtime/" .. subdir .. "/Sources/" .. name .. "/**" .. ext, { prefixdir = "private", install = false })
+		end
+	end
+
+	if module.dir then
+		remove_headerfiles("Runtime/" .. subdir .. "/Sources/" .. module.dir .. name .. "/Resources/**.h")
+	else
+		remove_headerfiles("Runtime/" .. subdir .. "/Sources/" .. name .. "/Resources/**.h")
+	end
+
+	if module.dir then
+		set_pcxxheader("Runtime/" .. subdir .. "/Includes/" .. module.dir .. name .. "/PreCompiled.h")
+	else
+		set_pcxxheader("Runtime/" .. subdir .. "/Includes/" .. name .. "/PreCompiled.h")
+	end
+
+	if module.packages then
+		add_packages(table.unpack(module.packages))
+	end
+
+	if module.publicPackages then
+		for _, pkg in ipairs(module.publicPackages) do
+			add_packages(pkg, { public = true })
+		end
+	end
+
+	if module.deps then
+		add_deps(table.unpack(module.deps))
+	end
+
+	if module.dir then
+		add_files("Runtime/" .. subdir .. "/Sources/" .. module.dir .. name .. "/**.cpp")
+	else
+		add_files("Runtime/" .. subdir .. "/Sources/" .. name .. "/**.cpp")
+	end
+
+	if module.custom then
+		module.custom(subdir)
+	end
+end
+
 target("MacroUnitTest")
 	set_license("MIT")
 	set_kind("binary")
 
 	add_packages("libsdl", "pfd", "libsdl_image", "imgui", "tiny-process-library")
 
-	if is_mode("release") then
+	if not is_mode("debug") then
 		add_rules("utils.bin2c", { extensions = { ".png", ".ttf" } } )
 		add_files("Resources/Assets/**.png")
 		add_files("Resources/Fonts/**.ttf")
@@ -225,7 +232,7 @@ target("MacroUnitTest")
 		end
 	end
 
-	before_build(CraeteEmbeddedResources)
+	before_build(CreateEmbeddedResources)
 
 	on_clean(function(target)
 		if target:objectfiles() then
