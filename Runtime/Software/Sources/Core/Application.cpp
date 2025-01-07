@@ -63,6 +63,7 @@ namespace mlxut
 					m_menubar.RenderSettingsWindow();
 				if(m_menubar.ShouldRenderAboutWindow())
 					m_menubar.RenderAboutWindow();
+				m_menubar.RenderMLXPath(*p_renderer);
 			p_imgui->EndFrame();
 
 			if(have_tests_been_launched && m_tester.HaveAllTestsFinished())
@@ -71,6 +72,7 @@ namespace mlxut
 				m_tester.CreateAllRenderTextures();
 				m_tester.ComputeAllErrorMaps();
 				m_tester.FetchSuccess();
+				m_menubar.AllTestsHaveFinished();
 				have_tests_been_launched = false;
 			}
 

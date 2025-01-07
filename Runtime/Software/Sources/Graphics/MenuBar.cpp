@@ -1,3 +1,4 @@
+#include "imgui.h"
 #include <Core/Application.h>
 #include <Graphics/MenuBar.h>
 #include <Graphics/ImGuiContext.h>
@@ -36,8 +37,13 @@ namespace mlxut
 			#endif
 		}
 
-		if(m_dialog.IsFinished())
+		static bool dialog_openned = false;
+
+		if(dialog_openned && m_dialog.IsFinished())
+		{
 			m_mlx_lib_path = m_dialog.GetResult();
+			dialog_openned = false;
+		}
 
 		m_launch_all_tests = false;
 
@@ -46,8 +52,11 @@ namespace mlxut
 			ImGui::Image(reinterpret_cast<void*>(p_logo), ImVec2{ 20.0f, 20.0f });
 			if(ImGui::BeginMenu(MLX_UT_ICON_MD_FOLDER" File"))
 			{
-				if(ImGui::MenuItem("Open") && !m_dialog.IsFinished())
+				if(ImGui::MenuItem("Open") && !dialog_openned)
+				{
 					m_dialog.Open("Select lib mlx", { "dynamic library (" MLX_UT_LIB_EXTENSION ")", "*" MLX_UT_LIB_EXTENSION });
+					dialog_openned = true;
+				}
 				if(ImGui::MenuItem("Quit"))
 					m_quit_requested = true;
 				ImGui::EndMenu();
@@ -66,7 +75,7 @@ namespace mlxut
 			}
 			if(ImGui::Button("Launch All Tests"))
 				m_launch_all_tests = true;
-			ImGui::SameLine(static_cast<float>(size.x) / 2.0f - ImGui::CalcTextSize("MLX UnitTester").x / 2.0f);
+			ImGui::SameLine(static_cast<float>(size.x) * 0.5f - ImGui::CalcTextSize("MLX UnitTester").x * 0.5f);
 			ImGui::TextUnformatted("MLX UnitTester");
 			ImGui::SameLine(size.x - (ImGui::CalcTextSize("X").x * 3 + style->ItemSpacing.x * 3 + style->WindowPadding.x) * 2);
 			if(ImGui::Button(MLX_UT_ICON_MD_REMOVE))
@@ -90,6 +99,11 @@ namespace mlxut
 			ImGui::OpenPopup("No mlx path");
 			m_launch_all_tests = false;
 		}
+		else if(m_launch_all_tests)
+		{
+			ImGui::OpenPopup("Running");
+			m_all_tests_have_finished = false;
+		}
 
 		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 		ImGui::SetNextWindowSize(ImVec2(0, 80), ImGuiCond_Appearing);
@@ -98,13 +112,58 @@ namespace mlxut
 		{
 			ImGui::Text("Cannot start testing, no mlx path given");
 			if(ImGui::Button("Select mlx path", ImVec2(120, 0)))
+			{
 				m_dialog.Open("Select lib mlx", { "dynamic library (" MLX_UT_LIB_EXTENSION ")", "*" MLX_UT_LIB_EXTENSION });
+				dialog_openned = true;
+			}
 
 			ImGui::SameLine();
 
 			if(ImGui::Button("Continue", ImVec2(120, 0)))
 				ImGui::CloseCurrentPopup();
+
+			if(!m_mlx_lib_path.empty())
+				ImGui::CloseCurrentPopup();
 			ImGui::EndPopup();
+		}
+
+		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize("All tests are currently running").x + 50, 100), ImGuiCond_Appearing);
+
+		if(ImGui::BeginPopupModal("Running", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+		{
+			float window_width = ImGui::GetWindowWidth();
+			float text_width = ImGui::CalcTextSize("All tests are currently running").x;
+			ImGui::SetCursorPosX((window_width - text_width) / 2.0f);
+			ImGui::Text("All tests are currently running");
+
+			const ImU32 bg = ImGui::GetColorU32(ImGuiCol_WindowBg);
+			ImGui::SetCursorPosX((window_width - 45) / 2.0f);
+			ImSpinner::SpinnerLoadingRing("##running_spinner", 15, 3, ImSpinner::white, bg);
+
+			if(m_all_tests_have_finished)
+				ImGui::CloseCurrentPopup();
+
+			ImGui::EndPopup();
+		}
+	}
+
+	void MenuBar::RenderMLXPath(const Renderer& renderer)
+	{
+		ImGui::SetNextWindowPos(ImVec2(0, renderer.GetDrawableSize().y - ImGui::GetFrameHeightWithSpacing()));
+		if(m_mlx_lib_path.empty())
+			ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize("MLX Path: None").x + 5, ImGui::GetFrameHeightWithSpacing()));
+		else
+			ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize(("MLX Path: " + m_mlx_lib_path.string()).c_str()).x + 5, ImGui::GetFrameHeightWithSpacing()));
+
+		if(ImGui::Begin("##mlx_path", nullptr, ImGuiWindowFlags_NoDecoration))
+		{
+			ImGui::BringWindowToDisplayFront(ImGui::GetCurrentWindow());
+			if(m_mlx_lib_path.empty())
+				ImGui::TextUnformatted("MLX Path: None");
+			else
+				ImGui::TextUnformatted(("MLX Path: " + m_mlx_lib_path.string()).c_str());
+			ImGui::End();
 		}
 	}
 

@@ -24,7 +24,7 @@ function Test(mlx, win)
 	end
 	mlx_string_put(mlx, win, 50, 80, mlx_color:new(0xF00FFFFF), "this string is in middle")
 	mlx_put_transformed_image_to_window(mlx, win, img, 150, 60, 0.5, 0.5, 75)
-	mlx_put_transformed_image_to_window(mlx, win, img, 100, 150, 0.1, 0.1, 130)
+	mlx_put_transformed_image_to_window(mlx, win, img, 190, 190, 0.1, 0.1, 130)
 	mlx_string_put(mlx, win, 50, 110, mlx_color:new(0xF00F44FF), "this string is on top")
 end
 

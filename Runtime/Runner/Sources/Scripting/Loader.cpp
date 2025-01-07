@@ -59,17 +59,17 @@ namespace mlxut
 		{
 			std::size_t sz = pixels.size();
 			std::vector<mlx_color> vec(sz);
-			for(int i = 1; i <= sz; i++)
-				vec[i - 1] = pixels[i];
-			MLXLoader::Get().mlx_pixel_put_array(mlx, window, x, y, vec.data(), vec.size() * sizeof(mlx_color));
+			for(std::size_t i = 0; i < sz; i++)
+				vec[i] = pixels[i + 1];
+			MLXLoader::Get().mlx_pixel_put_array(mlx, window, x, y, vec.data(), vec.size());
 		});
 
 		m_state.set_function("mlx_pixel_put_region", [](mlx_context mlx, mlx_window window, int x, int y, int w, int h, sol::table pixels)
 		{
 			std::size_t sz = pixels.size();
 			std::vector<mlx_color> vec(sz);
-			for(int i = 1; i <= sz; i++)
-				vec[i - 1] = pixels[i];
+			for(std::size_t i = 0; i < sz; i++)
+				vec[i] = pixels[i + 1];
 			MLXLoader::Get().mlx_pixel_put_region(mlx, window, x, y, w, h, vec.data());
 		});
 
