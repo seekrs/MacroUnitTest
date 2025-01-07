@@ -75,7 +75,7 @@ namespace mlxut
 
 		m_state.set_function("mlx_get_image_region", [](mlx_context mlx, mlx_image image, int x, int y, int w, int h, sol::table pixels)
 		{
-			std::vector<mlx_color> tmp(w * h);
+			std::vector<mlx_color> tmp(w * h * 2 /* wtf ? */);
 			MLXLoader::Get().mlx_get_image_region(mlx, image, x, y, w, h, tmp.data());
 			for(auto pixel : tmp)
 				pixels.add(pixel);
