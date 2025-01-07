@@ -1,5 +1,3 @@
 function Test(mlx, win)
-	local color = mlx_color:new()
-	color.rgba = 0xFF0000FF
-	mlx_clear_window(mlx, win, color)
+	mlx_clear_window(mlx, win, mlx_color:new(0xFF0000FF))
 end

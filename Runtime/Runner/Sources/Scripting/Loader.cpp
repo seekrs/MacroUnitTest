@@ -15,7 +15,7 @@ namespace mlxut
 		m_state.set("MLX_WIN_WIDTH", MLX_WIN_WIDTH);
 		m_state.set("MLX_WIN_HEIGHT", MLX_WIN_HEIGHT);
 
-		auto color_type = m_state.new_usertype<mlx_color>("mlx_color");
+		auto color_type = m_state.new_usertype<mlx_color>("mlx_color", sol::constructors<mlx_color(), mlx_color(std::uint32_t), mlx_color(std::uint8_t, std::uint8_t, std::uint8_t, std::uint8_t)>());
 		color_type["rgba"] = sol::property(&mlx_color::GetRGBA, &mlx_color::SetRGBA);
 		color_type["r"] = sol::property(&mlx_color::GetR, &mlx_color::SetR);
 		color_type["g"] = sol::property(&mlx_color::GetG, &mlx_color::SetG);

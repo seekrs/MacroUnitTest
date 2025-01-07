@@ -21,21 +21,26 @@ enum mlx_event_type
 	MLX_WINDOW_EVENT = 5
 };
 
-struct mlx_color
+class mlx_color
 {
-	inline std::uint8_t GetR() const noexcept { return m_rgba >> 24; }
-	inline std::uint8_t GetG() const noexcept { return m_rgba >> 16; }
-	inline std::uint8_t GetB() const noexcept { return m_rgba >> 8; }
-	inline std::uint8_t GetA() const noexcept { return m_rgba; }
+	public:
+		mlx_color() = default;
+		mlx_color(std::uint32_t color) : m_rgba(color) {}
+		mlx_color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) { SetR(r); SetG(g); SetB(b); SetA(a); }
 
-	inline std::uint32_t GetRGBA() const noexcept { return m_rgba; }
+		inline std::uint8_t GetR() const noexcept { return m_rgba >> 24; }
+		inline std::uint8_t GetG() const noexcept { return m_rgba >> 16; }
+		inline std::uint8_t GetB() const noexcept { return m_rgba >> 8; }
+		inline std::uint8_t GetA() const noexcept { return m_rgba; }
 
-	inline void SetR(std::uint8_t r) noexcept { m_rgba |= (r << 24); }
-	inline void SetG(std::uint8_t g) noexcept { m_rgba |= (g << 16); }
-	inline void SetB(std::uint8_t b) noexcept { m_rgba |= (b << 8); }
-	inline void SetA(std::uint8_t a) noexcept { m_rgba |= a; }
+		inline std::uint32_t GetRGBA() const noexcept { return m_rgba; }
 
-	inline void SetRGBA(std::uint32_t rgba) noexcept { m_rgba = rgba; }
+		inline void SetR(std::uint8_t r) noexcept { m_rgba |= (r << 24); }
+		inline void SetG(std::uint8_t g) noexcept { m_rgba |= (g << 16); }
+		inline void SetB(std::uint8_t b) noexcept { m_rgba |= (b << 8); }
+		inline void SetA(std::uint8_t a) noexcept { m_rgba |= a; }
+
+		inline void SetRGBA(std::uint32_t rgba) noexcept { m_rgba = rgba; }
 
 	private:
 		std::uint32_t m_rgba;

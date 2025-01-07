@@ -9,9 +9,7 @@ function Setup(mlx, win)
 	custom_img = mlx_new_image(mlx, w, h)
 	for y = 0, h - 1, 1 do
 		for x = 0, w - 1, 1 do
-			local color = mlx_color:new()
-			color.rgba = 0x0F0FF099
-			mlx_set_image_pixel(mlx, custom_img, x, y, color)
+			mlx_set_image_pixel(mlx, custom_img, x, y, mlx_color:new(0x0F0FF099))
 		end
 	end
 end
@@ -21,9 +19,7 @@ function Test(mlx, win)
 	mlx_put_image_to_window(mlx, win, custom_img, 200, 200)
 	for y = 0, 40, 1 do
 		for x = 0, 40, 1 do
-			local color = mlx_color:new()
-			color.rgba = 0xFF000055
-			mlx_pixel_put(mlx, win, x + 130, y + 130, color)
+			mlx_pixel_put(mlx, win, x + 130, y + 130, mlx_color:new(0xFF000055))
 		end
 	end
 end
