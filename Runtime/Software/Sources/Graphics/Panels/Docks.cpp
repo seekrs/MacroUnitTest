@@ -30,6 +30,7 @@ namespace mlxut
 
 				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_LIST" Tests", dock_left_id);
 				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_MONITOR" Render", dock_center_id);
+				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_CODE" Script", dock_center_id);
 				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_INFO" About", dock_center_id);
 				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_SETTINGS" Settings", dock_center_id);
 				ImGui::DockBuilderDockWindow(MLX_UT_ICON_MD_TERMINAL" Logs", dock_right_id);

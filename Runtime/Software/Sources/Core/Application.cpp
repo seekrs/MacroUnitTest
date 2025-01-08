@@ -7,6 +7,7 @@
 #include <Graphics/Panels/Render.h>
 #include <Graphics/Panels/Result.h>
 #include <Graphics/Panels/Tests.h>
+#include <Graphics/Panels/Script.h>
 
 namespace mlxut
 {
@@ -31,6 +32,7 @@ namespace mlxut
 		m_stack.AddPanel(std::make_shared<Docks>(m_menubar));
 		m_stack.AddPanel(std::make_shared<LogsPanel>(m_tester));
 		m_stack.AddPanel(std::make_shared<Render>(m_tester));
+		m_stack.AddPanel(std::make_shared<ScriptPanel>(*p_renderer, m_tester));
 		m_stack.AddPanel(std::make_shared<Results>(m_tester));
 		m_stack.AddPanel(std::make_shared<TestsPanel>(m_tester));
 
@@ -60,7 +62,7 @@ namespace mlxut
 				for(auto panel : m_stack.GetPanels())
 					panel->OnUpdate(im_render_size);
 				if(m_menubar.ShouldRenderSettingsWindow())
-					m_menubar.RenderSettingsWindow();
+					m_menubar.RenderSettingsWindow(std::static_pointer_cast<ScriptPanel>(m_stack.GetPanel("Script")));
 				if(m_menubar.ShouldRenderAboutWindow())
 					m_menubar.RenderAboutWindow();
 				m_menubar.RenderMLXPath(*p_renderer);
