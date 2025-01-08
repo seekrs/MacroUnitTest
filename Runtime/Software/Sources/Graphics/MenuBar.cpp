@@ -309,7 +309,7 @@ namespace mlxut
 						if(ImGui::Selectable((std::to_string(size) + "%").c_str(), io.Fonts->Fonts[i] == current_font))
 						{
 							io.FontDefault = io.Fonts->Fonts[i];
-							script_panel->SetFont(io.Fonts->Fonts[i * 2]);
+							script_panel->SetFont(io.Fonts->Fonts[io.Fonts->Fonts.size() / 2 + i]);
 							current_size = size;
 						}
 						ImGui::PopID();

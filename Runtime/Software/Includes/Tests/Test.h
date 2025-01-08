@@ -32,6 +32,7 @@ namespace mlxut
 			[[nodiscard]] inline bool IsRunning() const noexcept { return m_state == TestState::Running; }
 			[[nodiscard]] inline bool HasPassed() const noexcept { return m_state == TestState::Succeeded; }
 			[[nodiscard]] inline bool HasFailed() const noexcept { return m_state == TestState::Failed; }
+			[[nodiscard]] inline bool IsSuspicious() const noexcept { return m_state == TestState::Suspicious; }
 
 		private:
 			std::vector<std::uint32_t> m_result_pixels;

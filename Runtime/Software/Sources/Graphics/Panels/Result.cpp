@@ -17,7 +17,7 @@ namespace mlxut
 			if(ImGui::BeginChild("ErrorResult", { 0.f, 0.f }, ImGuiChildFlags_Border))
 			{
 				ImGui::TextUnformatted("Error Map:");
-				if(test->GetMean() > MEAN_THRESHOLD)
+				if(test->GetMean() > SUSPICIOUS_THRESHOLD)
 				{
 					float size_reference = ImGui::GetWindowWidth();
 					if(size_reference > ImGui::GetWindowHeight())

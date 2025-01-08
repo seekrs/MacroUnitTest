@@ -28,6 +28,7 @@ namespace mlxut
 			}
 		#endif
 		m_pending_tests = m_tests.size();
+		std::sort(m_tests.begin(), m_tests.end(), [](std::shared_ptr<Test> rhs, std::shared_ptr<Test> lhs) { return rhs->GetName() < lhs->GetName(); });
 	}
 
 	void Tester::RunAllTests(const std::filesystem::path& mlx_path)
@@ -78,10 +79,13 @@ namespace mlxut
 	{
 		m_passed_tests = 0;
 		m_failed_tests = 0;
+		m_sus_tests = 0;
 		for(auto test : m_tests)
 		{
 			if(test->HasFailed())
 				m_failed_tests++;
+			else if(test->IsSuspicious())
+				m_sus_tests++;
 			else if(test->HasPassed())
 				m_passed_tests++;
 		}

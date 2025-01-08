@@ -23,6 +23,7 @@ namespace mlxut
 			[[nodiscard]] inline bool AreTestsRunning() const noexcept { return m_is_running; }
 			[[nodiscard]] inline std::size_t GetTestsPassedNumber() const noexcept { return m_passed_tests; }
 			[[nodiscard]] inline std::size_t GetTestsFailedNumber() const noexcept { return m_failed_tests; }
+			[[nodiscard]] inline std::size_t GetTestsSuspiciousNumber() const noexcept { return m_sus_tests; }
 			[[nodiscard]] inline std::size_t GetTestsPendingNumber() const noexcept { return m_pending_tests; }
 			[[nodiscard]] inline std::size_t GetSelectedTest() const noexcept { return m_selected_test; }
 
@@ -35,6 +36,7 @@ namespace mlxut
 			std::size_t m_selected_test = 0;
 			std::size_t m_passed_tests = 0;
 			std::size_t m_failed_tests = 0;
+			std::size_t m_sus_tests = 0;
 			std::size_t m_pending_tests = 0;
 			bool m_is_running = false;
 	};

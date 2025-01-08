@@ -212,6 +212,8 @@ namespace mlxut
 			m_error_mean = sum / (error_map.getWidth() * error_map.getHeight());
 			if(m_error_mean > MEAN_THRESHOLD)
 				m_state = TestState::Failed;
+			else if(m_error_mean > SUSPICIOUS_THRESHOLD)
+				m_state = TestState::Suspicious;
 			else if(m_state != TestState::Failed)
 				m_state = TestState::Succeeded;
 		}
