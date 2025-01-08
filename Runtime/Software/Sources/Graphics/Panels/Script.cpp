@@ -105,6 +105,13 @@ namespace mlxut
 				test_name_ptr = &test->GetName();
 			}
 
+			TextEditor::ErrorMarkers markers;
+
+			if(test->HasFailed() && !test->GetLuaErrorMessage().empty()) // TODO: dont update each frame
+				markers[test->GetLuaErrorLine()] = test->GetLuaErrorMessage();
+
+			m_editor.SetErrorMarkers(markers);
+
 			ImGui::PushFont(p_font);
 				m_editor.Render("Code", ImVec2(), true);
 			ImGui::PopFont();
