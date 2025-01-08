@@ -1,4 +1,3 @@
-#include "imgui.h"
 #include <Core/Application.h>
 #include <Graphics/MenuBar.h>
 #include <Graphics/ImGuiContext.h>
@@ -6,6 +5,7 @@
 #include <Graphics/Renderer.h>
 #include <Core/MaterialFont.h>
 #include <Core/OS/OSInstance.h>
+#include <Graphics/Panels/Script.h>
 #include <Core/CLI.h>
 
 #ifdef MLX_UT_RELEASE
@@ -217,7 +217,7 @@ namespace mlxut
 		}
 	}
 
-	void MenuBar::RenderSettingsWindow()
+	void MenuBar::RenderSettingsWindow(std::shared_ptr<ScriptPanel> script_panel)
 	{
 		if(ImGui::Begin(MLX_UT_ICON_MD_SETTINGS" Settings", &m_render_settings_window, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse))
 		{
@@ -233,7 +233,7 @@ namespace mlxut
 			{
 				switch(selected)
 				{
-					case 0: RenderGeneralSettings(); break;
+					case 0: RenderGeneralSettings(script_panel); break;
 
 					default : break;
 				}
@@ -249,7 +249,7 @@ namespace mlxut
 			SDL_DestroyTexture(p_logo);
 	}
 
-	void MenuBar::RenderGeneralSettings()
+	void MenuBar::RenderGeneralSettings(std::shared_ptr<ScriptPanel> script_panel)
 	{
 		ImGui::TextUnformatted("General");
 		ImGui::Separator();
@@ -303,12 +303,13 @@ namespace mlxut
 				if(ImGui::BeginCombo("##Font_selector", (std::to_string(current_size) + "%").c_str()))
 				{
 					std::size_t size = 50;
-					for(ImFont* font : io.Fonts->Fonts)
+					for(std::size_t i = 0; i < io.Fonts->Fonts.size() / 2; i++)
 					{
-						ImGui::PushID((void*)font);
-						if(ImGui::Selectable((std::to_string(size) + "%").c_str(), font == current_font))
+						ImGui::PushID((void*)io.Fonts->Fonts[i]);
+						if(ImGui::Selectable((std::to_string(size) + "%").c_str(), io.Fonts->Fonts[i] == current_font))
 						{
-							io.FontDefault = font;
+							io.FontDefault = io.Fonts->Fonts[i];
+							script_panel->SetFont(io.Fonts->Fonts[i * 2]);
 							current_size = size;
 						}
 						ImGui::PopID();
