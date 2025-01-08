@@ -24,9 +24,11 @@ namespace mlxut
 			[[nodiscard]] inline SDL_Texture* GetErrorMap() const noexcept { return p_error_map; }
 
 			[[nodiscard]] inline float GetMean() const noexcept { return m_error_mean; }
+			[[nodiscard]] inline std::size_t GetLuaErrorLine() const noexcept { return m_lua_line_error; }
 
 			[[nodiscard]] inline const std::string& GetName() const noexcept { return m_name; }
 			[[nodiscard]] inline const std::string& GetLogs() const noexcept { return m_logs; }
+			[[nodiscard]] inline const std::string& GetLuaErrorMessage() const noexcept { return m_lua_error_message; }
 
 			[[nodiscard]] inline bool IsPending() const noexcept { return m_state == TestState::Pending; }
 			[[nodiscard]] inline bool IsRunning() const noexcept { return m_state == TestState::Running; }
@@ -40,6 +42,7 @@ namespace mlxut
 
 			std::string m_logs;
 			std::string m_name;
+			std::string m_lua_error_message;
 
 			std::unique_ptr<TinyProcessLib::Process> p_process;
 
@@ -52,6 +55,8 @@ namespace mlxut
 			TestState m_state = TestState::Pending;
 
 			float m_error_mean = 0.0f;
+
+			std::size_t m_lua_line_error = 0;
 	};
 }
 

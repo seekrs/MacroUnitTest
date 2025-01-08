@@ -76,6 +76,20 @@ namespace mlxut
 		if(m_state == TestState::Running)
 			return;
 
+		std::size_t finder;
+		if(HasFailed() && (finder = m_logs.find("Lua Error: ")) != std::string::npos)
+		{
+			std::string_view line(m_logs.begin() + finder, m_logs.begin() + m_logs.find_first_of('\n', finder));
+			finder = line.find_last_of(':');
+			if(finder != std::string::npos)
+			{
+				std::string_view error_line(line.begin() + line.find_last_of(':', finder - 1) + 1, line.begin() + finder);
+				if(std::from_chars(error_line.data(), error_line.data() + error_line.size(), m_lua_line_error).ec != std::errc{})
+					m_lua_line_error = 0;
+				m_lua_error_message = line.substr(finder + 2);
+			}
+		}
+
 		std::filesystem::path transfer_file_path = std::filesystem::temp_directory_path() / m_name;
 		std::ifstream transfer_file(transfer_file_path, std::ios::binary);
 		if(!transfer_file.is_open())
