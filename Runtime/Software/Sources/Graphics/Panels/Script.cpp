@@ -62,12 +62,12 @@ namespace mlxut
 
 		m_editor.SetLanguageDefinition(m_lang);
 
-		m_editor.SetTabSize(8);
+		m_editor.SetTabSize(4);
 		m_editor.SetShowWhitespaces(false);
 		m_editor.SetPalette(GetPalette());
 		m_editor.SetReadOnly(true);
 
-		for(std::size_t size = 8; size < 26; size += 2)
+		for(std::size_t size = 10; size < 28; size += 2)
 		{
 			#ifndef MLX_UT_RELEASE
 				ImFont* font = ImGui::GetIO().Fonts->AddFontFromFileTTF((OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Fonts/Sono_Medium.ttf").string().c_str(), size);
@@ -75,7 +75,7 @@ namespace mlxut
 				ImFont* font = ImGui::GetIO().Fonts->AddFontFromMemoryTTF(reinterpret_cast<void*>(const_cast<std::uint8_t*>(Sono_Medium_data.data())), Sono_Medium_data.size(), size);
 			#endif
 
-			if(size == 10)
+			if(size == 12)
 				p_font = font;
 		}
 	}
@@ -87,12 +87,6 @@ namespace mlxut
 		if(ImGui::Begin(MLX_UT_ICON_MD_CODE" Script", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse))
 		{
 			auto test = m_tester.GetAllTests()[m_tester.GetSelectedTest()];
-
-			if(test->GetName().empty())
-			{
-				ImGui::End();
-				return;
-			}
 
 			if(test_name_ptr != &test->GetName())
 			{

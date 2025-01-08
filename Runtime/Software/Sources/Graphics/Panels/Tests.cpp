@@ -11,14 +11,18 @@ namespace mlxut
 		{
 			const auto& tests = m_tester.GetAllTests();
 
-			ImGui::Text("All %ld tests", tests.size());
+			ImGui::Text("All %ld tests :", tests.size());
 			ImGui::SameLine();
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(.2f, .5f, 1.f, 1.f));
 				ImGui::Text("%ld pending", m_tester.GetTestsPendingNumber());
 			ImGui::PopStyleColor();
-			ImGui::SameLine();
+
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(.2f, .8f, .1f, 1.f));
 				ImGui::Text("%ld passed", m_tester.GetTestsPassedNumber());
+			ImGui::PopStyleColor();
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, .8f, .0f, 1.f));
+				ImGui::Text("%ld suspicious", m_tester.GetTestsSuspiciousNumber());
 			ImGui::PopStyleColor();
 			ImGui::SameLine();
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, .365f, .365f, 1.f));
@@ -36,6 +40,11 @@ namespace mlxut
 					{
 						name += MLX_UT_ICON_MD_ERROR" ";
 						print_color = ImVec4(1.f, .365f, .365f, 1.f);
+					}
+					else if(tests[n]->IsSuspicious())
+					{
+						name += MLX_UT_ICON_MD_WARNING" ";
+						print_color = ImVec4(1.f, .8f, .0f, 1.f);
 					}
 					else if(tests[n]->HasPassed())
 					{
