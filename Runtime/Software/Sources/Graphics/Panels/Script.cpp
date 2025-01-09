@@ -114,6 +114,7 @@ namespace mlxut
 					if(file.good())
 					{
 						std::string str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+						str.pop_back();
 						m_editor.SetText(str);
 					}
 				}
@@ -157,15 +158,17 @@ namespace mlxut
 			#ifndef MLX_UT_RELEASE
 				if(m_editor.IsTextChanged())
 					unsaved = true;
-				if(true)
+				if(unsaved)
 				{
-					float window_width = ImGui::GetWindowWidth();
-					ImGui::SetCursorPos(ImVec2(window_width - 60, 67));
+					ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 60, 40));
 					if(ImGui::BeginChild("#test", ImVec2(0.0f, 0.0f), 0, ImGuiWindowFlags_NoBackground))
 					{
 						if(ImGui::Button(MLX_UT_ICON_MD_SAVE))
 						{
-							std::cout << "caca" << std::endl;
+							std::ofstream file(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (test->GetName() + ".lua"));
+							if(file.good())
+								file << m_editor.GetText();
+							unsaved = false;
 						}
 						ImGui::EndChild();
 					}

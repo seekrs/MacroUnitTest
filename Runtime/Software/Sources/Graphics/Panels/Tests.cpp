@@ -1,5 +1,6 @@
 #include <Graphics/Panels/Tests.h>
 #include <Core/MaterialFont.h>
+#include <Core/Application.h>
 
 namespace mlxut
 {
@@ -61,6 +62,13 @@ namespace mlxut
 						if(ImGui::Selectable(name.c_str(), m_tester.GetSelectedTest() == n))
 							m_tester.SelectTest(n);
 					ImGui::PopStyleColor();
+
+					if(ImGui::BeginPopupContextItem(nullptr, ImGuiPopupFlags_MouseButtonRight))
+					{
+						if(ImGui::Button("Run test"))
+							m_tester.RunSingleTests(n, Application::Get().GetMLXPath());
+						ImGui::EndPopup();
+					}
 				}
 				ImGui::EndChild();
 			}

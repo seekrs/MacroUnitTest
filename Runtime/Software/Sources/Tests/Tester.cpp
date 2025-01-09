@@ -1,6 +1,7 @@
 #include <Tests/Tester.h>
 #include <Core/OS/OSInstance.h>
 #include <Graphics/Renderer.h>
+#include <Core/Application.h>
 
 #ifdef MLX_UT_RELEASE
 	#include <Embedded/Tests.h>
@@ -36,6 +37,15 @@ namespace mlxut
 		m_pending_tests = m_tests.size();
 		for(auto test : m_tests)
 			test->Run(mlx_path);
+		Application::Get().TestHaveBeenLaunched();
+		m_is_running = true;
+	}
+
+	void Tester::RunSingleTests(std::size_t index, const std::filesystem::path& mlx_path)
+	{
+		m_pending_tests = 1;
+		m_tests[index]->Run(mlx_path);
+		Application::Get().TestHaveBeenLaunched();
 		m_is_running = true;
 	}
 

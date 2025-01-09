@@ -41,7 +41,6 @@ namespace mlxut
 
 	void Application::Run()
 	{
-		bool have_tests_been_launched = false;
 		for(;;)
 		{
 			m_wheel_event = MouseWheelEvent::Idle;
@@ -75,23 +74,41 @@ namespace mlxut
 				if(m_menubar.ShouldRenderAboutWindow())
 					m_menubar.RenderAboutWindow();
 				m_menubar.RenderMLXPath(*p_renderer);
+
+				if(m_have_tests_been_launched)
+					ImGui::OpenPopup("Running");
+
+				ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+				ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize("All tests are currently running").x + 50, 100), ImGuiCond_Appearing);
+				if(ImGui::BeginPopupModal("Running", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+				{
+					float window_width = ImGui::GetWindowWidth();
+					float text_width = ImGui::CalcTextSize("All tests are currently running").x;
+					ImGui::SetCursorPosX((window_width - text_width) / 2.0f);
+					ImGui::Text("All tests are currently running");
+
+					const ImU32 bg = ImGui::GetColorU32(ImGuiCol_WindowBg);
+					ImGui::SetCursorPosX((window_width - 45) / 2.0f);
+					ImSpinner::SpinnerLoadingRing("##running_spinner", 15, 3, ImSpinner::white, bg);
+
+					if(!m_have_tests_been_launched)
+						ImGui::CloseCurrentPopup();
+
+					ImGui::EndPopup();
+				}
 			p_imgui->EndFrame();
 
-			if(have_tests_been_launched && m_tester.HaveAllTestsFinished())
+			if(m_have_tests_been_launched && m_tester.HaveAllTestsFinished())
 			{
 				m_tester.FetchAllResults();
 				m_tester.CreateAllRenderTextures();
 				m_tester.ComputeAllErrorMaps();
 				m_tester.FetchSuccess();
-				m_menubar.AllTestsHaveFinished();
-				have_tests_been_launched = false;
+				m_have_tests_been_launched = false;
 			}
 
 			if(m_menubar.ShouldStartAllTests())
-			{
 				m_tester.RunAllTests(m_menubar.GetMLXPath());
-				have_tests_been_launched = true;
-			}
 
 			if(m_menubar.IsQuitRequested())
 				break;

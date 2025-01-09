@@ -16,7 +16,11 @@ namespace mlxut
 			Application();
 
 			void Run();
+
 			inline void SetCursor(SDL_SystemCursor cursor) const noexcept { SDL_SetCursor(m_cursors.at(cursor)); }
+			inline void TestHaveBeenLaunched() noexcept { m_have_tests_been_launched = true; }
+
+			[[nodiscard]] inline const std::filesystem::path& GetMLXPath() const noexcept { return m_menubar.GetMLXPath(); }
 			[[nodiscard]] inline MouseWheelEvent GetMouseWheelEvent() const noexcept { return m_wheel_event; }
 
 			inline static Application& Get() noexcept { return *s_instance; }
@@ -39,6 +43,7 @@ namespace mlxut
 			std::unique_ptr<Renderer> p_renderer;
 			std::unique_ptr<ImGuiContext> p_imgui;
 			MouseWheelEvent m_wheel_event = MouseWheelEvent::Idle;
+			bool m_have_tests_been_launched = false;
 	};
 }
 

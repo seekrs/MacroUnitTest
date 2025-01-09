@@ -62,6 +62,11 @@ namespace mlxut
 			}
 			if(ImGui::BeginMenu(MLX_UT_ICON_MD_TUNE" Edit"))
 			{
+				#ifndef MLX_UT_RELEASE
+				if(ImGui::MenuItem("Create new test"))
+				{
+				}
+				#endif
 				if(ImGui::MenuItem("Settings"))
 					m_render_settings_window = true;
 				ImGui::EndMenu();
@@ -98,11 +103,6 @@ namespace mlxut
 			ImGui::OpenPopup("No mlx path");
 			m_launch_all_tests = false;
 		}
-		else if(m_launch_all_tests)
-		{
-			ImGui::OpenPopup("Running");
-			m_all_tests_have_finished = false;
-		}
 
 		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 		ImGui::SetNextWindowSize(ImVec2(0, 80), ImGuiCond_Appearing);
@@ -123,26 +123,6 @@ namespace mlxut
 
 			if(!m_mlx_lib_path.empty())
 				ImGui::CloseCurrentPopup();
-			ImGui::EndPopup();
-		}
-
-		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-		ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize("All tests are currently running").x + 50, 100), ImGuiCond_Appearing);
-
-		if(ImGui::BeginPopupModal("Running", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
-		{
-			float window_width = ImGui::GetWindowWidth();
-			float text_width = ImGui::CalcTextSize("All tests are currently running").x;
-			ImGui::SetCursorPosX((window_width - text_width) / 2.0f);
-			ImGui::Text("All tests are currently running");
-
-			const ImU32 bg = ImGui::GetColorU32(ImGuiCol_WindowBg);
-			ImGui::SetCursorPosX((window_width - 45) / 2.0f);
-			ImSpinner::SpinnerLoadingRing("##running_spinner", 15, 3, ImSpinner::white, bg);
-
-			if(m_all_tests_have_finished)
-				ImGui::CloseCurrentPopup();
-
 			ImGui::EndPopup();
 		}
 	}

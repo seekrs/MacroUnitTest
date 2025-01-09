@@ -13,6 +13,7 @@ namespace mlxut
 
 			void CreateAllTests(const class Renderer& renderer);
 			void RunAllTests(const std::filesystem::path& mlx_path);
+			void RunSingleTests(std::size_t index, const std::filesystem::path& mlx_path);
 			bool HaveAllTestsFinished();
 			void FetchAllResults();
 			void CreateAllRenderTextures();
