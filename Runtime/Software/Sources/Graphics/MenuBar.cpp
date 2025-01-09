@@ -1,4 +1,3 @@
-#include "imgui.h"
 #include <Core/Application.h>
 #include <Graphics/MenuBar.h>
 #include <Graphics/ImGuiContext.h>
@@ -21,7 +20,7 @@ namespace mlxut
 			m_mlx_lib_path = *mlx_path;
 	}
 
-	void MenuBar::Render(const Window& win, const Renderer& renderer, ImVec2 size) noexcept
+	void MenuBar::Render(const Window& win, const Renderer& renderer, ImVec2 size, Tester& tester) noexcept
 	{
 		ImGuiStyle* style = &ImGui::GetStyle();
 
@@ -135,7 +134,7 @@ namespace mlxut
 			if(new_test_openned)
 				ImGui::OpenPopup("New test");
 			ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-			ImGui::SetNextWindowSize(ImVec2(250, 0), ImGuiCond_Appearing);
+			ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize("Test name:  Your test needs a name !").x + 25, 0), ImGuiCond_Appearing);
 			if(ImGui::BeginPopupModal("New test", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
 			{
 				std::string_view test_name_view{test_name};
@@ -147,7 +146,7 @@ namespace mlxut
 						ImGui::TextUnformatted("Your test needs a name !");
 					ImGui::PopStyleColor();
 				}
-				ImGui::SetNextItemWidth(250 - ImGui::GetStyle().FramePadding.x * 2);
+				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() - ImGui::GetStyle().FramePadding.x * 2);
 				if(ImGui::InputTextWithHint("##test_name", "Name", test_name, 255, ImGuiInputTextFlags_AutoSelectAll))
 					error_no_name = false;
 
@@ -156,6 +155,18 @@ namespace mlxut
 				{
 					if(!test_name_view.empty())
 					{
+						std::ofstream file(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (std::string{ test_name_view } + ".lua"));
+						if(file.is_open())
+						{
+							file << "function Setup(mlx, win)" << '\n';
+							file << "end" << "\n\n";
+							file << "function Test(mlx, win)" << '\n';
+							file << "end" << "\n\n";
+							file << "function Cleanup(mlx, win)" << '\n';
+							file << "end";
+						}
+						file.close();
+						tester.CreateAllTests(renderer);
 						new_test_openned = false;
 						std::memset(test_name, 0, 255);
 						ImGui::CloseCurrentPopup();

@@ -19,8 +19,9 @@ namespace mlxut
 			void CreateAllRenderTextures();
 			void ComputeAllErrorMaps();
 			void FetchSuccess();
+			void Reset();
 
-			[[nodiscard]] const auto& GetAllTests() const noexcept { return m_tests; }
+			[[nodiscard]] std::vector<std::shared_ptr<Test>>& GetAllTests() noexcept { return m_tests; }
 			[[nodiscard]] inline bool AreTestsRunning() const noexcept { return m_is_running; }
 			[[nodiscard]] inline std::size_t GetTestsPassedNumber() const noexcept { return m_passed_tests; }
 			[[nodiscard]] inline std::size_t GetTestsFailedNumber() const noexcept { return m_failed_tests; }

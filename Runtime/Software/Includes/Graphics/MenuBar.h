@@ -11,7 +11,7 @@ namespace mlxut
 		public:
 			MenuBar();
 
-			void Render(const class Window& win, const class Renderer& renderer, ImVec2 size) noexcept;
+			void Render(const class Window& win, const class Renderer& renderer, ImVec2 size, class Tester& tester) noexcept;
 			void RenderAboutWindow();
 			void RenderSettingsWindow();
 			void RenderMLXPath(const class Renderer& renderer);

@@ -1,6 +1,7 @@
 #include <Graphics/Panels/Tests.h>
 #include <Core/MaterialFont.h>
 #include <Core/Application.h>
+#include <Core/OS/OSInstance.h>
 
 namespace mlxut
 {
@@ -10,7 +11,7 @@ namespace mlxut
 	{
 		if(ImGui::Begin(MLX_UT_ICON_MD_LIST" Tests", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse))
 		{
-			const auto& tests = m_tester.GetAllTests();
+			std::vector<std::shared_ptr<Test>>& tests = m_tester.GetAllTests();
 
 			ImGui::Text("All %ld tests :", tests.size());
 			ImGui::SameLine();
@@ -67,7 +68,15 @@ namespace mlxut
 					{
 						if(ImGui::Button("Run test"))
 							m_tester.RunSingleTests(n, Application::Get().GetMLXPath());
-						#ifndef MLX_UT_EDITOR
+						#ifndef MLX_UT_EMBED_TESTS
+							if(ImGui::Button("Delete reference"))
+								tests[n]->DeleteReference();
+							if(ImGui::Button("Delete test"))
+							{
+								tests[n]->DeleteReference();
+								std::filesystem::remove(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (tests[n]->GetName() + ".lua"));
+								tests.erase(tests.begin() + n);
+							}
 						#endif
 						ImGui::EndPopup();
 					}
