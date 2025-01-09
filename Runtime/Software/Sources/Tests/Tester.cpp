@@ -18,6 +18,8 @@ namespace mlxut
 					continue;
 				if(dir_entry.path().extension() != ".lua")
 					continue;
+				if(std::find_if(m_tests.begin(), m_tests.end(), [&dir_entry](std::shared_ptr<Test> test) { return test->GetName() == dir_entry.path().stem(); }) != m_tests.end())
+					continue;
 				m_tests.emplace_back(std::make_shared<Test>(renderer, std::move(dir_entry.path().stem().string())));
 				m_tests.back()->CreateRenderTextures();
 			}
@@ -99,5 +101,16 @@ namespace mlxut
 			else if(test->HasPassed())
 				m_passed_tests++;
 		}
+	}
+
+	void Tester::Reset()
+	{
+		m_tests.clear();
+		m_selected_test = 0;
+		m_passed_tests = 0;
+		m_failed_tests = 0;
+		m_sus_tests = 0;
+		m_pending_tests = 0;
+		m_is_running = false;
 	}
 }

@@ -66,7 +66,7 @@ namespace mlxut
 			ImVec2 im_render_size = ImVec2{ static_cast<float>(render_size.x), static_cast<float>(render_size.y) };
 
 			p_imgui->BeginFrame();
-				m_menubar.Render(*p_window, *p_renderer, im_render_size);
+				m_menubar.Render(*p_window, *p_renderer, im_render_size, m_tester);
 				for(auto panel : m_stack.GetPanels())
 					panel->OnUpdate(im_render_size);
 				if(m_menubar.ShouldRenderSettingsWindow())
@@ -79,13 +79,13 @@ namespace mlxut
 					ImGui::OpenPopup("Running");
 
 				ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-				ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize("All tests are currently running").x + 50, 100), ImGuiCond_Appearing);
+				ImGui::SetNextWindowSize(ImVec2(ImGui::CalcTextSize("Tests are currently running").x + 50, 100), ImGuiCond_Appearing);
 				if(ImGui::BeginPopupModal("Running", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
 				{
 					float window_width = ImGui::GetWindowWidth();
-					float text_width = ImGui::CalcTextSize("All tests are currently running").x;
+					float text_width = ImGui::CalcTextSize("Tests are currently running").x;
 					ImGui::SetCursorPosX((window_width - text_width) / 2.0f);
-					ImGui::Text("All tests are currently running");
+					ImGui::Text("Tests are currently running");
 
 					const ImU32 bg = ImGui::GetColorU32(ImGuiCol_WindowBg);
 					ImGui::SetCursorPosX((window_width - 45) / 2.0f);

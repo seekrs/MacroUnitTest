@@ -42,7 +42,7 @@ local os_interfaces = {
 option("unitybuild", { description = "Build the app using unity build", default = false })
 option("editor", { description = "Build the app in edtior mode", default = is_mode("debug") })
 
-if not has_config("editor") then
+if not is_mode("debug") and not has_config("editor") then
 	add_defines("MLX_UT_EMBED_TESTS")
 end
 
