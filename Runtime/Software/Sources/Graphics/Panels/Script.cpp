@@ -1,9 +1,11 @@
-#include "SDL_surface.h"
+#include "imgui.h"
 #include <Graphics/Panels/Script.h>
 #include <Core/OS/OSInstance.h>
 #include <Core/MaterialFont.h>
 #include <Tests/Tester.h>
 #include <Graphics/Renderer.h>
+#include <Core/Application.h>
+#include <filesystem>
 
 #ifdef MLX_UT_RELEASE
 	#include <Embedded/Fonts.h>
@@ -65,7 +67,9 @@ namespace mlxut
 		m_editor.SetTabSize(4);
 		m_editor.SetShowWhitespaces(false);
 		m_editor.SetPalette(GetPalette());
-		m_editor.SetReadOnly(true);
+		#ifdef MLX_UT_RELEASE
+			m_editor.SetReadOnly(true);
+		#endif
 
 		for(std::size_t size = 10; size < 28; size += 2)
 		{
@@ -76,23 +80,37 @@ namespace mlxut
 			#endif
 
 			if(size == 12)
+			{
 				p_font = font;
+				m_font_id = ImGui::GetIO().Fonts->Fonts.size() - 1;
+			}
 		}
 	}
 
 	void ScriptPanel::OnUpdate(ImVec2 size)
 	{
 		static const std::string* test_name_ptr = nullptr;
+		#ifndef MLX_UT_RELEASE
+			static std::filesystem::file_time_type last_write{};
+			static bool unsaved = false;
+		#endif
+		static TextEditor::ErrorMarkers markers;
 
 		if(ImGui::Begin(MLX_UT_ICON_MD_CODE" Script", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse))
 		{
 			auto test = m_tester.GetAllTests()[m_tester.GetSelectedTest()];
 
-			if(test_name_ptr != &test->GetName())
+			#ifndef MLX_UT_RELEASE
+				std::filesystem::path file_path = OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (test->GetName() + ".lua");
+				if(test_name_ptr != &test->GetName() || std::filesystem::last_write_time(file_path) != last_write)
+			#else
+				if(test_name_ptr != &test->GetName())
+			#endif
 			{
 				#ifndef MLX_UT_RELEASE
+				last_write = std::filesystem::last_write_time(file_path);
 				{
-					std::ifstream file(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (test->GetName() + ".lua"));
+					std::ifstream file(std::move(file_path));
 					if(file.good())
 					{
 						std::string str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
@@ -103,18 +121,57 @@ namespace mlxut
 					m_editor.SetText(GetDataFromFilename(test->GetName()));
 				#endif
 				test_name_ptr = &test->GetName();
+				markers.clear();
+				test->ClearLuaErrors();
 			}
 
-			TextEditor::ErrorMarkers markers;
-
-			if(test->HasFailed() && !test->GetLuaErrorMessage().empty()) // TODO: dont update each frame
+			if(!m_tester.AreTestsRunning())
+				markers.clear();
+			if(markers.empty() && m_tester.HaveAllTestsFinished() && test->HasFailed() && !test->GetLuaErrorMessage().empty())
 				markers[test->GetLuaErrorLine()] = test->GetLuaErrorMessage();
 
 			m_editor.SetErrorMarkers(markers);
 
+			if(ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl))
+			{
+				ImGuiIO& io = ImGui::GetIO();
+
+				if((ImGui::IsKeyPressed(ImGuiKey_Equal) || ImGui::IsKeyPressed(ImGuiKey_KeypadAdd) || Application::Get().GetMouseWheelEvent() == MouseWheelEvent::Up)
+					&& m_font_id < io.Fonts->Fonts.size() - 1)
+				{
+					p_font = io.Fonts->Fonts[m_font_id + 1];
+					m_font_id++;
+				}
+				if((ImGui::IsKeyPressed(ImGuiKey_Minus) || ImGui::IsKeyPressed(ImGuiKey_KeypadSubtract) || Application::Get().GetMouseWheelEvent() == MouseWheelEvent::Down)
+					&& m_font_id > io.Fonts->Fonts.size() / 2)
+				{
+					p_font = io.Fonts->Fonts[m_font_id - 1];
+					m_font_id--;
+				}
+			}
+
 			ImGui::PushFont(p_font);
 				m_editor.Render("Code", ImVec2(), true);
 			ImGui::PopFont();
+
+			#ifndef MLX_UT_RELEASE
+				if(m_editor.IsTextChanged())
+					unsaved = true;
+				if(true)
+				{
+					float window_width = ImGui::GetWindowWidth();
+					ImGui::SetCursorPos(ImVec2(window_width - 60, 67));
+					if(ImGui::BeginChild("#test", ImVec2(0.0f, 0.0f), 0, ImGuiWindowFlags_NoBackground))
+					{
+						if(ImGui::Button(MLX_UT_ICON_MD_SAVE))
+						{
+							std::cout << "caca" << std::endl;
+						}
+						ImGui::EndChild();
+					}
+				}
+			#endif
+
 			ImGui::End();
 		}
 	}

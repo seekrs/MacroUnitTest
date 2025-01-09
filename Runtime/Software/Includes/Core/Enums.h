@@ -15,7 +15,6 @@ namespace mlxut
 
 		EndEnum
 	};
-
 	constexpr std::size_t LogTypeCount = static_cast<std::size_t>(LogType::EndEnum);
 
 	enum class Event
@@ -24,8 +23,17 @@ namespace mlxut
 
 		EndEnum
 	};
-
 	constexpr std::size_t EventCount = static_cast<std::size_t>(Event::EndEnum);
+
+	enum class MouseWheelEvent : std::uint8_t
+	{
+		Idle,
+		Up,
+		Down,
+
+		EndEnum
+	};
+	constexpr std::size_t MouseWheelEventCount = static_cast<std::size_t>(MouseWheelEvent::EndEnum);
 }
 
 #endif

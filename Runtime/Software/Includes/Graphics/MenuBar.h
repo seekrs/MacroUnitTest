@@ -13,7 +13,7 @@ namespace mlxut
 
 			void Render(const class Window& win, const class Renderer& renderer, ImVec2 size) noexcept;
 			void RenderAboutWindow();
-			void RenderSettingsWindow(std::shared_ptr<class ScriptPanel> script_panel);
+			void RenderSettingsWindow();
 			void RenderMLXPath(const class Renderer& renderer);
 			void DestroyResources();
 
@@ -28,7 +28,7 @@ namespace mlxut
 			~MenuBar() = default;
 
 		private:
-			void RenderGeneralSettings(std::shared_ptr<class ScriptPanel> script_panel);
+			void RenderGeneralSettings();
 
 		private:
 			std::filesystem::path m_mlx_lib_path;
