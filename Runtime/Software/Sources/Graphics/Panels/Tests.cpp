@@ -67,6 +67,8 @@ namespace mlxut
 					{
 						if(ImGui::Button("Run test"))
 							m_tester.RunSingleTests(n, Application::Get().GetMLXPath());
+						#ifndef MLX_UT_EDITOR
+						#endif
 						ImGui::EndPopup();
 					}
 				}

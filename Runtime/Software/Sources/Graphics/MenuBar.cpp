@@ -1,3 +1,4 @@
+#include "imgui.h"
 #include <Core/Application.h>
 #include <Graphics/MenuBar.h>
 #include <Graphics/ImGuiContext.h>
@@ -37,6 +38,9 @@ namespace mlxut
 		}
 
 		static bool dialog_openned = false;
+		#ifndef MLX_UT_EMBED_TESTS
+			static bool new_test_openned = false;
+		#endif
 
 		if(dialog_openned && m_dialog.IsFinished())
 		{
@@ -62,10 +66,9 @@ namespace mlxut
 			}
 			if(ImGui::BeginMenu(MLX_UT_ICON_MD_TUNE" Edit"))
 			{
-				#ifndef MLX_UT_RELEASE
-				if(ImGui::MenuItem("Create new test"))
-				{
-				}
+				#ifndef MLX_UT_EMBED_TESTS
+					if(ImGui::MenuItem("Create new test"))
+						new_test_openned = true;
 				#endif
 				if(ImGui::MenuItem("Settings"))
 					m_render_settings_window = true;
@@ -125,6 +128,45 @@ namespace mlxut
 				ImGui::CloseCurrentPopup();
 			ImGui::EndPopup();
 		}
+
+		#ifndef MLX_UT_EMBED_TESTS
+			static char test_name[255] = { 0 };
+			static bool error_no_name = false;
+			if(new_test_openned)
+				ImGui::OpenPopup("New test");
+			ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+			ImGui::SetNextWindowSize(ImVec2(250, 0), ImGuiCond_Appearing);
+			if(ImGui::BeginPopupModal("New test", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+			{
+				std::string_view test_name_view{test_name};
+				ImGui::TextUnformatted("Test name:");
+				if(error_no_name)
+				{
+					ImGui::SameLine();
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.365f, 0.365f, 1.0f));
+						ImGui::TextUnformatted("Your test needs a name !");
+					ImGui::PopStyleColor();
+				}
+				ImGui::SetNextItemWidth(250 - ImGui::GetStyle().FramePadding.x * 2);
+				if(ImGui::InputTextWithHint("##test_name", "Name", test_name, 255, ImGuiInputTextFlags_AutoSelectAll))
+					error_no_name = false;
+
+				ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() * 0.5f - ImGui::CalcTextSize("Create").x * 0.5f, ImGui::GetCursorPosY()));
+				if(ImGui::Button("Create"))
+				{
+					if(!test_name_view.empty())
+					{
+						new_test_openned = false;
+						std::memset(test_name, 0, 255);
+						ImGui::CloseCurrentPopup();
+					}
+					else
+						error_no_name = true;
+				}
+
+				ImGui::EndPopup();
+			}
+		#endif
 	}
 
 	void MenuBar::RenderMLXPath(const Renderer& renderer)

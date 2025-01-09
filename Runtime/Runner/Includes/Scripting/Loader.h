@@ -11,7 +11,7 @@ namespace mlxut
 		public:
 			LuaLoader();
 
-			#ifndef MLX_UT_RELEASE
+			#ifndef MLX_UT_EMBED_TESTS
 				std::optional<LuaScript> LoadScript(std::filesystem::path path);
 			#else
 				std::optional<LuaScript> LoadScript(std::string name);
