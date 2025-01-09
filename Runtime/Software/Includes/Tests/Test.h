@@ -19,6 +19,8 @@ namespace mlxut
 			void CreateRenderTextures();
 			void ComputeErrorMap();
 
+			inline void ClearLuaErrors() { m_lua_line_error = 0; m_lua_error_message.clear(); }
+
 			[[nodiscard]] inline SDL_Texture* GetResult() const noexcept { return p_result; }
 			[[nodiscard]] inline SDL_Texture* GetReference() const noexcept { return p_reference; }
 			[[nodiscard]] inline SDL_Texture* GetErrorMap() const noexcept { return p_error_map; }

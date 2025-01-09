@@ -53,6 +53,8 @@ namespace mlxut
 			}
 		);
 		m_state = TestState::Running;
+		m_lua_error_message.clear();
+		m_lua_line_error = 0;
 	}
 
 	bool Test::IsTestFinished()

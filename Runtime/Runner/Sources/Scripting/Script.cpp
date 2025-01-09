@@ -24,7 +24,7 @@ namespace mlxut
 		if(!result.valid())
 		{
 			sol::error err = result;
-			std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Script: failed to execute update function: " << err.what() << std::endl;
+			std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Error: failed to execute update function: " << err.what() << std::endl;
 			m_has_failed = true;
 		}
 	}
@@ -37,7 +37,7 @@ namespace mlxut
 		if(!result.valid())
 		{
 			sol::error err = result;
-			std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Script: failed to execute quit function: " << err.what() << std::endl;
+			std::cerr << Ansi::red << "Error: " << Ansi::def << "Lua Error: failed to execute quit function: " << err.what() << std::endl;
 			m_has_failed = true;
 		}
 	}

@@ -22,6 +22,7 @@ namespace mlxut
 			TextEditor::LanguageDefinition m_lang;
 			class Tester& m_tester;
 			ImFont* p_font = nullptr;
+			std::size_t m_font_id;
 	};
 }
 

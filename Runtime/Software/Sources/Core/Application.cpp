@@ -44,12 +44,21 @@ namespace mlxut
 		bool have_tests_been_launched = false;
 		for(;;)
 		{
+			m_wheel_event = MouseWheelEvent::Idle;
+
 			while(SDL_PollEvent(&m_event))
 			{
 				if(m_event.type == SDL_QUIT)
 					goto EndLoop;
 				if(m_event.type == SDL_WINDOWEVENT && m_event.window.event == SDL_WINDOWEVENT_CLOSE)
 					goto EndLoop;
+				if(m_event.type == SDL_MOUSEWHEEL)
+				{
+					if(m_event.wheel.y > 0) // scroll up
+						m_wheel_event = MouseWheelEvent::Up;
+					else if(m_event.wheel.y < 0) // scroll down
+						m_wheel_event = MouseWheelEvent::Down;
+				}
 				p_imgui->CheckEvents(&m_event);
 			}
 			UpdateCursor();
@@ -62,7 +71,7 @@ namespace mlxut
 				for(auto panel : m_stack.GetPanels())
 					panel->OnUpdate(im_render_size);
 				if(m_menubar.ShouldRenderSettingsWindow())
-					m_menubar.RenderSettingsWindow(std::static_pointer_cast<ScriptPanel>(m_stack.GetPanel("Script")));
+					m_menubar.RenderSettingsWindow();
 				if(m_menubar.ShouldRenderAboutWindow())
 					m_menubar.RenderAboutWindow();
 				m_menubar.RenderMLXPath(*p_renderer);

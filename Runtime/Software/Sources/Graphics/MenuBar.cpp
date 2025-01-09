@@ -5,7 +5,6 @@
 #include <Graphics/Renderer.h>
 #include <Core/MaterialFont.h>
 #include <Core/OS/OSInstance.h>
-#include <Graphics/Panels/Script.h>
 #include <Core/CLI.h>
 
 #ifdef MLX_UT_RELEASE
@@ -217,7 +216,7 @@ namespace mlxut
 		}
 	}
 
-	void MenuBar::RenderSettingsWindow(std::shared_ptr<ScriptPanel> script_panel)
+	void MenuBar::RenderSettingsWindow()
 	{
 		if(ImGui::Begin(MLX_UT_ICON_MD_SETTINGS" Settings", &m_render_settings_window, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse))
 		{
@@ -233,7 +232,7 @@ namespace mlxut
 			{
 				switch(selected)
 				{
-					case 0: RenderGeneralSettings(script_panel); break;
+					case 0: RenderGeneralSettings(); break;
 
 					default : break;
 				}
@@ -249,7 +248,7 @@ namespace mlxut
 			SDL_DestroyTexture(p_logo);
 	}
 
-	void MenuBar::RenderGeneralSettings(std::shared_ptr<ScriptPanel> script_panel)
+	void MenuBar::RenderGeneralSettings()
 	{
 		ImGui::TextUnformatted("General");
 		ImGui::Separator();
@@ -309,7 +308,6 @@ namespace mlxut
 						if(ImGui::Selectable((std::to_string(size) + "%").c_str(), io.Fonts->Fonts[i] == current_font))
 						{
 							io.FontDefault = io.Fonts->Fonts[i];
-							script_panel->SetFont(io.Fonts->Fonts[io.Fonts->Fonts.size() / 2 + i]);
 							current_size = size;
 						}
 						ImGui::PopID();
