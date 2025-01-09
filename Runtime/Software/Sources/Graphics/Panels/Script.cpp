@@ -9,6 +9,8 @@
 
 #ifdef MLX_UT_RELEASE
 	#include <Embedded/Fonts.h>
+#endif
+#ifdef MLX_UT_EMBED_TESTS
 	#include <Embedded/Tests.h>
 #endif
 
@@ -67,7 +69,7 @@ namespace mlxut
 		m_editor.SetTabSize(4);
 		m_editor.SetShowWhitespaces(false);
 		m_editor.SetPalette(GetPalette());
-		#ifdef MLX_UT_RELEASE
+		#ifdef MLX_UT_EMBED_TESTS
 			m_editor.SetReadOnly(true);
 		#endif
 
@@ -90,7 +92,7 @@ namespace mlxut
 	void ScriptPanel::OnUpdate(ImVec2 size)
 	{
 		static const std::string* test_name_ptr = nullptr;
-		#ifndef MLX_UT_RELEASE
+		#ifndef MLX_UT_EMBED_TESTS
 			static std::filesystem::file_time_type last_write{};
 			static bool unsaved = false;
 		#endif
@@ -100,24 +102,24 @@ namespace mlxut
 		{
 			auto test = m_tester.GetAllTests()[m_tester.GetSelectedTest()];
 
-			#ifndef MLX_UT_RELEASE
+			#ifndef MLX_UT_EMBED_TESTS
 				std::filesystem::path file_path = OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (test->GetName() + ".lua");
 				if(test_name_ptr != &test->GetName() || std::filesystem::last_write_time(file_path) != last_write)
 			#else
 				if(test_name_ptr != &test->GetName())
 			#endif
 			{
-				#ifndef MLX_UT_RELEASE
-				last_write = std::filesystem::last_write_time(file_path);
-				{
-					std::ifstream file(std::move(file_path));
-					if(file.good())
+				#ifndef MLX_UT_EMBED_TESTS
+					last_write = std::filesystem::last_write_time(file_path);
 					{
-						std::string str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-						str.pop_back();
-						m_editor.SetText(str);
+						std::ifstream file(std::move(file_path));
+						if(file.good())
+						{
+							std::string str((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+							str.pop_back();
+							m_editor.SetText(str);
+						}
 					}
-				}
 				#else
 					m_editor.SetText(GetDataFromFilename(test->GetName()));
 				#endif
@@ -155,7 +157,7 @@ namespace mlxut
 				m_editor.Render("Code", ImVec2(), true);
 			ImGui::PopFont();
 
-			#ifndef MLX_UT_RELEASE
+			#ifndef MLX_UT_EMBED_TESTS
 				if(m_editor.IsTextChanged())
 					unsaved = true;
 				if(unsaved)

@@ -32,7 +32,7 @@
 
 	os.Init(ac, av);
 
-	#ifndef MLX_UT_RELEASE
+	#ifndef MLX_UT_EMBED_TESTS
 		auto script_path = mlxut::CommandLineInterface::Get().GetOption("script-path");
 		if(!script_path.has_value() || !std::filesystem::exists(*script_path))
 		{
@@ -59,7 +59,7 @@
 	mlx_loader.Load(*mlx_path);
 
 	mlxut::LuaLoader lua_loader;
-	#ifndef MLX_UT_RELEASE
+	#ifndef MLX_UT_EMBED_TESTS
 		auto script = lua_loader.LoadScript(*script_path);
 	#else
 		auto script = lua_loader.LoadScript(*script_name);
@@ -108,7 +108,7 @@
 					result.push_back(mlx_loader.mlx_get_image_pixel(mlx, render_target, x, y));
 			}
 
-			#ifndef MLX_UT_RELEASE
+			#ifndef MLX_UT_EMBED_TESTS
 				std::filesystem::path transfer_file_path = std::filesystem::temp_directory_path() / std::filesystem::path{ *script_path }.stem();
 			#else
 				std::filesystem::path transfer_file_path = std::filesystem::temp_directory_path() / *script_name;

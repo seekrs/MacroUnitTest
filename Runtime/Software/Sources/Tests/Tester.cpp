@@ -3,7 +3,7 @@
 #include <Graphics/Renderer.h>
 #include <Core/Application.h>
 
-#ifdef MLX_UT_RELEASE
+#ifdef MLX_UT_EMBED_TESTS
 	#include <Embedded/Tests.h>
 #endif
 
@@ -11,7 +11,7 @@ namespace mlxut
 {
 	void Tester::CreateAllTests(const Renderer& renderer)
 	{
-		#ifndef MLX_UT_RELEASE
+		#ifndef MLX_UT_EMBED_TESTS
 			for(auto const& dir_entry : std::filesystem::directory_iterator{ OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" })
 			{
 				if(std::filesystem::is_directory(dir_entry.path()))

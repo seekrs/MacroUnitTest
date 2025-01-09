@@ -2,7 +2,7 @@
 #include <Loader/Loader.h>
 #include <Utils/Ansi.h>
 
-#ifdef MLX_UT_RELEASE
+#ifdef MLX_UT_EMBED_TESTS
 	#include <Embedded/Tests.h>
 #endif
 
@@ -91,7 +91,7 @@ namespace mlxut
 		});
 	}
 
-	#ifndef MLX_UT_RELEASE
+	#ifndef MLX_UT_EMBED_TESTS
 		std::optional<LuaScript> LuaLoader::LoadScript(std::filesystem::path lua_file)
 		{
 			if(!std::filesystem::exists(lua_file))

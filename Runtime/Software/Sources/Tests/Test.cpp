@@ -4,7 +4,7 @@
 
 #include <FLIP.h>
 
-#ifdef MLX_UT_RELEASE
+#ifdef MLX_UT_EMBED_TESTS
 	#include <Embedded/References.h>
 #endif
 
@@ -33,7 +33,7 @@ namespace mlxut
 		std::fill(m_reference_pixels.begin(), m_reference_pixels.end(), 0);
 		SDL_DestroyTexture(p_reference);
 		p_reference = nullptr;
-		#ifndef MLX_UT_RELEASE
+		#ifndef MLX_UT_EMBED_TESTS
 			std::filesystem::remove(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Assets/TestsReferences" / (m_name + ".png"));
 		#endif
 	}
@@ -44,7 +44,7 @@ namespace mlxut
 		p_process = std::make_unique<TinyProcessLib::Process>(
 			std::vector<std::string>{
 				OSInstance::Get().GetCurrentWorkingDirectoryPath() / "TestRunner",
-				#ifndef MLX_UT_RELEASE
+				#ifndef MLX_UT_EMBED_TESTS
 					"--script-path=" + (OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (m_name + ".lua")).string(),
 				#else
 					"--script=" + m_name,
@@ -136,14 +136,14 @@ namespace mlxut
 			return;
 		}
 
-	#ifndef MLX_UT_RELEASE
+	#ifndef MLX_UT_EMBED_TESTS
 		std::filesystem::path ref_path = OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Assets/TestsReferences" / (m_name + ".png");
 		if(std::filesystem::exists(ref_path))
 		{
 	#endif
 			if(surface)
 				SDL_FreeSurface(surface);
-		#ifndef MLX_UT_RELEASE
+		#ifndef MLX_UT_EMBED_TESTS
 			surface = IMG_Load(ref_path.string().c_str());
 		#else
 			const auto& ref_data = GetDataFromFilename(m_name);
@@ -191,7 +191,7 @@ namespace mlxut
 			SDL_UnlockSurface(surface);
 			p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			SDL_FreeSurface(surface);
-	#ifndef MLX_UT_RELEASE
+	#ifndef MLX_UT_EMBED_TESTS
 		}
 		else if(surface)
 		{
