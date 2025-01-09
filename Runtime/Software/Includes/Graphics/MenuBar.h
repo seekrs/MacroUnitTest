@@ -23,7 +23,6 @@ namespace mlxut
 			[[nodiscard]] inline bool IsQuitRequested() const noexcept { return m_quit_requested; }
 			[[nodiscard]] inline float GetHeight() const noexcept { return m_height; }
 			[[nodiscard]] inline const std::filesystem::path& GetMLXPath() const noexcept { return m_mlx_lib_path; }
-			inline constexpr void AllTestsHaveFinished() noexcept { m_all_tests_have_finished = true; }
 
 			~MenuBar() = default;
 
@@ -39,7 +38,6 @@ namespace mlxut
 			bool m_render_settings_window = false;
 			bool m_launch_all_tests = false;
 			bool m_quit_requested = false;
-			bool m_all_tests_have_finished = true;
 	};
 }
 

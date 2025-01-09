@@ -22,9 +22,20 @@ namespace mlxut
 	{
 		std::fill(m_result_pixels.begin(), m_result_pixels.end(), 0);
 		SDL_DestroyTexture(p_result);
+		p_result = nullptr;
 		m_logs.clear();
 		m_state = TestState::Pending;
 		p_process.reset();
+	}
+
+	void Test::DeleteReference()
+	{
+		std::fill(m_reference_pixels.begin(), m_reference_pixels.end(), 0);
+		SDL_DestroyTexture(p_reference);
+		p_reference = nullptr;
+		#ifndef MLX_UT_RELEASE
+			std::filesystem::remove(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Assets/TestsReferences" / (m_name + ".png"));
+		#endif
 	}
 
 	void Test::Run(const std::filesystem::path& mlx_path)
@@ -116,6 +127,13 @@ namespace mlxut
 		{
 			surface = SDL_CreateRGBSurfaceFrom(m_result_pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);
 			p_result = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
+		}
+
+		if(p_reference != nullptr)
+		{
+			if(surface != nullptr)
+				SDL_FreeSurface(surface);
+			return;
 		}
 
 	#ifndef MLX_UT_RELEASE

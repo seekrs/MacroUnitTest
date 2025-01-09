@@ -12,6 +12,7 @@ namespace mlxut
 			Test(const class Renderer& renderer, std::string name);
 
 			void Reset() noexcept;
+			void DeleteReference();
 
 			void Run(const std::filesystem::path& mlx_path);
 			bool IsTestFinished();
