@@ -6,6 +6,7 @@
 !xmake.lua
 !/Runtime/
 !/Resources/
+!/Screenshots/
 !/Xmake/
 Runtime/Software/Includes/Embedded/
 Runtime/Common/Includes/Embedded/
