@@ -10,7 +10,7 @@
 	{
 		mlxut::CommandLineInterface cli;
 		mlxut::WindowsInstance os;
-		os.Init();
+		os.Init(0, nullptr);
 		mlxut::Application app;
 		app.Run();
 		os.Shutdown();

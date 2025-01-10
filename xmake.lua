@@ -35,7 +35,7 @@ local os_interfaces = {
 	},
 	Windows = {
 		dir = "Drivers/",
-		enabled = is_plat("windows")
+		enabled = is_plat("windows") or is_plat("mingw")
 	}
 }
 
@@ -179,10 +179,12 @@ function ModuleTargetConfig(name, module, subdir)
 		remove_headerfiles("Runtime/" .. subdir .. "/Sources/" .. name .. "/Resources/**.h")
 	end
 
-	if module.dir then
-		set_pcxxheader("Runtime/" .. subdir .. "/Includes/" .. module.dir .. name .. "/PreCompiled.h")
-	else
-		set_pcxxheader("Runtime/" .. subdir .. "/Includes/" .. name .. "/PreCompiled.h")
+	if is_plat("windows", "linux", "macosx") then
+		if module.dir then
+			set_pcxxheader("Runtime/" .. subdir .. "/Includes/" .. module.dir .. name .. "/PreCompiled.h")
+		else
+			set_pcxxheader("Runtime/" .. subdir .. "/Includes/" .. name .. "/PreCompiled.h")
+		end
 	end
 
 	if module.packages then
@@ -226,7 +228,9 @@ target("MacroUnitTest")
 		add_rules("c++.unity_build", { batchsize = 6 })
 	end
 
-	set_pcxxheader("Runtime/Software/Includes/PreCompiled.h")
+	if is_plat("windows", "linux", "macosx") then
+		set_pcxxheader("Runtime/Software/Includes/PreCompiled.h")
+	end
 	add_includedirs("Runtime/Software/Includes", "Runtime/Software/Sources", "Runtime/ThirdParty")
 	add_includedirs("Runtime/Common/Includes", "Runtime/Common/Sources")
 	add_files("Runtime/Software/Sources/**.cpp|Drivers/**.cpp")
@@ -267,7 +271,9 @@ target("TestRunner")
 		add_rules("c++.unity_build", { batchsize = 6 })
 	end
 
-	set_pcxxheader("Runtime/Runner/Includes/PreCompiled.h")
+	if is_plat("windows", "linux", "macosx") then
+		set_pcxxheader("Runtime/Runner/Includes/PreCompiled.h")
+	end
 	add_includedirs("Runtime/Runner/Includes", "Runtime/Runner/Sources", "Runtime/ThirdParty")
 	add_includedirs("Runtime/Common/Includes", "Runtime/Common/Sources")
 	add_files("Runtime/Runner/Sources/**.cpp")

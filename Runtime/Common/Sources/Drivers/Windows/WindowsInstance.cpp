@@ -1,12 +1,14 @@
 #include <Drivers/Windows/WindowsLibLoader.h>
 #include <Drivers/Windows/WindowsInstance.h>
+#include <Core/CLI.h>
 
 namespace mlxut
 {
-	void WindowsInstance::Init()
+	void WindowsInstance::Init(int ac, char** av)
 	{
 		OSInstance::SetInstance(this);
 		OSInstance::SetLibLoader(new WindowsLibLoader);
+		CommandLineInterface::Get().Feed(ac, av);
 	}
 
 	void WindowsInstance::Shutdown()

@@ -36,6 +36,8 @@ namespace mlxut
 
 	void CommandLineInterface::Feed(int ac, char** av)
 	{
+		if(ac == 0 || av == nullptr)
+			return;
 		m_cmd = av[0];
 		for(int i = 1; i < ac; i++)
 		{

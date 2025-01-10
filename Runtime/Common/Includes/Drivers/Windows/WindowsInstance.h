@@ -11,7 +11,7 @@ namespace mlxut
 		public:
 			WindowsInstance() = default;
 
-			void Init() override;
+			void Init(int ac, char** av);
 			void Shutdown() override;
 
 			[[nodiscard]]
