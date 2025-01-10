@@ -44,7 +44,7 @@ namespace mlxut
 		Reset();
 		p_process = std::make_unique<TinyProcessLib::Process>(
 			std::vector<std::string>{
-				OSInstance::Get().GetCurrentWorkingDirectoryPath() / "TestRunner",
+				(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "TestRunner").string(),
 				#ifndef MLX_UT_EMBED_TESTS
 					"--script-path=" + (OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (m_name + ".lua")).string(),
 				#else

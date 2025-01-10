@@ -14,11 +14,7 @@
 	#include <Drivers/MacOS/MacOSInstance.h>
 #endif
 
-#if defined(MLX_UT_PLAT_WINDOWS)
-	int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow)
-#else
-	int main(int ac, char** av)
-#endif
+int main(int ac, char** av)
 {
 	mlxut::CommandLineInterface cli;
 

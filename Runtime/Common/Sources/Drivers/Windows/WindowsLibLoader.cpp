@@ -16,7 +16,7 @@ namespace mlxut
 	[[nodiscard]]
 	LibFunc WindowsLibLoader::GetSymbol(LibModule module, const char* symbol) const
 	{
-		LibFunc func = reinterpret_cast<LibFunc>(::GetProcAddress(module, symbol));
+		LibFunc func = reinterpret_cast<LibFunc>(::GetProcAddress(reinterpret_cast<HMODULE>(module), symbol));
 		if(func == nullptr)
 			return nullptr;
 		return func;
@@ -35,6 +35,6 @@ namespace mlxut
 	void WindowsLibLoader::UnloadLib(LibModule module)
 	{
 		if(module != NullModule)
-			::FreeLibrary(module);
+			::FreeLibrary(reinterpret_cast<HMODULE>(module));
 	}
 }
