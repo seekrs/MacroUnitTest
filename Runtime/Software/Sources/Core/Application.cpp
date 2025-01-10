@@ -22,6 +22,8 @@ namespace mlxut
 		};
 		EventBus::RegisterListener({ functor, "Application" });
 
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+
 		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) != 0)
 			FatalError("SDL error: unable to init all subsystems, %", SDL_GetError());
 		LoadSystemCursors();

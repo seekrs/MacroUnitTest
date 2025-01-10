@@ -1,4 +1,5 @@
 #include <Graphics/Panels/Result.h>
+#include <Graphics/Utils.h>
 #include <Tests/Tester.h>
 #include <Core/MaterialFont.h>
 
@@ -26,8 +27,10 @@ namespace mlxut
 						size_reference = MLX_WIN_WIDTH;
 					ImVec2 size(size_reference - 16.f, size_reference - 16.f);
 					ImGui::SetCursorPos({ (ImGui::GetWindowWidth() - size.x) * 0.5f, (ImGui::GetWindowHeight() - size.y) * 0.5f });
+					const ImVec2 pos = ImGui::GetCursorScreenPos();
 					if(test->GetErrorMap() != nullptr)
 						ImGui::Image(test->GetErrorMap(), size);
+					ImageZoom(test->GetErrorMap(), size, pos);
 				}
 				else
 				{

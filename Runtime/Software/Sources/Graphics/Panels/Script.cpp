@@ -163,16 +163,22 @@ namespace mlxut
 				if(unsaved)
 				{
 					ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() - 60, 40));
+					bool save = false;
 					if(ImGui::BeginChild("#test", ImVec2(0.0f, 0.0f), 0, ImGuiWindowFlags_NoBackground))
 					{
 						if(ImGui::Button(MLX_UT_ICON_MD_SAVE))
-						{
-							std::ofstream file(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (test->GetName() + ".lua"));
-							if(file.good())
-								file << m_editor.GetText();
-							unsaved = false;
-						}
+							save = true;
 						ImGui::EndChild();
+					}
+					if(ImGui::IsKeyChordPressed(ImGuiMod_Ctrl | ImGuiKey_S))
+						save = true;
+
+					if(save)
+					{
+						std::ofstream file(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (test->GetName() + ".lua"));
+						if(file.good())
+							file << m_editor.GetText();
+						unsaved = false;
 					}
 				}
 			#endif

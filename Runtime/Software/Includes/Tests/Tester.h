@@ -30,6 +30,17 @@ namespace mlxut
 			[[nodiscard]] inline std::size_t GetSelectedTest() const noexcept { return m_selected_test; }
 
 			inline void SelectTest(std::size_t index) { if(index < m_tests.size()) m_selected_test = index; }
+			inline void SelectTest(std::string_view name)
+			{
+				for(std::size_t i = 0; i < m_tests.size(); i++)
+				{
+					if(m_tests[i]->GetName() == name)
+					{
+						m_selected_test = i;
+						return;
+					}
+				}
+			}
 
 			~Tester() = default;
 

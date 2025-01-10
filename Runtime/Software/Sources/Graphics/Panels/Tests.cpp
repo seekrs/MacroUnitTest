@@ -1,3 +1,4 @@
+#include "imgui.h"
 #include <Graphics/Panels/Tests.h>
 #include <Core/MaterialFont.h>
 #include <Core/Application.h>
@@ -66,16 +67,17 @@ namespace mlxut
 
 					if(ImGui::BeginPopupContextItem(nullptr, ImGuiPopupFlags_MouseButtonRight))
 					{
-						if(ImGui::Button("Run test"))
+						if(ImGui::Selectable("Run test"))
 							m_tester.RunSingleTests(n, Application::Get().GetMLXPath());
 						#ifndef MLX_UT_EMBED_TESTS
-							if(ImGui::Button("Delete reference"))
+							if(ImGui::Selectable("Delete reference"))
 								tests[n]->DeleteReference();
-							if(ImGui::Button("Delete test"))
+							if(ImGui::Selectable("Delete test"))
 							{
 								tests[n]->DeleteReference();
 								std::filesystem::remove(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (tests[n]->GetName() + ".lua"));
 								tests.erase(tests.begin() + n);
+								m_tester.SelectTest(0);
 							}
 						#endif
 						ImGui::EndPopup();

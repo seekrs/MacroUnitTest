@@ -1,4 +1,5 @@
 #include <Graphics/Panels/Render.h>
+#include <Graphics/Utils.h>
 #include <Core/MaterialFont.h>
 #include <Tests/Tester.h>
 
@@ -28,10 +29,12 @@ namespace mlxut
 						size_reference = ImGui::GetWindowHeight();
 					if(size_reference > MLX_WIN_WIDTH)
 						size_reference = MLX_WIN_WIDTH;
-					ImVec2 size(size_reference - 16.f, size_reference - 16.f);
+					ImVec2 size(size_reference, size_reference);
 					ImGui::SetCursorPos({ (ImGui::GetWindowWidth() - size.x) * 0.5f, (ImGui::GetWindowHeight() - size.y) * 0.5f });
+					const ImVec2 pos = ImGui::GetCursorScreenPos();
 					if(test->GetResult() != nullptr)
 						ImGui::Image(static_cast<void*>(test->GetResult()), size);
+					ImageZoom(test->GetResult(), size, pos);
 				}
 				ImGui::EndChild();
 			}
@@ -43,10 +46,12 @@ namespace mlxut
 					size_reference = ImGui::GetWindowHeight();
 				if(size_reference > MLX_WIN_WIDTH)
 					size_reference = MLX_WIN_WIDTH;
-				ImVec2 size(size_reference - 16.f, size_reference - 16.f);
+				ImVec2 size(size_reference, size_reference);
 				ImGui::SetCursorPos({ (ImGui::GetWindowWidth() - size.x) * 0.5f, (ImGui::GetWindowHeight() - size.y) * 0.5f });
+				const ImVec2 pos = ImGui::GetCursorScreenPos();
 				if(test->GetReference() != nullptr)
 					ImGui::Image(static_cast<void*>(test->GetReference()), size);
+				ImageZoom(test->GetReference(), size, pos);
 				ImGui::EndChild();
 			}
 			ImGui::End();
