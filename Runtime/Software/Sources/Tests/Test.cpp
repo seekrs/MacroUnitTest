@@ -14,7 +14,8 @@ namespace mlxut
 		m_result_pixels(MLX_WIN_WIDTH * MLX_WIN_HEIGHT, 0),
 		m_reference_pixels(MLX_WIN_WIDTH * MLX_WIN_HEIGHT, 0),
 		m_name(std::move(name)),
-		m_renderer(renderer)
+		m_renderer(renderer),
+		m_state(TestState::Pending)
 	{
 	}
 
@@ -86,7 +87,7 @@ namespace mlxut
 
 	void Test::FetchResult()
 	{
-		if(m_state == TestState::Running)
+		if(m_state == TestState::Running || m_state == TestState::Pending)
 			return;
 
 		std::size_t finder;
@@ -196,6 +197,7 @@ namespace mlxut
 		else if(surface)
 		{
 			m_reference_pixels = m_result_pixels;
+			p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			IMG_SavePNG(surface, ref_path.string().c_str());
 			SDL_FreeSurface(surface);
 		}
@@ -204,6 +206,9 @@ namespace mlxut
 
 	void Test::ComputeErrorMap()
 	{
+		if(m_state == TestState::Running || m_state == TestState::Pending)
+			return;
+
 		FLIP::image<FLIP::color3> reference_image;
 		{
 			std::vector<float> flip_reference_pixels(m_reference_pixels.size() * 3);

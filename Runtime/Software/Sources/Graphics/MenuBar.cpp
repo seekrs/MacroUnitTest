@@ -1,3 +1,4 @@
+#include "imgui.h"
 #include <Core/Application.h>
 #include <Graphics/MenuBar.h>
 #include <Graphics/ImGuiContext.h>
@@ -150,7 +151,14 @@ namespace mlxut
 				if(ImGui::InputTextWithHint("##test_name", "Name", test_name, 255, ImGuiInputTextFlags_AutoSelectAll))
 					error_no_name = false;
 
-				ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() * 0.5f - ImGui::CalcTextSize("Create").x * 0.5f, ImGui::GetCursorPosY()));
+				ImGui::SetCursorPos(ImVec2(ImGui::GetWindowWidth() * 0.5f - ImGui::CalcTextSize("Cancel").x - ImGui::GetStyle().ItemSpacing.x, ImGui::GetCursorPosY()));
+				if(ImGui::Button("Cancel"))
+				{
+					new_test_openned = false;
+					std::memset(test_name, 0, 255);
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::SameLine();
 				if(ImGui::Button("Create"))
 				{
 					if(!test_name_view.empty())
@@ -163,10 +171,11 @@ namespace mlxut
 							file << "function Test(mlx, win)" << '\n';
 							file << "end" << "\n\n";
 							file << "function Cleanup(mlx, win)" << '\n';
-							file << "end";
+							file << "end" << '\n';
 						}
 						file.close();
 						tester.CreateAllTests(renderer);
+						tester.SelectTest(test_name_view);
 						new_test_openned = false;
 						std::memset(test_name, 0, 255);
 						ImGui::CloseCurrentPopup();

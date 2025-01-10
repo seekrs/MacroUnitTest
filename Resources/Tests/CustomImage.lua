@@ -6,7 +6,7 @@ function Setup(mlx, win)
 	img = mlx_new_image(mlx, w, h)
 	for y = 0, h - 1, 1 do
 		for x = 0, w - 1, 1 do
-			mlx_set_image_pixel(mlx, img, x, y, mlx_color:new(0xFF0F0FF0 + x * y * 2))
+			mlx_set_image_pixel(mlx, img, x, y, mlx_color:new(0x550000FF + ((y // 10) << 8) * 30))
 		end
 	end
 end
