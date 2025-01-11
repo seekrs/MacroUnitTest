@@ -54,7 +54,7 @@ namespace mlxut
 	[[nodiscard]]
 	std::filesystem::path UnixInstance::GetCurrentWorkingDirectoryPath()
 	{
-		return std::filesystem::current_path();
+		return GetExecutablePath().parent_path();
 	}
 
 	bool UnixInstance::OpenURL([[maybe_unused]] const std::string& url)
