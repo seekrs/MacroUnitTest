@@ -7,7 +7,7 @@ local img
 local dummy = 0
 
 function Setup(mlx, win)
-	img = mlx_new_image_from_file(mlx, "Resources/Assets/Logo.png", dummy, dummy)
+	img = mlx_new_image_from_file(mlx, mlx_utils.get_current_working_directory() .. "Resources/Assets/Logo.png", dummy, dummy)
 
 	local i = 1
 	for y = 0, CIRCLE_DIAMETER do
@@ -31,12 +31,12 @@ function Test(mlx, win)
 			color_shift = color_shift + 1
 		end
 	end
-	mlx_set_font_scale(mlx, "Resources/Fonts/OpenSans/OpenSans_Regular.ttf", 50.0)
+	mlx_set_font_scale(mlx, mlx_utils.get_current_working_directory() .. "Resources/Fonts/OpenSans/OpenSans_Regular.ttf", 50.0)
 	mlx_string_put(mlx, win, 50, 50, mlx_color:new(0xFFFF00FF), "this string is behind")
 	mlx_put_image_to_window(mlx, win, img, 10, 10)
-	mlx_set_font_scale(mlx, "Resources/Fonts/OpenSans/OpenSans_Regular.ttf", 36.0)
+	mlx_set_font_scale(mlx, mlx_utils.get_current_working_directory() .. "Resources/Fonts/OpenSans/OpenSans_Regular.ttf", 36.0)
 	mlx_string_put(mlx, win, 10, 20, mlx_color:new(0xFFFF00FF), "this is a string")
-	mlx_set_font(mlx, "Resources/Fonts/OpenSans/OpenSans_Italic.ttf")
+	mlx_set_font(mlx, mlx_utils.get_current_working_directory() .. "Resources/Fonts/OpenSans/OpenSans_Italic.ttf")
 	mlx_string_put(mlx, win, 50, 50, mlx_color:new(0xFF0000FF), "macro unit tester")
 	for y = 0, 40, 1 do
 		for x = 0, 40, 1 do
@@ -50,7 +50,7 @@ function Test(mlx, win)
 	mlx_pixel_put_region(mlx, win, 200, 170, CIRCLE_DIAMETER + 1, CIRCLE_DIAMETER, pixels_circle);
 	mlx_set_font_scale(mlx, "default", 32.0)
 	mlx_string_put(mlx, win, 150, 250, mlx_color:new(0x0000FFFF), "yes")
-	mlx_set_font_scale(mlx, "Resources/Fonts/OpenSans/OpenSans_ExtraBold.ttf", 45.0)
+	mlx_set_font_scale(mlx, mlx_utils.get_current_working_directory() .. "Resources/Fonts/OpenSans/OpenSans_ExtraBold.ttf", 45.0)
 	mlx_string_put(mlx, win, 10, 350, mlx_color:new(0xB4A8FFFFF), "another string")
 	for y = 0, 40, 1 do
 		for x = 0, 40, 1 do
