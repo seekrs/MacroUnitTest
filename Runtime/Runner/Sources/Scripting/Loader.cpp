@@ -1,6 +1,7 @@
 #include <Scripting/Loader.h>
 #include <Loader/Loader.h>
 #include <Utils/Ansi.h>
+#include <Core/OS/OSInstance.h>
 
 #ifdef MLX_UT_EMBED_TESTS
 	#include <Embedded/Tests.h>
@@ -88,6 +89,13 @@ namespace mlxut
 			for(int i = 1; i <= sz; i++)
 				vec[i - 1] = pixels[i];
 			MLXLoader::Get().mlx_set_image_region(mlx, image, x, y, w, h, vec.data());
+		});
+
+		auto utils = m_state["mlx_utils"].get_or_create<sol::table>();
+
+		utils.set_function("get_current_working_directory", []()
+		{
+			return OSInstance::Get().GetCurrentWorkingDirectoryPath().string() + "/";
 		});
 	}
 

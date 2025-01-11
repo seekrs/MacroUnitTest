@@ -1,10 +1,10 @@
 function Test(mlx, win)
-	mlx_set_font_scale(mlx, "Resources/Fonts/OpenSans/OpenSans_Regular.ttf", 36.0)
+	mlx_set_font_scale(mlx, mlx_utils.get_current_working_directory() .. "Resources/Fonts/OpenSans/OpenSans_Regular.ttf", 36.0)
 	mlx_string_put(mlx, win, 10, 20, mlx_color:new(0xFFFF00FF), "this is a string")
-	mlx_set_font(mlx, "Resources/Fonts/OpenSans/OpenSans_Italic.ttf")
+	mlx_set_font(mlx, mlx_utils.get_current_working_directory() .. "Resources/Fonts/OpenSans/OpenSans_Italic.ttf")
 	mlx_string_put(mlx, win, 50, 50, mlx_color:new(0xFF0000FF), "macro unit tester")
 	mlx_set_font_scale(mlx, "default", 32.0)
 	mlx_string_put(mlx, win, 150, 250, mlx_color:new(0x0000FFFF), "yes")
-	mlx_set_font_scale(mlx, "Resources/Fonts/OpenSans/OpenSans_ExtraBold.ttf", 45.0)
+	mlx_set_font_scale(mlx, mlx_utils.get_current_working_directory() .. "Resources/Fonts/OpenSans/OpenSans_ExtraBold.ttf", 45.0)
 	mlx_string_put(mlx, win, 10, 350, mlx_color:new(0xB4A8FFFFF), "another string")
 end

@@ -2,7 +2,7 @@ local img
 local dummy = 0
 
 function Setup(mlx, win)
-	img = mlx_new_image_from_file(mlx, "Resources/Assets/Logo.png", dummy, dummy)
+	img = mlx_new_image_from_file(mlx, mlx_utils.get_current_working_directory() .. "Resources/Assets/Logo.png", dummy, dummy)
 end
 
 function Test(mlx, win)
@@ -14,7 +14,7 @@ function Test(mlx, win)
 			color_shift = color_shift + 1
 		end
 	end
-	mlx_set_font_scale(mlx, "Resources/Fonts/OpenSans/OpenSans_Regular.ttf", 50.0)
+	mlx_set_font_scale(mlx, mlx_utils.get_current_working_directory() .. "Resources/Fonts/OpenSans/OpenSans_Regular.ttf", 50.0)
 	mlx_string_put(mlx, win, 50, 50, mlx_color:new(0xFFFF00FF), "this string is behind")
 	mlx_put_image_to_window(mlx, win, img, 10, 10)
 	for y = 0, 40, 1 do

@@ -53,6 +53,7 @@ namespace mlxut
 
 		std::array identifiers = {
 			"Test", "Setup", "Cleanup", "mlx_color", "MLX_WIN_WIDTH", "MLX_WIN_HEIGHT",
+			"mlx_utils", "get_current_working_directory",
 			#include <Loader/Prototypes.h>
 		};
 

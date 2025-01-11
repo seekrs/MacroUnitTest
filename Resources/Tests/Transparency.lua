@@ -5,7 +5,7 @@ local h = 80
 
 function Setup(mlx, win)
 	local dummy = 0
-	img = mlx_new_image_from_file(mlx, "Resources/Assets/Logo.png", dummy, dummy)
+	img = mlx_new_image_from_file(mlx, mlx_utils.get_current_working_directory() .. "Resources/Assets/Logo.png", dummy, dummy)
 	custom_img = mlx_new_image(mlx, w, h)
 	for y = 0, h - 1, 1 do
 		for x = 0, w - 1, 1 do

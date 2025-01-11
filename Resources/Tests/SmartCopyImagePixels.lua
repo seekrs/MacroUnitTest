@@ -4,7 +4,7 @@ local w = 0
 local h = 0
 
 function Setup(mlx, win)
-	img = mlx_new_image_from_file(mlx, "Resources/Assets/Logo.png", w, h)
+	img = mlx_new_image_from_file(mlx, mlx_utils.get_current_working_directory() .. "Resources/Assets/Logo.png", w, h)
 	w = 200
 	h = 200
 	new_img = mlx_new_image(mlx, w, h)
