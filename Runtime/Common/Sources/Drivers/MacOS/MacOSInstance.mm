@@ -40,7 +40,7 @@ namespace mlxut
 	[[nodiscard]]
 	std::filesystem::path MacOSInstance::GetCurrentWorkingDirectoryPath()
 	{
-		return std::filesystem::current_path();
+		return GetExecutablePath().parent_path();
 	}
 
 	bool MacOSInstance::OpenURL([[maybe_unused]] const std::string& url)

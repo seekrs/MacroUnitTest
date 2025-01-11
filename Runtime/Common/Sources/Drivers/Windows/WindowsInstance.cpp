@@ -33,7 +33,7 @@ namespace mlxut
 	[[nodiscard]]
 	std::filesystem::path WindowsInstance::GetCurrentWorkingDirectoryPath()
 	{
-		return std::filesystem::current_path();
+		return GetExecutablePath().parent_path();
 	}
 
 	bool WindowsInstance::OpenURL(const std::string& url)
