@@ -24,7 +24,7 @@ enum mlx_event_type
 class mlx_color
 {
 	public:
-		mlx_color() = default;
+		mlx_color() : m_rgba(0) {}
 		mlx_color(std::uint32_t color) : m_rgba(color) {}
 		mlx_color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) { SetR(r); SetG(g); SetB(b); SetA(a); }
 

@@ -1,7 +1,7 @@
 add_repositories("local-repo Xmake")
 
 add_requires("imgui v1.91.0-docking", { configs = { sdl2 = true }})
-add_requires("libsdl", "pfd", "libsdl_image", "sol2", "tiny-process-library")
+add_requires("libsdl2", "pfd", "libsdl2_image", "sol2", "tiny-process-library")
 
 add_rules("mode.debug", "mode.release", "mode.releasedbg")
 set_languages("cxx20")
@@ -216,7 +216,7 @@ target("MacroUnitTest")
 	set_license("MIT")
 	set_kind("binary")
 
-	add_packages("libsdl", "pfd", "libsdl_image", "imgui", "tiny-process-library")
+	add_packages("libsdl2", "pfd", "libsdl2_image", "imgui", "tiny-process-library")
 
 	if not is_mode("debug") then
 		add_rules("utils.bin2c", { extensions = { ".png", ".ttf" } } )
@@ -265,7 +265,7 @@ target("TestRunner")
 	set_license("MIT")
 	set_kind("binary")
 
-	add_packages("libsdl", "sol2")
+	add_packages("libsdl2", "sol2")
 
 	if has_config("unitybuild") then
 		add_rules("c++.unity_build", { batchsize = 6 })
@@ -306,3 +306,21 @@ target("TestRunner")
 		end
 	end)
 target_end()
+
+includes("@builtin/xpack")
+
+xpack("MacroUnitTest")
+	set_formats("nsis", "zip", "targz")
+	set_title("MacroLibX unit tester.")
+	set_author("kbz_8")
+	set_maintainer("contact@kbz8.me")
+	set_description("MacroUnitTest installer.")
+	set_homepage("https://macrolibx.kbz8.me")
+	set_licensefile("LICENSE")
+	set_license("MIT")
+	add_targets("MacroUnitTest", "TestRunner")
+	add_installfiles("Resources/(**)|**.txt|Fonts/Sono_Medium.ttf|Fonts/MaterialIcons_Regular.ttf|Dist/**", { prefixdir = "share/MacroUnitTest/Resources" })
+	add_installfiles("Resources/Dist/icons/(**)", { prefixdir = "share/icons/hicolor" })
+	add_installfiles("Resources/Dist/MacroUnitTest.desktop", { prefixdir = "share/applications" })
+	set_iconfile("Resources/Assets/Logo.png")
+xpack_end()

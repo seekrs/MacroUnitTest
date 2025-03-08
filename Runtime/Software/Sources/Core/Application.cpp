@@ -23,6 +23,7 @@ namespace mlxut
 		EventBus::RegisterListener({ functor, "Application" });
 
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+		SDL_SetHintWithPriority(SDL_HINT_VIDEODRIVER, "wayland,x11", SDL_HINT_OVERRIDE);
 
 		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) != 0)
 			FatalError("SDL error: unable to init all subsystems, %", SDL_GetError());

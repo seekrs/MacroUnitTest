@@ -8,8 +8,12 @@
 	#include <Embedded/References.h>
 #endif
 
+extern char **environ;
+
 namespace mlxut
 {
+	static std::unordered_map<std::string, std::string> env_map;
+	
 	Test::Test(const class Renderer& renderer, std::string name) :
 		m_result_pixels(MLX_WIN_WIDTH * MLX_WIN_HEIGHT, 0),
 		m_reference_pixels(MLX_WIN_WIDTH * MLX_WIN_HEIGHT, 0),
@@ -17,6 +21,20 @@ namespace mlxut
 		m_renderer(renderer),
 		m_state(TestState::Pending)
 	{
+		if(!env_map.empty())
+			return;
+		for(char** env = environ; *env != nullptr; env++)
+		{
+			std::string_view env_str = *env;
+			std::size_t delimiter_pos = env_str.find('=');
+			if(delimiter_pos != std::string::npos)
+			{
+				std::string key{ env_str.substr(0, delimiter_pos) };
+				std::string_view value = env_str.substr(delimiter_pos + 1);
+				env_map[key] = value;
+			}
+		}
+		env_map["MLX_DEBUG_LOGS"] = "1";
 	}
 
 	void Test::Reset() noexcept
@@ -42,9 +60,12 @@ namespace mlxut
 	void Test::Run(const std::filesystem::path& mlx_path)
 	{
 		Reset();
+
+		std::string cmd = (OSInstance::Get().IsInDistributionMode() ? "/usr/bin/TestRunner" : (OSInstance::Get().GetCurrentWorkingDirectoryPath() / "TestRunner").string());
+
 		p_process = std::make_unique<TinyProcessLib::Process>(
 			std::vector<std::string>{
-				(OSInstance::Get().GetCurrentWorkingDirectoryPath() / "TestRunner").string(),
+				cmd,
 				#ifndef MLX_UT_EMBED_TESTS
 					"--script-path=" + (OSInstance::Get().GetCurrentWorkingDirectoryPath() / "Resources/Tests" / (m_name + ".lua")).string(),
 				#else
@@ -54,6 +75,7 @@ namespace mlxut
 				m_name
 			},
 			"",
+			env_map,
 			[this](const char* bytes, std::size_t n)
 			{
 				m_logs.append(bytes, n);

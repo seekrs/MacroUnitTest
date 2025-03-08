@@ -14,6 +14,7 @@ namespace mlxut
 
 			virtual std::filesystem::path GetExecutablePath() = 0;
 			virtual std::filesystem::path GetCurrentWorkingDirectoryPath() = 0;
+			virtual bool IsInDistributionMode() { return false; }
 			virtual bool OpenURL([[maybe_unused]] const std::string& url) { return false; }
 			virtual void Delay([[maybe_unused]] std::uint32_t us) {}
 
