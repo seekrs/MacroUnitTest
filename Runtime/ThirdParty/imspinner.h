@@ -3396,7 +3396,7 @@ namespace ImSpinner
 
     inline void Spinner(const char *label, const detail::SpinnerConfig& config)
     {
-      if (config.m_SpinnerType < sizeof(detail::spinner_draw_funcs))
+      //if (config.m_SpinnerType < sizeof(detail::spinner_draw_funcs))
         detail::spinner_draw_funcs[config.m_SpinnerType].func(label, config);
     }
 

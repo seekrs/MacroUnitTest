@@ -54,7 +54,12 @@ namespace mlxut
 	[[nodiscard]]
 	std::filesystem::path UnixInstance::GetCurrentWorkingDirectoryPath()
 	{
-		return GetExecutablePath().parent_path();
+		return (IsInDistributionMode() ? "/usr/share/MacroUnitTest" : GetExecutablePath().parent_path());
+	}
+
+	bool UnixInstance::IsInDistributionMode()
+	{
+		return (GetExecutablePath().parent_path() == "/usr/bin");
 	}
 
 	bool UnixInstance::OpenURL([[maybe_unused]] const std::string& url)

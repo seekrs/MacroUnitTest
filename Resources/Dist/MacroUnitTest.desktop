@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=MacroUnitTest
+Exec=MacroUnitTest
+Terminal=false
+Type=Application
+Hidden=false
+Icon=macro-unit-test.png
+Categories=Development; Graphics; Utility

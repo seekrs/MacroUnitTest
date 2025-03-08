@@ -18,6 +18,7 @@ namespace mlxut
 			std::filesystem::path GetExecutablePath() override;
 			[[nodiscard]]
 			std::filesystem::path GetCurrentWorkingDirectoryPath() override;
+			bool IsInDistributionMode() override;
 			bool OpenURL([[maybe_unused]] const std::string& url) override;
 			void Delay(std::uint32_t us) override;
 
