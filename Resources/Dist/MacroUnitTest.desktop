@@ -4,5 +4,5 @@ Exec=MacroUnitTest
 Terminal=false
 Type=Application
 Hidden=false
-Icon=macro-unit-test.png
+Icon=macro-unit-test
 Categories=Development; Graphics; Utility
