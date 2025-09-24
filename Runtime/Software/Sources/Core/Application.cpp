@@ -59,7 +59,7 @@ namespace mlxut
 		m_tester.CreateAllTests(*p_renderer);
 	}
 
-	void Application::Run()
+	int Application::Run()
 	{
 		if(!CommandLineInterface::Get().HasFlag("headless"))
 		{
@@ -138,11 +138,12 @@ namespace mlxut
 
 		EndLoop:
 			m_menubar.DestroyResources();
-			return;
+			return 0;
 		}
 
 		// Headless mode
 		using namespace std::chrono_literals;
+		int return_code = 0;
 
 		std::cout << "MacroLibX Unit Tester headless mode\n" << std::endl;
 
@@ -169,6 +170,7 @@ namespace mlxut
 				if(!test->GetLuaErrorMessage().empty())
 					std::cout << "Lua error :\n" << test->GetLuaErrorMessage() << '\n';
 				std::cout << "===================== MacroLibX logs =====================\n" << test->GetLogs() << "\n==========================================================\n";
+				return_code = -1;
 			}
 			else if(test->IsSuspicious())
 				std::cout << Ansi::yellow << "SUSPICIOUS" << Ansi::reset << " with mean value " << test->GetMean();
@@ -176,6 +178,7 @@ namespace mlxut
 				std::cout << Ansi::green << "PASSED" << Ansi::reset;
 			std::cout << std::endl;
 		}
+		return return_code;
 	}
 
 	Application::~Application()

@@ -27,9 +27,9 @@
 		mlxut::UnixInstance os;
 		os.Init(ac, av);
 		mlxut::Application app;
-		app.Run();
+		int return_code = app.Run();
 		os.Shutdown();
-		return 0;
+		return return_code;
 	}
 
 #elif defined(MLX_UT_PLAT_MACOS)
