@@ -217,11 +217,12 @@ target("MacroUnitTest")
 	set_kind("binary")
 
 	add_packages("libsdl2", "pfd", "libsdl2_image", "imgui", "tiny-process-library")
+	add_deps("TestRunner")
 
 	if not has_config("editor") then
 		add_rules("utils.bin2c", { extensions = { ".png", ".ttf" } } )
-		add_files("$(projectdir)/Resources/Assets/**.png")
-		add_files("$(projectdir)/Resources/Fonts/**.ttf")
+		add_files("Resources/Assets/**.png")
+		add_files("Resources/Fonts/**.ttf")
 	end
 
 	if has_config("unitybuild") then
