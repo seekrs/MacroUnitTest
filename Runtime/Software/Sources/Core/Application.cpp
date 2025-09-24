@@ -145,7 +145,7 @@ namespace mlxut
 		using namespace std::chrono_literals;
 		int return_code = 0;
 
-		std::cout << "MacroLibX Unit Tester headless mode\n" << std::endl;
+		std::cout << "MacroLibX Unit Tester headless mode\n" << "Using mlx path : " << *CommandLineInterface::Get().GetOption("path") << '\n' << std::endl;
 
 		m_tester.RunAllTests(*CommandLineInterface::Get().GetOption("path"));
 		while (!m_tester.HaveAllTestsFinished())

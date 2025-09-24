@@ -139,6 +139,8 @@ namespace mlxut
 		std::size_t i = 0;
 		while(transfer_file.read(reinterpret_cast<char*>(&part), sizeof(part)))
 		{
+			if((part & 0x000000FF) == 0)
+				part |= 0xFF;
 			m_result_pixels[i] = part;
 			i++;
 		}
