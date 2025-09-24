@@ -47,8 +47,8 @@ if not is_mode("debug") and not has_config("editor") then
 end
 
 function CreateEmbeddedResources(target)
-	if is_mode("debug") and not os.exists("$(buildir)/Bin/$(os)_$(arch)/Resources") then
-		os.ln("$(scriptdir)/Resources", "$(buildir)/Bin/$(os)_$(arch)/Resources")
+	if is_mode("debug") and not os.exists("$(builddir)/Bin/$(os)_$(arch)/Resources") then
+		os.ln("$(scriptdir)/Resources", "$(builddir)/Bin/$(os)_$(arch)/Resources")
 		print("Created resources symlink")
 	end
 	if not is_mode("debug") then
@@ -285,8 +285,8 @@ target("TestRunner")
 	end
 
 	on_load(function(target)
-		if not os.exists("$(buildir)/Bin/$(os)_$(arch)/Resources") then
-			os.ln("$(scriptdir)/Resources", "$(buildir)/Bin/$(os)_$(arch)/Resources")
+		if not os.exists("$(builddir)/Bin/$(os)_$(arch)/Resources") then
+			os.ln("$(scriptdir)/Resources", "$(builddir)/Bin/$(os)_$(arch)/Resources")
 			print("Created resources symlink")
 		end
 	end)
