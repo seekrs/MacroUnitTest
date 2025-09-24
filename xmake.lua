@@ -2,6 +2,9 @@ add_repositories("local-repo Xmake")
 
 add_requires("imgui v1.91.0-docking", { configs = { sdl2 = true }})
 add_requires("libsdl2", "pfd", "libsdl2_image", "sol2", "tiny-process-library")
+if is_plat("linux") then
+	add_requires("libbacktrace")
+end
 
 add_rules("mode.debug", "mode.release", "mode.releasedbg")
 set_languages("cxx20")
@@ -267,6 +270,11 @@ target("TestRunner")
 	set_kind("binary")
 
 	add_packages("libsdl2", "sol2")
+
+	if is_plat("linux") then
+		add_packages("libbacktrace")
+		add_defines("BACKTRACE")
+	end
 
 	if has_config("unitybuild") then
 		add_rules("c++.unity_build", { batchsize = 6 })
