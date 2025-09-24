@@ -220,8 +220,8 @@ target("MacroUnitTest")
 
 	if not has_config("editor") then
 		add_rules("utils.bin2c", { extensions = { ".png", ".ttf" } } )
-		add_files("Resources/Assets/**.png")
-		add_files("Resources/Fonts/**.ttf")
+		add_files("$(projectdir)/Resources/Assets/**.png")
+		add_files("$(projectdir)/Resources/Fonts/**.ttf")
 	end
 
 	if has_config("unitybuild") then
