@@ -15,7 +15,7 @@ namespace mlxut
 		public:
 			Application();
 
-			void Run();
+			int Run();
 
 			inline void SetCursor(SDL_SystemCursor cursor) const noexcept { SDL_SetCursor(m_cursors.at(cursor)); }
 			inline void TestHaveBeenLaunched() noexcept { m_have_tests_been_launched = true; }
