@@ -60,6 +60,7 @@ namespace mlxut
 			float m_error_mean = 0.0f;
 
 			std::size_t m_lua_line_error = 0;
+			bool m_has_reference = false;
 	};
 }
 

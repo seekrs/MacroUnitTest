@@ -2,6 +2,7 @@
 #include <Core/OS/OSInstance.h>
 #include <Core/CLI.h>
 #include <Core/EventBus.h>
+#include <Utils/Ansi.h>
 
 #include <Graphics/Panels/Docks.h>
 #include <Graphics/Panels/Logs.h>
@@ -23,18 +24,25 @@ namespace mlxut
 		};
 		EventBus::RegisterListener({ functor, "Application" });
 
-		if(!CommandLineInterface::Get().HasFlag("--headless"))
+		if(!CommandLineInterface::Get().HasFlag("headless"))
 		{
 			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 			SDL_SetHintWithPriority(SDL_HINT_VIDEODRIVER, "wayland,x11", SDL_HINT_OVERRIDE);
 		}
 		else
+		{
+			if(!CommandLineInterface::Get().GetOption("path"))
+			{
+				Error("Missing --path argument");
+				std::terminate();
+			}
 			SDL_setenv("SDL_VIDEODRIVER", "dummy", 1);
+		}
 
 		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) != 0)
 			FatalError("SDL error: unable to init all subsystems, %", SDL_GetError());
 
-		if(!CommandLineInterface::Get().HasFlag("--headless"))
+		if(!CommandLineInterface::Get().HasFlag("headless"))
 		{
 			LoadSystemCursors();
 			p_window = std::make_unique<Window>("MLX UnitTester", MLX_UT_WINDOW_WIDTH, MLX_UT_WINDOW_HEIGHT);
@@ -53,7 +61,7 @@ namespace mlxut
 
 	void Application::Run()
 	{
-		if(!CommandLineInterface::Get().HasFlag("--headless"))
+		if(!CommandLineInterface::Get().HasFlag("headless"))
 		{
 			for(;;)
 			{
@@ -132,11 +140,47 @@ namespace mlxut
 			m_menubar.DestroyResources();
 			return;
 		}
+
+		// Headless mode
+		using namespace std::chrono_literals;
+
+		std::cout << "MacroLibX Unit Tester headless mode\n" << std::endl;
+
+		m_tester.RunAllTests(*CommandLineInterface::Get().GetOption("path"));
+		while (!m_tester.HaveAllTestsFinished())
+			std::this_thread::sleep_for(500ms);
+		m_tester.FetchAllResults();
+		m_tester.CreateAllRenderTextures();
+		m_tester.ComputeAllErrorMaps();
+		m_tester.FetchSuccess();
+
+		std::size_t longest_name = 0;
+		for(const auto& test : m_tester.GetAllTests())
+		{
+			if(test->GetName().length() > longest_name)
+				longest_name = test->GetName().length();
+		}
+		for(const auto& test : m_tester.GetAllTests())
+		{
+			std::cout << std::setw(longest_name) << test->GetName() << " : ";
+			if(test->HasFailed())
+			{
+				std::cout << Ansi::red << "FAILED" << Ansi::reset << " with mean value " << test->GetMean() << '\n';
+				if(!test->GetLuaErrorMessage().empty())
+					std::cout << "Lua error :\n" << test->GetLuaErrorMessage() << '\n';
+				std::cout << "===================== MacroLibX logs =====================\n" << test->GetLogs() << "\n==========================================================\n";
+			}
+			else if(test->IsSuspicious())
+				std::cout << Ansi::yellow << "SUSPICIOUS" << Ansi::reset << " with mean value " << test->GetMean();
+			else if(test->HasPassed())
+				std::cout << Ansi::green << "PASSED" << Ansi::reset;
+			std::cout << std::endl;
+		}
 	}
 
 	Application::~Application()
 	{
-		if(!CommandLineInterface::Get().HasFlag("--headless"))
+		if(!CommandLineInterface::Get().HasFlag("headless"))
 		{
 			m_stack.Destroy();
 
@@ -147,8 +191,8 @@ namespace mlxut
 			SDL_QuitSubSystem(SDL_INIT_VIDEO);
 			SDL_QuitSubSystem(SDL_INIT_TIMER);
 			SDL_QuitSubSystem(SDL_INIT_EVENTS);
-			SDL_Quit();
 		}
+		SDL_Quit();
 
 		s_instance = nullptr;
 	}

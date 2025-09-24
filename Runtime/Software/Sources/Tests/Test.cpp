@@ -1,3 +1,4 @@
+#include "Core/CLI.h"
 #include <Tests/Test.h>
 #include <Graphics/Renderer.h>
 #include <Core/OS/OSInstance.h>
@@ -35,6 +36,8 @@ namespace mlxut
 			}
 		}
 		env_map["MLX_DEBUG_LOGS"] = "1";
+		if(CommandLineInterface::Get().HasFlag("headless"))
+			env_map["MLX_HEADLESS_MODE"] = "1";
 	}
 
 	void Test::Reset() noexcept
@@ -149,10 +152,11 @@ namespace mlxut
 		if(m_result_pixels[0] != 0)
 		{
 			surface = SDL_CreateRGBSurfaceFrom(m_result_pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);
-			p_result = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
+			if(!CommandLineInterface::Get().HasFlag("headless"))
+				p_result = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 		}
 
-		if(p_reference != nullptr)
+		if(m_has_reference)
 		{
 			if(surface != nullptr)
 				SDL_FreeSurface(surface);
@@ -212,18 +216,21 @@ namespace mlxut
 			}
 
 			SDL_UnlockSurface(surface);
-			p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
+			if(!CommandLineInterface::Get().HasFlag("headless"))
+				p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			SDL_FreeSurface(surface);
 	#ifndef MLX_UT_EMBED_TESTS
 		}
 		else if(surface)
 		{
 			m_reference_pixels = m_result_pixels;
-			p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
+			if(!CommandLineInterface::Get().HasFlag("headless"))
+				p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			IMG_SavePNG(surface, ref_path.string().c_str());
 			SDL_FreeSurface(surface);
 		}
 	#endif
+		m_has_reference = true;
 	}
 
 	void Test::ComputeErrorMap()
@@ -306,9 +313,12 @@ namespace mlxut
 					}
 				}
 			}
-			SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(error_map_data.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);
-			p_error_map = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
-			SDL_FreeSurface(surface);
+			if(!CommandLineInterface::Get().HasFlag("headless"))
+			{
+				SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(error_map_data.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);
+				p_error_map = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
+				SDL_FreeSurface(surface);
+			}
 		}
 	}
 }
