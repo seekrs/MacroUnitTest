@@ -22,6 +22,7 @@
 #include <mutex>
 #include <csignal>
 #include <fstream>
+#include <string_view>
 
 #include <imgui.h>
 #include <imgui_internal.h>
