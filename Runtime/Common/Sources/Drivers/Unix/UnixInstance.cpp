@@ -6,23 +6,11 @@ namespace mlxut
 {
 	constexpr const int UNIX_PATH_MAX = 1024;
 
-	void SignalsHandler([[maybe_unused]] int sig)
-	{
-		if(sig == SIGSEGV)
-		{
-			std::cerr << "Segmentation Fault" << std::endl;
-			std::abort();
-		}
-	}
-
 	void UnixInstance::Init(int ac, char** av)
 	{
 		m_av = av;
 		m_ac = ac;
 		OSInstance::SetInstance(this);
-		signal(SIGINT, SignalsHandler);
-		signal(SIGQUIT, SignalsHandler);
-		signal(SIGSEGV, SignalsHandler);
 		OSInstance::SetLibLoader(new UnixLibLoader);
 		CommandLineInterface::Get().Feed(ac, av);
 	}
