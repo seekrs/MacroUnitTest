@@ -1,5 +1,6 @@
 #include <PreCompiled.h>
 #include <Core/CompilationProfile.h>
+#include <Utils/Ansi.h>
 #include <Core/CLI.h>
 #include <Loader/Loader.h>
 #include <Scripting/Loader.h>
@@ -23,29 +24,31 @@
 	void ErrorCallback(void* data, const char* msg, int errnum)
 	{
 		(void)data;
-		fprintf(stderr, "Error in backtrace: %s (error %d)\n", msg, errnum);
+		std::cerr << "Error in backtrace: " << msg << " (error " << errnum << ')' << std::endl;;
 	}
 
 	int SymbolCallback(void* data, unsigned long pc, const char* filename, int lineno, const char* function)
 	{
 		(void)data;
+		std::cerr << mlxut::Ansi::reset;
 		if(filename && function)
-			fprintf(stderr, "\t#%zu\033[1;34m 0x%lx\033[1;0m in\033[1;33m %s() from %s:%d\033[1;0m\n", trace_count, pc, function, filename, lineno);
+			std::cerr << "\t#" << trace_count << mlxut::Ansi::blue << " 0x" << std::hex << pc << std::oct << mlxut::Ansi::reset << " in " << mlxut::Ansi::yellow << function << "()" << mlxut::Ansi::magenta << " from " << filename << ":" << lineno << mlxut::Ansi::reset << std::endl;
 		else if(function)
-			fprintf(stderr, "\t#%zu\033[1;34m 0x%lx\033[1;0m in\033[1;33m %s() from unknown:unknown\033[1;0m\n", trace_count, pc, function);
+			std::cerr << "\t#" << trace_count << mlxut::Ansi::blue << " 0x" << std::hex << pc << std::oct  << mlxut::Ansi::reset << " in " << mlxut::Ansi::yellow << function << "()" << mlxut::Ansi::magenta << " from unknown:unknown" << mlxut::Ansi::reset << std::endl;
 		else
-			fprintf(stderr, "\t#%zu\033[1;34m 0x%lx\033[1;0m in\033[1;33m ??\()\033[1;0m\n", trace_count, pc);
+			std::cerr << "\t#" << trace_count << mlxut::Ansi::blue << " 0x" << std::hex << pc << std::oct  << mlxut::Ansi::reset << " in " << mlxut::Ansi::yellow << "??\()" << mlxut::Ansi::reset << std::endl;
 		trace_count++;
 		return 0;
 	}
 
 	void SignalHandler(int sig)
 	{
-		fprintf(stderr, "\n==========================================================\nFatal error: %s.\n<Begin of stack trace>\n", sig == SIGSEGV ? "segmentation fault" : "aborted");
+		std::cerr << mlxut::Ansi::reset;
+		std::cerr << "\n==========================================================\nFatal error: " << (sig == SIGSEGV ? "segmentation fault" : "aborted" ) << ".\n<Begin of stack trace>" << std::endl;
 		trace_count = 0;
 		backtrace_full(state, 0, SymbolCallback, ErrorCallback, nullptr);
-		fprintf(stderr, "<End of stack trace>\n==========================================================\n");
-		exit(1);
+		std::cerr << "<End of stack trace>\n==========================================================" << std::endl;
+		std::exit(1);
 	}
 #endif
 
