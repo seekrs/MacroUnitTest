@@ -149,11 +149,10 @@ namespace mlxut
 	void Test::CreateRenderTextures()
 	{
 		SDL_Surface* surface = nullptr;
-		if(m_result_pixels[0] != 0)
+		if(m_result_pixels[0] != 0 && !CommandLineInterface::Get().HasFlag("headless"))
 		{
 			surface = SDL_CreateRGBSurfaceFrom(m_result_pixels.data(), MLX_WIN_WIDTH, MLX_WIN_HEIGHT, 32, 4 * MLX_WIN_WIDTH, R_MASK, G_MASK, B_MASK, A_MASK);
-			if(!CommandLineInterface::Get().HasFlag("headless"))
-				p_result = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
+			p_result = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 		}
 
 		if(m_has_reference)
@@ -177,10 +176,13 @@ namespace mlxut
 			SDL_RWops* rw = SDL_RWFromMem(reinterpret_cast<void*>(const_cast<std::uint8_t*>(ref_data.data())), ref_data.size());
 			surface = IMG_Load_RW(rw, 1);
 		#endif
-			SDL_LockSurface(surface);
+			if(surface) // Maybe empty ref (embedded)
+				SDL_LockSurface(surface);
 
 			auto get_pixel = [](SDL_Surface* surface, int x, int y) -> std::uint32_t
 			{
+				if(!surface)
+					return 0;
 				int bpp = surface->format->BytesPerPixel;
 				std::uint8_t* p = reinterpret_cast<std::uint8_t*>(surface->pixels) + y * surface->pitch + x * bpp;
 
@@ -215,7 +217,8 @@ namespace mlxut
 					m_reference_pixels[y * MLX_WIN_WIDTH + x] = get_pixel(surface, x, y);
 			}
 
-			SDL_UnlockSurface(surface);
+			if(surface)
+				SDL_UnlockSurface(surface);
 			if(!CommandLineInterface::Get().HasFlag("headless"))
 				p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			SDL_FreeSurface(surface);
