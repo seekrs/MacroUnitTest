@@ -42,16 +42,16 @@ local os_interfaces = {
 option("unitybuild", { description = "Build the app using unity build", default = false })
 option("editor", { description = "Build the app in edtior mode", default = is_mode("debug") })
 
-if not is_mode("debug") and not has_config("editor") then
+if not has_config("editor") then
 	add_defines("MLX_UT_EMBED_TESTS")
 end
 
 function CreateEmbeddedResources(target)
-	if is_mode("debug") and not os.exists("$(builddir)/Bin/$(os)_$(arch)/Resources") then
+	if has_config("editor") and not os.exists("$(builddir)/Bin/$(os)_$(arch)/Resources") then
 		os.ln("$(scriptdir)/Resources", "$(builddir)/Bin/$(os)_$(arch)/Resources")
 		print("Created resources symlink")
 	end
-	if not is_mode("debug") then
+	if not has_config("editor") then
 		if os.exists("Runtime/Software/Includes/Embedded") then
 			os.rm("Runtime/Software/Includes/Embedded")
 		end
@@ -218,7 +218,7 @@ target("MacroUnitTest")
 
 	add_packages("libsdl2", "pfd", "libsdl2_image", "imgui", "tiny-process-library")
 
-	if not is_mode("debug") then
+	if not has_config("editor") then
 		add_rules("utils.bin2c", { extensions = { ".png", ".ttf" } } )
 		add_files("Resources/Assets/**.png")
 		add_files("Resources/Fonts/**.ttf")
