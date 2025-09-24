@@ -66,7 +66,7 @@ function CreateEmbeddedResources(target)
 #include <cstdint>
 
 static const std::vector<std::uint8_t> logo_data = {
-	#include <Logo.png.h>
+	#include "Logo.png.h"
 };
 
 #endif // MLX_UT_EMBEDDED_LOGO]])
@@ -76,7 +76,7 @@ static const std::vector<std::uint8_t> logo_data = {
 
 		for _, file in ipairs(os.files("Resources/Assets/TestsReferences/*.png")) do
 			_, filename, _ = file:match("^(.-)([^\\/]-)%.([^\\/%.]-)%.?$")
-			references = references .. "static const std::vector<std::uint8_t> " .. filename .. "_data = {\n\t#include <" .. filename .. ".png.h>\n};\n"
+			references = references .. "static const std::vector<std::uint8_t> " .. filename .. "_data = {\n\t#include \"" .. filename .. ".png.h\"\n};\n"
 			references_names = references_names .. "if(name == \"" .. filename .. "\")\n\t\treturn " .. filename .. "_data;\n\t"
 		end
 
@@ -94,7 +94,7 @@ static const std::vector<std::uint8_t> logo_data = {
 
 inline const std::vector<std::uint8_t> GetDataFromFilename(std::string_view name)
 {
-// Ugly generated function
+	// Ugly generated function
 	]] .. references_names .. [[return {};
 }
 
@@ -104,7 +104,7 @@ inline const std::vector<std::uint8_t> GetDataFromFilename(std::string_view name
 
 		for _, file in ipairs(os.files("Resources/Fonts/**.ttf")) do
 			_, filename, _ = file:match("^(.-)([^\\/]-)%.([^\\/%.]-)%.?$")
-			fonts = fonts .. "static const std::vector<std::uint8_t> " .. filename .. "_data = {\n\t#include <" .. filename .. ".ttf.h>\n};\n"
+			fonts = fonts .. "static const std::vector<std::uint8_t> " .. filename .. "_data = {\n\t#include \"" .. filename .. ".ttf.h\"\n};\n"
 		end
 
 		io.writefile("Runtime/Software/Includes/Embedded/Fonts.h", [[
@@ -153,7 +153,7 @@ static const std::array all_test_names = {
 
 inline const std::string GetDataFromFilename(std::string_view name)
 {
-// Ugly generated function
+	// Ugly generated function
 	]] .. tests_names .. [[return {};
 }
 
