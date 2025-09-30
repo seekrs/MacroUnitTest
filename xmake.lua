@@ -13,7 +13,6 @@ if is_mode("debug") then
 	add_defines("MLX_UT_DEBUG")
 else
 	add_defines("MLX_UT_RELEASE")
-	set_fpmodels("fast")
 	add_vectorexts("sse", "sse2", "sse3", "ssse3")
 end
 
@@ -22,7 +21,7 @@ set_targetdir("build/Bin/$(os)_$(arch)")
 set_rundir("build/Bin/$(os)_$(arch)")
 set_dependir("build/.deps")
 
-set_optimize("fastest")
+set_optimize("faster")
 
 local os_interfaces = {
 	Unix = {
