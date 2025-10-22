@@ -224,6 +224,7 @@ namespace mlxut
 			if(!CommandLineInterface::Get().HasFlag("headless"))
 				p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			SDL_FreeSurface(surface);
+			m_has_reference = true;
 	#ifndef MLX_UT_EMBED_TESTS
 		}
 		else if(surface)
@@ -233,9 +234,9 @@ namespace mlxut
 				p_reference = SDL_CreateTextureFromSurface(m_renderer.Get(), surface);
 			IMG_SavePNG(surface, ref_path.string().c_str());
 			SDL_FreeSurface(surface);
+			m_has_reference = true;
 		}
 	#endif
-		m_has_reference = true;
 	}
 
 	void Test::ComputeErrorMap()
