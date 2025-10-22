@@ -147,37 +147,56 @@ namespace mlxut
 
 		std::cout << "MacroLibX Unit Tester headless mode\n" << "Using mlx path : " << *CommandLineInterface::Get().GetOption("path") << '\n' << std::endl;
 
-		m_tester.RunAllTests(*CommandLineInterface::Get().GetOption("path"));
-		while (!m_tester.HaveAllTestsFinished())
-			std::this_thread::sleep_for(500ms);
-		m_tester.FetchAllResults();
-		m_tester.CreateAllRenderTextures();
-		m_tester.ComputeAllErrorMaps();
-		m_tester.FetchSuccess();
-
 		std::size_t longest_name = 0;
 		for(const auto& test : m_tester.GetAllTests())
 		{
 			if(test->GetName().length() > longest_name)
 				longest_name = test->GetName().length();
 		}
-		for(const auto& test : m_tester.GetAllTests())
-		{
-			std::cout << std::setw(longest_name) << test->GetName() << " : ";
-			if(test->HasFailed())
+
+		bool has_failed = false;
+		std::unordered_set<std::string_view> finished_tests;
+		m_tester.RunAllTests(*CommandLineInterface::Get().GetOption("path"));
+		do {
+			for(auto& test : m_tester.GetAllTests())
 			{
-				std::cout << Ansi::red << "FAILED" << Ansi::reset << " with mean value " << test->GetMean() << '\n';
-				if(!test->GetLuaErrorMessage().empty())
-					std::cout << "Lua error :\n" << test->GetLuaErrorMessage() << '\n';
-				std::cout << "===================== MacroLibX logs =====================\n" << test->GetLogs() << "\n==========================================================\n";
-				return_code = -1;
+				if(finished_tests.contains(test->GetName()) || !test->IsTestFinished())
+					continue;
+				test->FetchResult();
+				test->CreateRenderTextures();
+				test->ComputeErrorMap();
+				finished_tests.emplace(test->GetName());
+
+				std::cout << std::setw(longest_name) << test->GetName() << " : ";
+				if(test->HasFailed())
+				{
+					has_failed = true;
+					std::cout << Ansi::red << "FAILED" << Ansi::reset << " with mean value " << test->GetMean() << '\n';
+					if(!test->GetLuaErrorMessage().empty())
+						std::cout << "Lua error :\n" << test->GetLuaErrorMessage() << '\n';
+					std::cout << "===================== MacroLibX logs =====================\n" << test->GetLogs() << "\n==========================================================\n";
+					return_code = -1;
+				}
+				else if(test->IsSuspicious())
+					std::cout << Ansi::yellow << "SUSPICIOUS" << Ansi::reset << " with mean value " << test->GetMean();
+				else if(test->HasPassed())
+					std::cout << Ansi::green << "PASSED" << Ansi::reset;
+				std::cout << std::endl;
+				std::this_thread::sleep_for(100ms);
 			}
-			else if(test->IsSuspicious())
-				std::cout << Ansi::yellow << "SUSPICIOUS" << Ansi::reset << " with mean value " << test->GetMean();
-			else if(test->HasPassed())
-				std::cout << Ansi::green << "PASSED" << Ansi::reset;
-			std::cout << std::endl;
-		}
+		} while(!m_tester.HaveAllTestsFinished() || finished_tests.size() != m_tester.GetAllTests().size());
+		m_tester.FetchSuccess();
+		std::cout << "\n======================================================\n";
+		std::cout << "TESTS COUNT" << " : " << m_tester.GetAllTests().size() << '\n';
+		std::cout << Ansi::green << "     PASSED" << Ansi::reset << " : " << m_tester.GetTestsPassedNumber() << '\n';
+		std::cout << Ansi::yellow << " SUSPICIOUS" << Ansi::reset << " : " << m_tester.GetTestsSuspiciousNumber() << '\n';
+		std::cout << Ansi::red << "     FAILED" << Ansi::reset << " : " << m_tester.GetTestsFailedNumber() << '\n';
+		if(has_failed)
+			std::cout << Ansi::bold << "\n     RESULT" << Ansi::reset << " : " << Ansi::red << "FAILED" << Ansi::reset;
+		else
+			std::cout << Ansi::bold << "\n     RESULT" << Ansi::reset << " : " << Ansi::green << "PASSED" << Ansi::reset;
+		std::cout << "\n======================================================" << std::endl;;
+
 		return return_code;
 	}
 
