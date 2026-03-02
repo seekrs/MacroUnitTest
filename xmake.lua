@@ -2,6 +2,9 @@ add_repositories("local-repo Xmake")
 
 add_requires("imgui v1.91.0-docking", { configs = { sdl2 = true }})
 add_requires("libsdl2", "pfd", "libsdl2_image", "sol2", "tiny-process-library")
+
+add_requireconfs("sol2.lua", { version = "5.4.x", override = true })
+
 if is_plat("linux") then
 	add_requires("libbacktrace")
 end
